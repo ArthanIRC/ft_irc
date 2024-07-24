@@ -6,7 +6,6 @@
 #include "SocketClient.hpp"
 #include "SocketServer.hpp"
 // jai tout include dans le doute, mais faut voir ce qui est utile
-
 static bool checkPassword(std::string pass) {
     if (pass.empty()) {
         std::cerr << "Error: Password is empty" << std::endl;
