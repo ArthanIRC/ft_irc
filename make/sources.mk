@@ -2,6 +2,7 @@ SOURCES += ./src/Channel.cpp
 SOURCES += ./src/Client.cpp
 SOURCES += ./src/Command.cpp
 SOURCES += ./src/main.cpp
+SOURCES += ./src/Message.cpp
 SOURCES += ./src/Server.cpp
 SOURCES += ./src/SocketClient.cpp
 SOURCES += ./src/Socket.cpp
