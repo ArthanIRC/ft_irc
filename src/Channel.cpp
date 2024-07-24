@@ -16,12 +16,12 @@ bool Channel::getInviteOnly() const { return (this->_inviteOnly); }
 
 void Channel::setInviteOnly(bool inviteMode) { this->_inviteOnly = inviteMode; }
 
-void Channel::addClient(Client& client) {
+/*void Channel::addClient(Client& client) {
     if (std::find(_clientsChan.begin(), _clientsChan.end(), client) !=
         _clientsChan.end())
         throw std::runtime_error("the user already exist");
     this->_clientsChan.push_back(&client);
-}
+} */
 
 void Channel::checkNameSyntaxChan(std::string& name) {
     if (name[0] != '#')
