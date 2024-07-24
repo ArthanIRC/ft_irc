@@ -10,7 +10,7 @@ Server::~Server() {
     _channelServ.clear();
 }
 
-void Server::signalHandler(int signal) { this->_signal = true; }
+// void Server::signalHandler(int signal) { this->_signal = true; }
 
 int const& Server::getSocketFd(void) const { return (this->_socketFd); }
 

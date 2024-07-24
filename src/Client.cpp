@@ -1,7 +1,7 @@
 #include "Client.hpp"
 
 Client::Client(std::string nickname)
-    : _nickname(nickname), _realname(NULL), _username(NULL), _fd(-1) {
+    : _realname(NULL), _nickname(nickname), _username(NULL), _fd(-1) {
     checkNameSyntaxCli(nickname);
 }
 
