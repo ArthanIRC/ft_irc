@@ -18,8 +18,7 @@ class Channel {
     std::map<std::string, Client*> _operatorList;
     Channel();
     size_t _maxClients;
-    // variable, struct ou class topic ? avec nom du topic, si il est modif il
-    // faut avertir tt les user du chan
+    // variable, struct ou class topic ?
   public:
     Channel(Client* newClient, std::string name, std::string password);
     ~Channel();
@@ -32,6 +31,7 @@ class Channel {
     void addClient(Client& client);
     void checkNameSyntaxChan(std::string& name);
     void eraseClient(Client &client);
+    bool isInvited(Client &client);
     // KICK: ejecter un user
     // MODE : changer les mode du chan
     // INVITE : inviter un user sur le chan sur invitation (bool _inviteOnly =

@@ -25,6 +25,8 @@ size_t Channel::getMaxClients() const { return (this->_maxClients); }
 void Channel::setMaxClients(size_t nbMaxClients) { this->_maxClients = nbMaxClients; }
 
 void Channel::addClient(Client& client) {
+    if (this->_inviteOnly == true && !isInvited(client))
+        throw std::runtime_error("the user is not invited");
     std::string nickname = client.getNickname();
     if (_clientsChan.find(nickname) != _clientsChan.end()) {
         throw std::runtime_error("the user already exists");
@@ -39,6 +41,14 @@ void Channel::eraseClient(Client &client) {
         _clientsChan.erase(it);
     else
         throw std::runtime_error("the user does not exist");
+}
+
+bool Channel::isInvited(Client &client) {
+    std::string nickname = client.getNickname();
+    std::map<std::string, Client*>::iterator it = _whiteList.find(nickname);
+    if (it != _whiteList.end())
+        return true;
+    return false;
 }
 
 void Channel::checkNameSyntaxChan(std::string& name) {
