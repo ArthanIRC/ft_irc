@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <deque>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -19,8 +20,7 @@
 
 class Server {
   private:
-    Server();
-    int _port;
+    unsigned int _port;
     std::string _password;
     bool _signal;
     int _socketFd;
@@ -28,9 +28,31 @@ class Server {
     std::vector<Client*> _clientServ;
     std::vector<Channel*> _channelServ;
 
+    static const unsigned int defaultPort = 6667;
+
+    void parsePort(const char* strp);
+    void parsePassword(std::string pass);
+
   public:
-    Server(int port, std::string password);
+    Server(int ac, char** data);
     ~Server();
+
+    class InvalidNumberOfParametersException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
+    class InvalidPortException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
+    class EmptyPasswordException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
+    class NonAlnumPasswordException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
     void signalHandler(int signal);
     void initSocket();
     int const& getSocketFd(void) const;
