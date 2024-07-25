@@ -5,26 +5,33 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
+#include <map>
 
 class Channel {
   private:
     std::string _name;
     std::string _password;
     bool _inviteOnly;
-    std::vector<Client*> _clientsChan;
+    std::map<std::string, Client*> _clientsChan;
+    std::map<std::string, Client*> _whiteList;
+    std::map<std::string, Client*> _blackList;
+    std::map<std::string, Client*> _operatorList;
     Channel();
+    size_t _maxClients;
     // variable, struct ou class topic ? avec nom du topic, si il est modif il
     // faut avertir tt les user du chan
   public:
     Channel(Client* newClient, std::string name, std::string password);
     ~Channel();
     std::string const& getName() const;
-    std::vector<Client*>& getClientsChan();
+    std::map<std::string, Client*>& getClientsChan();
     bool getInviteOnly() const;
     void setInviteOnly(bool inviteMode);
+    size_t getMaxClients(void) const;
+    void setMaxClients(size_t nbMaxClients);
     void addClient(Client& client);
     void checkNameSyntaxChan(std::string& name);
+    void eraseClient(Client &client);
     // KICK: ejecter un user
     // MODE : changer les mode du chan
     // INVITE : inviter un user sur le chan sur invitation (bool _inviteOnly =
