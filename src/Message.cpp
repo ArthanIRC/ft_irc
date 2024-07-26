@@ -4,39 +4,30 @@
 
 Message::~Message() {}
 
-void	Message::setRaw(std::string& str) {
-	this->_rawMsg = str;
-}
-
-void	Message::setPrefix(std::string& str) {
-	this->_prefix = str;
-}
-
-void	Message::setCommand(std::string& str) {
-	this->_command = str;
-}
-
-void	Message::setParams(std::string& str) {
-	this->_params.push_back(str);
-}
-
 void	Message::create(std::string& data) {
-	if ((Message::parse(data) != 0) || (Message::validate(data) != 0)) {
-		throw (Message::MessageFormatException());
+	std::string					prefix;
+	std::string					command;
+	std::vector<std::string>	params;
+
+	if (Message::parse(data, prefix, command, params) == err_no_cmd) {
+		throw (Message::MissingCommandException());
+	}
+	if (Message::validate()) {
+		throw (Message::InvalidFormatException());
 	}
 }
 
-int Message::parse(std::string& data) {
-	std::istringstream	iss(data);
-	std::string			word;
+int Message::parse(std::string& data, std::string& prefix, std::string& command, std::vector<std::string>& params) {
+	std::istringstream			iss(data);
+	std::string					word;
 
 	if (data[0] == ':') {
 		iss >> word;
-		this->_prefix = word.substr(1);
+		prefix = word.substr(1);
 	}
 
-	if (!(iss >> this->_command)) {
-		return (ERR_NO_CMD);
+	if (!(iss >> command)) {
+		return (err_no_cmd);
 	}
 
 	while (iss >> word) {
@@ -45,9 +36,12 @@ int Message::parse(std::string& data) {
 			getline(iss, trailing);
 			word.erase(0,1);
 			word += trailing;
-			this->_params.push_back(trailing);
+			params.push_back(trailing);
 			break ;
 		}
-		this->_params.push_back(word);
+		params.push_back(word);
 	}
+	return (0);
 }
+
+int	Message::validate()
