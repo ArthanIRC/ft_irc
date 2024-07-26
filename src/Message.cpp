@@ -1,6 +1,6 @@
 #include "Message.hpp"
 #include <cstdio>
-#include <string>
+#include <sstream>
 
 Message::~Message() {}
 
