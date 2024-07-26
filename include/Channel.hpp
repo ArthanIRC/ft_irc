@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <map>
+#include <string>
 
 class Channel {
   private:
@@ -20,7 +20,8 @@ class Channel {
     std::map<std::string, Client*> _operatorList;
 
     template <typename MapType>
-    void addClientToMap(MapType& map, Client& client, const std::string& errorMsg) {
+    void addClientToMap(MapType& map, Client& client,
+                        const std::string& errorMsg) {
         std::string nickname = client.getNickname();
         if (map.find(nickname) != map.end()) {
             throw std::runtime_error(errorMsg);
@@ -29,7 +30,8 @@ class Channel {
     }
 
     template <typename MapType>
-    void removeClientFromMap(MapType& map, Client& client, const std::string& errorMsg) {
+    void removeClientFromMap(MapType& map, Client& client,
+                             const std::string& errorMsg) {
         std::string nickname = client.getNickname();
         typename MapType::iterator it = map.find(nickname);
         if (it != map.end()) {
@@ -49,13 +51,13 @@ class Channel {
     size_t getMaxClients(void) const;
     void setMaxClients(size_t nbMaxClients);
     void addClient(Client& client);
-    void addOperator(Client &client);
-    void kickOperator(Client &client);
+    void addOperator(Client& client);
+    void kickOperator(Client& client);
     void checkNameSyntaxChan(std::string& name);
-    void eraseClient(Client &client);
+    void eraseClient(Client& client);
     void banClient(Client& client);
-    void debanClient(Client &client);
-    bool isInvited(Client &client);
+    void debanClient(Client& client);
+    bool isInvited(Client& client);
     // KICK: ejecter un user
     // MODE : changer les mode du chan
     // INVITE : inviter un user sur le chan sur invitation (bool _inviteOnly =
