@@ -3,24 +3,33 @@
 #include <string>
 #include <vector>
 
-#define ERR_NO_CMD 1001
-
 class Message {
-  private:
-    std::string               _rawMsg;
-    std::string               _prefix;
-    std::string               _command;
-    std::vector<std::string>  _params;
+	private:
+		static const unsigned int ERR_NO_CMD = 1001;
 
-    static int parse(std::string& data);
-    static int validate(std::string& data);
+		std::string               _rawMsg;
+		std::string               _prefix;
+		std::string               _command;
+		std::vector<std::string>  _params;
 
-  public:
-    virtual ~Message();
+		static int parse(std::string& data);
+		static int validate(std::string& data);
 
-    std::string getRawMsg();
+	public:
+		virtual ~Message();
 
-    virtual void run() = 0;
+		std::string getRawMsg();
+
+		void setRaw(std::string& str);
+		void setPrefix(std::string& str);
+		void setCommand(std::string& str);
+		void setParams(std::string& str);
+		static void create(std::string& data);
+
+		virtual void run() = 0;
+
+		class MessageFormatException : public std::exception {
+			public:
+				virtual const char* what() const throw() {return ("Error: Message isn't properly formatted.");}
+		};
 };
-
-static void create(std::string& data);
