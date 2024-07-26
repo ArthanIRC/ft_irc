@@ -4,15 +4,15 @@
 #include <vector>
 
 class Message {
-	private:
-		static const unsigned int ERR_NO_CMD = 1001;
+	protected:
+		static const unsigned int err_no_cmd = 1001;
 
-		std::string               _rawMsg;
-		std::string               _prefix;
-		std::string               _command;
-		std::vector<std::string>  _params;
+		std::string					_rawMsg;
+		std::string					_prefix;
+		std::string					_command;
+		std::vector<std::string> 	_params;
 
-		static int parse(std::string& data);
+		static int parse(std::string& data, std::string& prefix, std::string& command, std::vector<std::string>& params);
 		static int validate(std::string& data);
 
 	public:
@@ -20,16 +20,16 @@ class Message {
 
 		std::string getRawMsg();
 
-		void setRaw(std::string& str);
-		void setPrefix(std::string& str);
-		void setCommand(std::string& str);
-		void setParams(std::string& str);
 		static void create(std::string& data);
 
 		virtual void run() = 0;
 
-		class MessageFormatException : public std::exception {
+		class MissingCommandException : public std::exception {
 			public:
-				virtual const char* what() const throw() {return ("Error: Message isn't properly formatted.");}
+				virtual const char* what() const throw() {return ("Error: Missing command in message.");}
+		};
+		class InvalidFormatException : public std::exception {
+			public:
+				virtual const char* what() const throw() {return ("Error: Message format is invalid.");}
 		};
 };
