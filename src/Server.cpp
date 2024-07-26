@@ -1,25 +1,69 @@
 #include "Server.hpp"
+#include "SocketServer.hpp"
+#include <cstdlib>
 
-Server::Server() {}
+static const std::string defaultPort = "6667";
 
-Server::Server(int port, std::string password)
-    : _port(port), _password(password), _signal(false), _socketFd(-1) {}
+Server::Server(std::string port, std::string password)
+    : _port(port), _password(password), _socket(SocketServer(port.c_str())) {}
 
 Server::~Server() {
-    _clientServ.clear();
-    _channelServ.clear();
+    _clients.clear();
+    _channels.clear();
 }
 
-// void Server::signalHandler(int signal) { this->_signal = true; }
+Server Server::create(int ac, char** data) {
+    std::string port;
+    std::string password;
 
-int const& Server::getSocketFd(void) const { return (this->_socketFd); }
+    if (ac < 2 || ac > 3) {
+        throw Server::InvalidNumberOfParametersException();
+    }
+    if (ac == 2) {
+        port = defaultPort;
+        password = parsePassword(data[1]);
+    } else {
+        port = parsePort(data[1]);
+        password = parsePassword(data[2]);
+    }
 
-void Server::initSocket() {
-    _socketAddr.sin_family = AF_INET;
-    _socketAddr.sin_port = htons(_port);
-    _socketAddr.sin_addr.s_addr = INADDR_ANY;
-
-    _socketFd = socket(AF_INET, SOCK_STREAM, 0);
-    if (_socketFd == -1)
-        throw std::runtime_error("Socket failed");
+    return Server(port, password);
 }
+
+const char* Server::InvalidNumberOfParametersException::what() const throw() {
+    return "Error: Usage: ./ircserv <port> <password>";
+}
+
+const char* Server::InvalidPortException::what() const throw() {
+    return "Error: Port has to be between 1 and 65535";
+}
+
+const char* Server::EmptyPasswordException::what() const throw() {
+    return "Error: Password is empty";
+}
+
+const char* Server::NonAlnumPasswordException::what() const throw() {
+    return "Error: Password contains non-alphanumeric characters";
+}
+
+std::string Server::parsePort(const char* strp) {
+    int port = strtol(strp, NULL, 10);
+
+    if (port < 1 || port > 65535)
+        throw Server::InvalidPortException();
+    return strp;
+}
+
+std::string Server::parsePassword(std::string pass) {
+    if (pass.empty()) {
+        throw Server::EmptyPasswordException();
+    }
+    for (size_t i = 0; i < pass.size(); ++i) {
+        if (!isalnum(pass[i])) {
+            throw Server::NonAlnumPasswordException();
+        }
+    }
+    return pass;
+}
+
+void Server::run() { this->_socket.listen(); }
