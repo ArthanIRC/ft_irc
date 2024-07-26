@@ -2,40 +2,34 @@
 
 #include <cstdlib>
 #include <ctime>
-#include <deque>
 #include <exception>
-#include <fstream>
-#include <iostream>
-#include <list>
-#include <map>
 #include <netinet/in.h>
-#include <stack>
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <vector>
 
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "SocketServer.hpp"
 
 class Server {
   private:
-    unsigned int _port;
+    std::string _port;
     std::string _password;
-    bool _signal;
-    int _socketFd;
-    struct sockaddr_in _socketAddr;
-    std::vector<Client*> _clientServ;
-    std::vector<Channel*> _channelServ;
+    SocketServer _socket;
+    std::map<std::string, Client*> _clients;
+    std::map<std::string, Channel*> _channels;
 
-    static const unsigned int defaultPort = 6667;
-
-    void parsePort(const char* strp);
-    void parsePassword(std::string pass);
+    static std::string parsePort(const char* strp);
+    static std::string parsePassword(std::string pass);
 
   public:
-    Server(int ac, char** data);
+    Server(std::string port, std::string password);
     ~Server();
+
+    static Server create(int ac, char** data);
+
+    void run();
 
     class InvalidNumberOfParametersException : public std::exception {
         virtual const char* what() const throw();
@@ -52,8 +46,4 @@ class Server {
     class NonAlnumPasswordException : public std::exception {
         virtual const char* what() const throw();
     };
-
-    void signalHandler(int signal);
-    void initSocket();
-    int const& getSocketFd(void) const;
 };

@@ -1,22 +1,33 @@
 #include "Server.hpp"
+#include "SocketServer.hpp"
 #include <cstdlib>
 
-Server::Server(int ac, char** data) {
+static const std::string defaultPort = "6667";
+
+Server::Server(std::string port, std::string password)
+    : _port(port), _password(password), _socket(SocketServer(port.c_str())) {}
+
+Server::~Server() {
+    _clients.clear();
+    _channels.clear();
+}
+
+Server Server::create(int ac, char** data) {
+    std::string port;
+    std::string password;
+
     if (ac < 2 || ac > 3) {
         throw Server::InvalidNumberOfParametersException();
     }
     if (ac == 2) {
-        this->_port = this->defaultPort;
-        parsePassword(data[1]);
+        port = defaultPort;
+        password = parsePassword(data[1]);
     } else {
-        parsePort(data[1]);
-        parsePassword(data[2]);
+        port = parsePort(data[1]);
+        password = parsePassword(data[2]);
     }
-}
 
-Server::~Server() {
-    _clientServ.clear();
-    _channelServ.clear();
+    return Server(port, password);
 }
 
 const char* Server::InvalidNumberOfParametersException::what() const throw() {
@@ -28,24 +39,22 @@ const char* Server::InvalidPortException::what() const throw() {
 }
 
 const char* Server::EmptyPasswordException::what() const throw() {
-    return "Error: Password is empty.";
+    return "Error: Password is empty";
 }
 
 const char* Server::NonAlnumPasswordException::what() const throw() {
     return "Error: Password contains non-alphanumeric characters";
 }
 
-int const& Server::getSocketFd(void) const { return (this->_socketFd); }
-
-void Server::parsePort(const char* strp) {
+std::string Server::parsePort(const char* strp) {
     int port = strtol(strp, NULL, 10);
 
     if (port < 1 || port > 65535)
         throw Server::InvalidPortException();
-    this->_port = port;
+    return strp;
 }
 
-void Server::parsePassword(std::string pass) {
+std::string Server::parsePassword(std::string pass) {
     if (pass.empty()) {
         throw Server::EmptyPasswordException();
     }
@@ -54,15 +63,7 @@ void Server::parsePassword(std::string pass) {
             throw Server::NonAlnumPasswordException();
         }
     }
-    this->_password = pass;
+    return pass;
 }
 
-void Server::initSocket() {
-    _socketAddr.sin_family = AF_INET;
-    _socketAddr.sin_port = htons(_port);
-    _socketAddr.sin_addr.s_addr = INADDR_ANY;
-
-    _socketFd = socket(AF_INET, SOCK_STREAM, 0);
-    if (_socketFd == -1)
-        throw std::runtime_error("Socket failed");
-}
+void Server::run() { this->_socket.listen(); }

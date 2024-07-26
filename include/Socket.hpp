@@ -1,14 +1,12 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
-
 class Socket {
-  private:
   protected:
+    int _fd;
+
   public:
     Socket();
-    virtual ~Socket();
+    virtual ~Socket() = 0;
+
+    int getFd();
 };
