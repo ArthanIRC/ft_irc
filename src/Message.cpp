@@ -1,9 +1,11 @@
 #include "Message.hpp"
+#include <cstddef>
 #include <cstdio>
 #include <sstream>
 
 Message::~Message() {}
 
+#include <iostream>
 void Message::create(std::string& data) {
     std::string prefix, command;
     std::vector<std::string> params;
@@ -11,14 +13,15 @@ void Message::create(std::string& data) {
     if (Message::parse(data, prefix, command, params) == false) {
         throw(Message::MissingCommandException());
     }
+    for (size_t i = 0; i < params.size(); ++i) {
+        std::cout << params[i] << std::endl;
+    }
     if (Message::validate(prefix, command, params) == false) {
         throw(Message::InvalidFormatException());
     }
 
     // ici message valide donc appel de commande etc
 }
-
-#include <iostream>
 
 bool Message::parse(std::string& data, std::string& prefix,
                     std::string& command, std::vector<std::string>& params) {
@@ -40,7 +43,7 @@ bool Message::parse(std::string& data, std::string& prefix,
             getline(iss, trailing);
             word.erase(0, 1);
             word += trailing;
-            params.push_back(trailing);
+            params.push_back(word);
             break;
         }
         params.push_back(word);
@@ -62,9 +65,7 @@ bool Message::validate(const std::string& prefix, const std::string& command,
     if (command.empty()) {
         return (false);
     }
-    if (command.length() > 10) {
-        return (false);
-    }
+
     for (std::string::const_iterator it = command.begin(); it != command.end();
          ++it) {
         if (!std::isupper(*it) && !std::isdigit(*it)) {
@@ -77,9 +78,6 @@ bool Message::validate(const std::string& prefix, const std::string& command,
     }
 
     for (size_t i = 0; i < params.size(); ++i) {
-        if (params[i].empty()) {
-            return (false);
-        }
         for (size_t j = 0; j < params[i].length(); ++j) {
             if (!std::isprint(params[i][j])) {
                 return (false);
