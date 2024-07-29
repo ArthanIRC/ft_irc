@@ -51,11 +51,9 @@ bool Message::parse(std::string& data, std::string& prefix,
 bool Message::validate(const std::string& prefix, const std::string& command,
                        const std::vector<std::string>& params) {
     if (!prefix.empty()) {
-        std::cout << prefix << std::endl;
         for (size_t i = 0; i < prefix.length(); ++i) {
             if (!std::isalnum(prefix[i]) && prefix[i] != '-' &&
                 prefix[i] != '.' && prefix[i] != '!' && prefix[i] != '@') {
-                std::cout << "test" << std::endl;
                 return (false);
             }
         }
