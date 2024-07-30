@@ -13,13 +13,13 @@ void Message::create(std::string& data) {
     switch (res) {
     case (0):
         break;
-    case (1001):
+    case (err_trailing):
         throw(Message::WrongTrailingException());
         break;
-    case (1002):
+    case (err_newline):
         throw(Message::NewlineException());
         break;
-    case (1003):
+    case (err_missing_cmd):
         throw(Message::MissingCommandException());
         break;
     default:
