@@ -68,7 +68,7 @@ int Message::parse(std::string& data, std::string& prefix, std::string& command,
         }
         params.push_back(word);
     }
-    
+
     return (0);
 }
 
