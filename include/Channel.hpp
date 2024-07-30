@@ -12,9 +12,10 @@ class Channel {
     Channel();
     std::string _name;
     std::string _password;
+    std::string topic;
     bool _inviteOnly;
-    std::map<std::string, Client*> _clientsChan;
     size_t _maxClients;
+    std::map<std::string, Client*> _clientsChan;
     std::map<std::string, Client*> _whiteList;
     std::map<std::string, Client*> _blackList;
     std::map<std::string, Client*> _operatorList;
@@ -40,24 +41,53 @@ class Channel {
             throw std::runtime_error(errorMsg);
         }
     }
-    // variable, struct ou class topic ?
+
+    template <typename MapType>
+    bool verifClientOnMap(MapType& map, Client& client) const {
+      std::string nickname = client.getNickname();
+    typename MapType::iterator it = map.find(nickname);
+    if (it != map.end())
+        return true;
+    return false;
+    }
+
   public:
+    Channel(Client* client, std::string name);
     Channel(Client* newClient, std::string name, std::string password);
     ~Channel();
+
+    void checkNameSyntaxChan(std::string& name);
     std::string const& getName() const;
+
+    std::string getPassword() const;
+    void setPassword(std::string newPassword);
+    void clearPassword();
+
+    std::string getTopic() const;
+    void setTopic(std::string newTopic);
+
     std::map<std::string, Client*>& getClientsChan();
+    std::map<std::string, Client*>& getWhitelist();
+    std::map<std::string, Client*>& getBlacklist();
+    std::map<std::string, Client*>& getOperatorlist();
+
     bool getInviteOnly() const;
     void setInviteOnly(bool inviteMode);
+
     size_t getMaxClients(void) const;
     void setMaxClients(size_t nbMaxClients);
+
     void addClient(Client& client);
     void addOperator(Client& client);
-    void kickOperator(Client& client);
-    void checkNameSyntaxChan(std::string& name);
-    void eraseClient(Client& client);
     void banClient(Client& client);
+
+    void kickOperator(Client& client);
     void debanClient(Client& client);
-    bool isInvited(Client& client);
+    void eraseClient(Client& client);
+
+    bool isWhitelisted(Client& client) const;
+    bool isBlacklisted(Client& client) const;
+    bool isOperator(Client& client) const;
     // KICK: ejecter un user
     // MODE : changer les mode du chan
     // INVITE : inviter un user sur le chan sur invitation (bool _inviteOnly =
