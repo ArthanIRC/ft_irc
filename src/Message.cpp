@@ -1,11 +1,10 @@
-#include "../include/Message.hpp"
+#include "Message.hpp"
 #include <cstddef>
 #include <cstdio>
 #include <sstream>
 
 Message::~Message() {}
 
-#include <iostream>
 void Message::create(std::string& data) {
     std::string prefix, command;
     std::vector<std::string> params;
@@ -27,15 +26,9 @@ void Message::create(std::string& data) {
         throw(Message::UnknownErrorException());
         break;
     }
-
-    // for (size_t i = 0; i < params.size(); ++i) {
-    //     std::cout << params[i] << std::endl;
-    // }
     if (Message::validate(prefix, command, params) == false) {
         throw(Message::InvalidFormatException());
     }
-
-    // ici message valide donc appel de commande etc
 }
 
 int Message::parse(std::string& data, std::string& prefix, std::string& command,
@@ -62,7 +55,6 @@ int Message::parse(std::string& data, std::string& prefix, std::string& command,
     }
 
     while (iss >> word) {
-        std::cout << "@@ " << word << std::endl;
         if (word[0] == ':') {
             std::string trailing;
             getline(iss, trailing);
@@ -71,13 +63,12 @@ int Message::parse(std::string& data, std::string& prefix, std::string& command,
             params.push_back(word);
             break;
         }
-        std::cout << "@@@@@ " << word << std::endl;
         if (word.find(':') != std::string::npos) {
-            std::cout << "@@@@@@@ " << word << std::endl;
             return (err_trailing);
         }
         params.push_back(word);
     }
+    
     return (0);
 }
 
