@@ -1,14 +1,14 @@
 #include "Channel.hpp"
 
 Channel::Channel(Client* newClient, std::string name)
-    : _name(name), _password(""), _inviteOnly(false), _maxClients(0) {
+    : _name(name), _password(""), _modifTopicByOps(false), _inviteOnly(false), _maxClients(0) {
     checkNameSyntaxChan(name);
     this->_clientsChan[newClient->getNickname()] = newClient;
     this->_operatorList[newClient->getNickname()] = newClient;
 }
 
 Channel::Channel(Client* newClient, std::string name, std::string password)
-    : _name(name), _password(password), _inviteOnly(false), _maxClients(0) {
+    : _name(name), _password(password), _modifTopicByOps(false), _inviteOnly(false), _maxClients(0) {
     checkNameSyntaxChan(name);
     this->_clientsChan[newClient->getNickname()] = newClient;
     this->_operatorList[newClient->getNickname()] = newClient;
@@ -21,13 +21,13 @@ Channel::~Channel() {
 
 void Channel::checkNameSyntaxChan(std::string& name) {
     if (name[0] != '#')
-        throw std::runtime_error("Error syntax name");
+        throw wrongSyntaxChannelName();
     if (name.find(' ') != name.npos)
-        throw std::runtime_error("Error syntax name");
+        throw wrongSyntaxChannelName();
     if (name.find(0x07) != name.npos)
-        throw std::runtime_error("Error syntax name");
+        throw wrongSyntaxChannelName();
     if (name.find(',') != name.npos)
-        throw std::runtime_error("Error syntax name");
+        throw wrongSyntaxChannelName();
 }
 
 std::string const& Channel::getName() const { return (this->_name); }
@@ -45,11 +45,19 @@ void Channel::clearPassword() {
 }
 
 std::string Channel::getTopic() const {
-    return (this->topic);
+    return (this->_topic);
 }
 
 void Channel::setTopic(std::string newTopic) {
-    this->topic = newTopic;
+    this->_topic = newTopic;
+}
+
+bool Channel::getModifTopicByOps() const {
+    return (this->_modifTopicByOps);
+}
+
+void Channel::setModifTopicByOps(bool lock) {
+    this->_modifTopicByOps = lock;
 }
 
 std::map<std::string, Client*>& Channel::getClientsChan() {
@@ -80,10 +88,10 @@ void Channel::setMaxClients(size_t nbMaxClients) {
 
 void Channel::addClient(Client& client) {
     if (this->_inviteOnly == true && !isWhitelisted(client))
-        throw std::runtime_error("the user is not invited");
+        throw userNotInvited();
     std::string nickname = client.getNickname();
     if (_clientsChan.find(nickname) != _clientsChan.end()) {
-        throw std::runtime_error("the user already exists");
+        throw userAlreadyExists();
     }
     _clientsChan[nickname] = &client;
 }
@@ -124,4 +132,18 @@ bool Channel::isOperator(Client& client) const {
     if (verifClientOnMap(_operatorList, client))
         return (true);
     return (false);
+}
+
+std::string Channel::getChannelMode() const {
+    std::string mode = "+";
+
+    if (getInviteOnly())
+        mode += "i";
+    if (getModifTopicByOps())
+        mode += "t";
+    if (!_password.empty())
+        mode += "k";
+    if (getMaxClients() > 1)
+        mode += "l";
+    return (mode);
 }
