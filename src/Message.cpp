@@ -106,24 +106,5 @@ bool Message::validate(const std::string& prefix, const std::string& command,
         }
     }
 
-    // if (!params.empty()) {
-    //     std::string last_param = params[params.size() - 1];
-    //     std::cout << "@@@@@@@@ " << last_param << std::endl;
-    //     if (!last_param.empty() && last_param[0] == ':') {
-    //         std::cout << "test" << std::endl;
-    //         // The trailing parameter should be the last one
-    //         if (params.size() > 1) {
-    //             // Ensure there is a space before the trailing parameter
-    //             std::string second_last_param = params[params.size() - 2];
-    //             if (second_last_param.empty() ||
-    //                 second_last_param[second_last_param.length() - 1] == ':')
-    //                 { return false; // Trailing parameter should be preceded
-    //                 by a
-    //                               // space, not a colon
-    //             }
-    //         }
-    //     }
-    // }
-
     return (true);
 }
