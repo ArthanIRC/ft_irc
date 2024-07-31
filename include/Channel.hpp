@@ -20,6 +20,7 @@ class Channel {
     std::map<std::string, Client*> _whiteList;
     std::map<std::string, Client*> _blackList;
     std::map<std::string, Client*> _operatorList;
+    void checkNameSyntaxChan(std::string& name);
 
     template <typename MapType>
     void addClientToMap(MapType& map, Client& client,
@@ -55,7 +56,6 @@ class Channel {
     Channel(Client* newClient, std::string name, std::string password);
     ~Channel();
 
-    void checkNameSyntaxChan(std::string& name);
     std::string const& getName() const;
 
     std::string getPassword() const;
