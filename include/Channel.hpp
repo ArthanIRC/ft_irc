@@ -45,9 +45,11 @@ class Channel {
 
     template <typename MapType>
     bool verifClientOnMap(MapType& map, Client& client) const {
-        std::string nickname = client.getNickname();
-        typename MapType::const_iterator it = map.find(nickname);
-        return it != map.end();
+      std::string nickname = client.getNickname();
+    typename MapType::iterator it = map.find(nickname);
+    if (it != map.end())
+        return true;
+    return false;
     }
 
   public:
