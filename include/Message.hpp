@@ -24,7 +24,7 @@ class Message {
 
     std::string getRawMsg();
 
-    static void create(std::string& data);
+    static bool verify(std::string& data);
 
     virtual void run() = 0;
 
