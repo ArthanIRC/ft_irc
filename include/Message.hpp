@@ -4,6 +4,12 @@
 #include <vector>
 
 class Message {
+  private:
+    static int parse(std::string& data, std::string& prefix,
+                     std::string& command, std::vector<std::string>& params);
+    static bool validate(const std::string& prefix, const std::string& command,
+                         const std::vector<std::string>& params);
+
   protected:
     static const unsigned int max_params = 15;
     static const unsigned int err_trailing = 1001;
@@ -13,11 +19,6 @@ class Message {
     std::string _prefix;
     std::string _command;
     std::vector<std::string> _params;
-
-    static int parse(std::string& data, std::string& prefix,
-                     std::string& command, std::vector<std::string>& params);
-    static bool validate(const std::string& prefix, const std::string& command,
-                         const std::vector<std::string>& params);
 
   public:
     virtual ~Message();
