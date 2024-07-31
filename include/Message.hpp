@@ -32,31 +32,31 @@ class Message {
     class MissingCommandException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Error: Missing command in message.");
+            return ("Missing command in message.");
         }
     };
     class WrongTrailingException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Error: End of the message badly formatted.");
+            return ("End of the message badly formatted.");
         }
     };
     class InvalidFormatException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Error: Message format is invalid.");
+            return ("Message format is invalid.");
         }
     };
     class NewlineException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Error: Message contains a newline.");
+            return ("Message contains a newline.");
         }
     };
     class UnknownErrorException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Error: Unknown parsing error.");
+            return ("Unknown parsing error.");
         }
     };
 };
