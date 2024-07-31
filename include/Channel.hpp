@@ -114,10 +114,9 @@ class Channel {
     };
     // KICK: ejecter un user
     // MODE : changer les mode du chan
-    // INVITE : inviter un user sur le chan sur invitation 
+    // INVITE : inviter un user sur le chan sur invitation
     // TOPIC : changer le sujet du chan
 
     // '+' ajoute les modes qui suivent et '-' les supprimes
-    // '+t' 
-
+    // '+t'
 };

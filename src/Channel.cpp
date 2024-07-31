@@ -1,14 +1,16 @@
 #include "Channel.hpp"
 
 Channel::Channel(Client* newClient, std::string name)
-    : _name(name), _password(""), _modifTopicByOps(false), _inviteOnly(false), _maxClients(0) {
+    : _name(name), _password(""), _modifTopicByOps(false), _inviteOnly(false),
+      _maxClients(0) {
     checkNameSyntaxChan(name);
     this->_clientsChan[newClient->getNickname()] = newClient;
     this->_operatorList[newClient->getNickname()] = newClient;
 }
 
 Channel::Channel(Client* newClient, std::string name, std::string password)
-    : _name(name), _password(password), _modifTopicByOps(false), _inviteOnly(false), _maxClients(0) {
+    : _name(name), _password(password), _modifTopicByOps(false),
+      _inviteOnly(false), _maxClients(0) {
     checkNameSyntaxChan(name);
     this->_clientsChan[newClient->getNickname()] = newClient;
     this->_operatorList[newClient->getNickname()] = newClient;
@@ -32,33 +34,21 @@ void Channel::checkNameSyntaxChan(std::string& name) {
 
 std::string const& Channel::getName() const { return (this->_name); }
 
-std::string Channel::getPassword() const {
-    return (this->_password);
-}
+std::string Channel::getPassword() const { return (this->_password); }
 
 void Channel::setPassword(std::string newPassword) {
     this->_password = newPassword;
 }
 
-void Channel::clearPassword() {
-    this->_password = "";
-}
+void Channel::clearPassword() { this->_password = ""; }
 
-std::string Channel::getTopic() const {
-    return (this->_topic);
-}
+std::string Channel::getTopic() const { return (this->_topic); }
 
-void Channel::setTopic(std::string newTopic) {
-    this->_topic = newTopic;
-}
+void Channel::setTopic(std::string newTopic) { this->_topic = newTopic; }
 
-bool Channel::getModifTopicByOps() const {
-    return (this->_modifTopicByOps);
-}
+bool Channel::getModifTopicByOps() const { return (this->_modifTopicByOps); }
 
-void Channel::setModifTopicByOps(bool lock) {
-    this->_modifTopicByOps = lock;
-}
+void Channel::setModifTopicByOps(bool lock) { this->_modifTopicByOps = lock; }
 
 std::map<std::string, Client*>& Channel::getClientsChan() {
     return (this->_clientsChan);
