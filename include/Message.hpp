@@ -5,12 +5,15 @@
 
 class Message {
   private:
-    static int parse(std::string& data, std::string& prefix,
-                     std::string& command, std::vector<std::string>& params);
     static bool validate(const std::string& prefix, const std::string& command,
                          const std::vector<std::string>& params);
 
   protected:
+    // PARSE TEMPO EN PROTECTED POUR AVOIR ACCES AVEC METHODE TMP DE REPARSE
+    // DANS Command::Create
+    static int parse(std::string& data, std::string& prefix,
+                     std::string& command, std::vector<std::string>& params);
+    // ----
     static const unsigned int max_params = 15;
     static const unsigned int err_trailing = 1001;
     static const unsigned int err_newline = 1002;
@@ -32,31 +35,31 @@ class Message {
     class MissingCommandException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Missing command in message.");
+            return ("Error: Missing command in message.");
         }
     };
     class WrongTrailingException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("End of the message badly formatted.");
+            return ("Error: End of the message badly formatted.");
         }
     };
     class InvalidFormatException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Message format is invalid.");
+            return ("Error: Message format is invalid.");
         }
     };
     class NewlineException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Message contains a newline.");
+            return ("Error: Message contains a newline.");
         }
     };
     class UnknownErrorException : public std::exception {
       public:
         virtual const char* what() const throw() {
-            return ("Unknown parsing error.");
+            return ("Error: Unknown parsing error.");
         }
     };
 };
