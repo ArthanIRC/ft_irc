@@ -1,4 +1,5 @@
 #include "Command.hpp"
+#include "InviteCommand.hpp"
 #include "PassCommand.hpp"
 #include <exception>
 #include <iostream>
@@ -15,21 +16,15 @@ Command* Command::create(std::string& data) {
     std::vector<std::string> params;
     data += "\r\n"; // ULTRA TMP MAIS POUR FAIRE MARCHER 2eme PARSING
     Message::parse(data, prefix, command, params);
-    // int parse_result = Message::parse(data, prefix, command, params);
-    // if (parse_result != 0) {
-    //     std::cerr << "Parsing error: " << parse_result << std::endl;
-    //     return NULL;
-    // }
     try {
         //     if (command == "CAP") {
         //         return new CapCommand(prefix, params);
         //     }
         if (command == "PASS") {
             return new PassCommand(prefix, params);
+        } else if (command == "INVITE") {
+            return new InviteCommand(prefix, params);
         }
-        // else if (command == "INVITE") {
-        //     return new InviteCommand(prefix, params);
-        // }
         // else if (command == "JOIN") {
         //     return new JoinCommand(prefix, params);
         // }
