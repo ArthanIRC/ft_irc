@@ -15,8 +15,8 @@ InviteCommand::InviteCommand(std::string prefix,
     if (channel[0] != '#' && channel[0] != '&') {
         throw std::invalid_argument("Channel name must start with '#' or '&'.");
     }
-    this->nickname = nickname;
-    this->channel = channel;
+    this->_nickname = nickname;
+    this->_channel = channel;
     // rajouter un check pour voir si le channel/user exist
 }
 
