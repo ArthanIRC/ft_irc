@@ -1,6 +1,8 @@
 #include "Command.hpp"
 #include "InviteCommand.hpp"
+#include "JoinCommand.hpp"
 #include "PassCommand.hpp"
+
 #include <exception>
 #include <iostream>
 #include <string>
@@ -24,10 +26,9 @@ Command* Command::create(std::string& data) {
             return new PassCommand(prefix, params);
         } else if (command == "INVITE") {
             return new InviteCommand(prefix, params);
+        } else if (command == "JOIN") {
+            return new JoinCommand(prefix, params);
         }
-        // else if (command == "JOIN") {
-        //     return new JoinCommand(prefix, params);
-        // }
         // else if (command == "KICK") {
         //     return new KickCommand(prefix, params);
         // }
