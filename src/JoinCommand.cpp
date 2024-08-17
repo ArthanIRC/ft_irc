@@ -1,4 +1,5 @@
 #include "JoinCommand.hpp"
+#include <sstream>
 
 JoinCommand::JoinCommand(std::string prefix, std::vector<std::string> params) {
     if (!prefix.empty()) {
@@ -11,7 +12,6 @@ JoinCommand::JoinCommand(std::string prefix, std::vector<std::string> params) {
     std::string channels = params[0];
     std::string keys = params.size() == 2 ? params[1] : "";
 
-    // Validate channel names
     std::istringstream channelStream(channels);
     std::string channel;
     while (getline(channelStream, channel, ',')) {
@@ -20,7 +20,6 @@ JoinCommand::JoinCommand(std::string prefix, std::vector<std::string> params) {
         }
     }
 
-    // Validate keys (optional)
     if (!keys.empty()) {
         std::istringstream keyStream(keys);
         std::string key;
