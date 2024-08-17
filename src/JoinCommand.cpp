@@ -31,4 +31,6 @@ JoinCommand::JoinCommand(std::string prefix, std::vector<std::string> params) {
     }
 }
 
+JoinCommand::~JoinCommand() {}
+
 void JoinCommand::run() { return; }
