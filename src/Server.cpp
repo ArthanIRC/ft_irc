@@ -28,7 +28,7 @@ void Server::init(int ac, char** data) {
 
     this->_port = port;
     this->_password = password;
-    this->_socket.init(this->_port.c_str());
+    this->_socket.init(_port.c_str());
 }
 
 Server& Server::getInstance() {
@@ -72,4 +72,4 @@ std::string Server::parsePassword(std::string pass) {
     return pass;
 }
 
-void Server::run() { this->_socket.listen(); }
+void Server::run() { _socket.listen(); }

@@ -10,7 +10,7 @@
 
 ServerSocket::ServerSocket() : Socket() {}
 
-ServerSocket::~ServerSocket() { freeaddrinfo(this->_ai); }
+ServerSocket::~ServerSocket() { freeaddrinfo(_ai); }
 
 void ServerSocket::init(const char* port) {
     struct addrinfo hints, *ai;
@@ -25,7 +25,7 @@ void ServerSocket::init(const char* port) {
         throw ServerSocket::AddrInfoException();
 
     this->_fd = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-    if (this->_fd < 0) {
+    if (_fd < 0) {
         freeaddrinfo(ai);
         throw ServerSocket::SocketCreationException();
     }
@@ -60,17 +60,17 @@ const char* ServerSocket::ClientNonBlockException::what() const throw() {
 void ServerSocket::listen() {
     int yes = 1;
 
-    setsockopt(this->_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+    setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
-    if (bind(this->_fd, this->_ai->ai_addr, this->_ai->ai_addrlen) < 0)
+    if (bind(_fd, _ai->ai_addr, _ai->ai_addrlen) < 0)
         throw ServerSocket::BindFailedException();
 
-    if (::listen(this->_fd, 10) == -1)
+    if (::listen(_fd, 10) == -1)
         throw ServerSocket::ListenFailedException();
 }
 
 void ServerSocket::onPoll() {
-    int clientFd = accept(this->_fd, NULL, NULL);
+    int clientFd = accept(_fd, NULL, NULL);
     if (clientFd < 0)
         throw ServerSocket::AcceptFailedException();
 

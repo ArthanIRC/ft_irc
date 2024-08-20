@@ -3,6 +3,9 @@
 
 Socket::Socket() {}
 
-Socket::~Socket() { close(this->_fd); }
+Socket::~Socket() {
+    if (_fd >= 0)
+        close(_fd);
+}
 
 int Socket::getFd() const { return this->_fd; }
