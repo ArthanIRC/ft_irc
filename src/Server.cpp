@@ -4,15 +4,14 @@
 
 static const std::string defaultPort = "6667";
 
-Server::Server(std::string port, std::string password)
-    : _port(port), _password(password), _socket(ServerSocket(port.c_str())) {}
+Server::Server() {}
 
 Server::~Server() {
     _clients.clear();
     _channels.clear();
 }
 
-Server Server::create(int ac, char** data) {
+void Server::init(int ac, char** data) {
     std::string port;
     std::string password;
 
@@ -27,7 +26,14 @@ Server Server::create(int ac, char** data) {
         password = parsePassword(data[2]);
     }
 
-    return Server(port, password);
+    this->_port = port;
+    this->_password = password;
+    this->_socket.init(this->_port.c_str());
+}
+
+Server& Server::getInstance() {
+    static Server instance;
+    return instance;
 }
 
 const char* Server::InvalidNumberOfParametersException::what() const throw() {

@@ -8,7 +8,11 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-ServerSocket::ServerSocket(const char* port) : Socket() {
+ServerSocket::ServerSocket() : Socket() {}
+
+ServerSocket::~ServerSocket() { freeaddrinfo(this->_ai); }
+
+void ServerSocket::init(const char* port) {
     struct addrinfo hints, *ai;
     int rv;
 
@@ -28,8 +32,6 @@ ServerSocket::ServerSocket(const char* port) : Socket() {
 
     this->_ai = ai;
 }
-
-ServerSocket::~ServerSocket() { freeaddrinfo(this->_ai); }
 
 const char* ServerSocket::AddrInfoException::what() const throw() {
     return "Error: Obtention of the local ip failed";

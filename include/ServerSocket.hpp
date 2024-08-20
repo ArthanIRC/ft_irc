@@ -10,7 +10,7 @@ class ServerSocket : public Socket {
     void onPoll();
 
   public:
-    ServerSocket(const char* port);
+    ServerSocket();
     ~ServerSocket();
 
     class AddrInfoException : public std::exception {
@@ -37,5 +37,6 @@ class ServerSocket : public Socket {
         virtual const char* what() const throw();
     };
 
+    void init(const char* port);
     void listen();
 };

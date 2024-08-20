@@ -2,9 +2,12 @@
 // #include <cstdlib>
 // #include <iostream>
 
-// int main(void) {
-//     std::string str = "INV user #channel\r\n";
-
-//     Command::create(str);
-//     return (EXIT_SUCCESS);
-// }
+int main(int ac, char** av) {
+    try {
+        Server::getInstance().init(ac, av);
+        Server::getInstance().run();
+    } catch (std::exception& e) {
+        std::cerr << e.what() << "\n";
+        return EXIT_FAILURE;
+    }
+}

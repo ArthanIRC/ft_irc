@@ -20,16 +20,18 @@ class Server {
     std::map<std::string, Client*> _clients;
     std::map<std::string, Channel*> _channels;
 
+    Server();
+
     static std::string parsePort(const char* strp);
     static std::string parsePassword(std::string pass);
 
   public:
-    Server(std::string port, std::string password);
     ~Server();
 
-    static Server create(int ac, char** data);
-
+    void init(int ac, char** data);
     void run();
+
+    static Server& getInstance();
 
     class InvalidNumberOfParametersException : public std::exception {
         virtual const char* what() const throw();
