@@ -14,6 +14,7 @@
 
 class Server {
   private:
+    bool _running;
     std::string _port;
     std::string _password;
     ServerSocket _socket;
@@ -30,6 +31,7 @@ class Server {
 
     void init(int ac, char** data);
     void run();
+    bool isRunning() const;
 
     static Server& getInstance();
 

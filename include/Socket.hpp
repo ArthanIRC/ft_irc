@@ -7,8 +7,7 @@ class Socket {
     Socket();
     virtual ~Socket();
 
-    virtual void onPoll() = 0;
-
   public:
     int getFd() const;
+    virtual void onPoll() = 0;
 };

@@ -7,8 +7,6 @@ class ServerSocket : public Socket {
   private:
     struct addrinfo* _ai;
 
-    void onPoll();
-
   public:
     ServerSocket();
     ~ServerSocket();
@@ -39,4 +37,5 @@ class ServerSocket : public Socket {
 
     void init(const char* port);
     void listen();
+    void onPoll();
 };
