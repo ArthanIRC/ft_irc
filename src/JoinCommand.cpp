@@ -1,5 +1,4 @@
 #include "JoinCommand.hpp"
-#include <sstream>
 
 JoinCommand::JoinCommand(std::string prefix, std::vector<std::string> params) {
     if (!prefix.empty()) {
