@@ -69,10 +69,10 @@ void ServerSocket::listen() {
 
 void ServerSocket::onPoll() {
     int clientFd = accept(this->_fd, NULL, NULL);
-    if (clientFd == -1)
+    if (clientFd < 0)
         throw ServerSocket::AcceptFailedException();
 
-    if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1)
+    if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
         throw ServerSocket::ClientNonBlockException();
 
     // TODO: Client creation and assignation to the list of
