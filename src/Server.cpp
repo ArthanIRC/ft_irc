@@ -1,11 +1,11 @@
 #include "Server.hpp"
-#include "SocketServer.hpp"
+#include "ServerSocket.hpp"
 #include <cstdlib>
 
 static const std::string defaultPort = "6667";
 
 Server::Server(std::string port, std::string password)
-    : _port(port), _password(password), _socket(SocketServer(port.c_str())) {}
+    : _port(port), _password(password), _socket(ServerSocket(port.c_str())) {}
 
 Server::~Server() {
     _clients.clear();

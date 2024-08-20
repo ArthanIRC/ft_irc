@@ -3,13 +3,15 @@
 #include "Socket.hpp"
 #include <exception>
 
-class SocketServer : public Socket {
+class ServerSocket : public Socket {
   private:
     struct addrinfo* _ai;
 
+    void onPoll();
+
   public:
-    SocketServer(const char* port);
-    ~SocketServer();
+    ServerSocket(const char* port);
+    ~ServerSocket();
 
     class AddrInfoException : public std::exception {
         virtual const char* what() const throw();
@@ -24,6 +26,14 @@ class SocketServer : public Socket {
     };
 
     class ListenFailedException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
+    class AcceptFailedException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
+    class ClientNonBlockException : public std::exception {
         virtual const char* what() const throw();
     };
 

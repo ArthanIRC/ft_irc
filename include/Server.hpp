@@ -10,13 +10,13 @@
 
 #include "Channel.hpp"
 #include "Client.hpp"
-#include "SocketServer.hpp"
+#include "ServerSocket.hpp"
 
 class Server {
   private:
     std::string _port;
     std::string _password;
-    SocketServer _socket;
+    ServerSocket _socket;
     std::map<std::string, Client*> _clients;
     std::map<std::string, Channel*> _channels;
 

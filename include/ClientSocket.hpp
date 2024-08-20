@@ -3,9 +3,9 @@
 #include "Client.hpp"
 #include "Socket.hpp"
 
-class SocketClient : public Socket {
+class ClientSocket : public Socket {
   private:
   public:
-    SocketClient();
-    ~SocketClient();
+    ClientSocket();
+    ~ClientSocket();
 };

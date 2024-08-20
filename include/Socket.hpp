@@ -4,9 +4,11 @@ class Socket {
   protected:
     int _fd;
 
-  public:
     Socket();
-    virtual ~Socket() = 0;
+    virtual ~Socket();
 
-    int getFd();
+    virtual void onPoll() = 0;
+
+  public:
+    int getFd() const;
 };
