@@ -1,5 +1,3 @@
-#include "ServerSocket.hpp"
-#include <Client.hpp>
 #include <cstddef>
 #include <cstring>
 #include <fcntl.h>
@@ -8,7 +6,11 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-ServerSocket::ServerSocket() : Socket() {}
+#include "Server.hpp"
+#include "ServerSocket.hpp"
+#include <Client.hpp>
+
+ServerSocket::ServerSocket() : Socket(), _registered(false) {}
 
 ServerSocket::~ServerSocket() { freeaddrinfo(_ai); }
 
@@ -33,6 +35,38 @@ void ServerSocket::init(const char* port) {
     this->_ai = ai;
 }
 
+void ServerSocket::listen() {
+    int yes = 1;
+
+    setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+
+    if (bind(_fd, _ai->ai_addr, _ai->ai_addrlen) < 0)
+        throw ServerSocket::BindFailedException();
+
+    if (::listen(_fd, 10) == -1)
+        throw ServerSocket::ListenFailedException();
+
+    if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
+        throw ServerSocket::ClientNonBlockException();
+}
+
+void ServerSocket::onPoll() {
+    int clientFd = accept(_fd, NULL, NULL);
+    if (clientFd < 0)
+        throw ServerSocket::AcceptFailedException();
+
+    if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
+        throw ServerSocket::ClientNonBlockException();
+
+    Client* c = new Client(clientFd);
+    Server::getInstance().addClient(c);
+    std::cout << "Client added\n";
+}
+
+bool ServerSocket::isRegistered() { return this->_registered; }
+
+void ServerSocket::setRegistered() { _registered = true; }
+
 const char* ServerSocket::AddrInfoException::what() const throw() {
     return "Error: Obtention of the local ip failed";
 }
@@ -55,28 +89,4 @@ const char* ServerSocket::AcceptFailedException::what() const throw() {
 
 const char* ServerSocket::ClientNonBlockException::what() const throw() {
     return "Error: Failed to set the client socket to nonblocking";
-}
-
-void ServerSocket::listen() {
-    int yes = 1;
-
-    setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-
-    if (bind(_fd, _ai->ai_addr, _ai->ai_addrlen) < 0)
-        throw ServerSocket::BindFailedException();
-
-    if (::listen(_fd, 10) == -1)
-        throw ServerSocket::ListenFailedException();
-}
-
-void ServerSocket::onPoll() {
-    int clientFd = accept(_fd, NULL, NULL);
-    if (clientFd < 0)
-        throw ServerSocket::AcceptFailedException();
-
-    if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
-        throw ServerSocket::ClientNonBlockException();
-
-    // TODO: Client creation and assignation to the list of
-    // clients for the Server
 }

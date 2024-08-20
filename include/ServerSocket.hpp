@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Socket.hpp"
 #include <exception>
+
+#include "Socket.hpp"
 
 class ServerSocket : public Socket {
   private:
     struct addrinfo* _ai;
+    bool _registered;
 
   public:
     ServerSocket();
@@ -38,4 +40,6 @@ class ServerSocket : public Socket {
     void init(const char* port);
     void listen();
     void onPoll();
+    bool isRegistered();
+    void setRegistered();
 };

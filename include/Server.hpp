@@ -7,9 +7,11 @@
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <vector>
 
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Epoll.hpp"
 #include "ServerSocket.hpp"
 
 class Server {
@@ -18,7 +20,8 @@ class Server {
     std::string _port;
     std::string _password;
     ServerSocket _socket;
-    std::map<std::string, Client*> _clients;
+    Epoll _epoll;
+    std::vector<Client*> _clients;
     std::map<std::string, Channel*> _channels;
 
     Server();
@@ -31,7 +34,10 @@ class Server {
 
     void init(int ac, char** data);
     void run();
+    void stop();
+    void addClient(Client* c);
     bool isRunning() const;
+    Epoll& getEpoll();
 
     static Server& getInstance();
 

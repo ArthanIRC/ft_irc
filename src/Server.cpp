@@ -1,14 +1,25 @@
+#include <cstdlib>
+
+#include "Channel.hpp"
 #include "Server.hpp"
 #include "ServerSocket.hpp"
-#include <cstdlib>
 
 static const std::string defaultPort = "6667";
 
 Server::Server() {}
 
 Server::~Server() {
-    _clients.clear();
-    _channels.clear();
+    for (std::vector<Client*>::iterator it = _clients.begin();
+         it != _clients.end(); it++) {
+        _epoll.unsubscribe((*it)->getSocket().getFd());
+        delete *it;
+    }
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin();
+         it != _channels.end(); it++) {
+        delete it->second;
+    }
+    if (_socket.isRegistered())
+        _epoll.unsubscribe(_socket.getFd());
 }
 
 void Server::init(int ac, char** data) {
@@ -37,22 +48,6 @@ Server& Server::getInstance() {
     return instance;
 }
 
-const char* Server::InvalidNumberOfParametersException::what() const throw() {
-    return "Error: Usage: ./ircserv <port> <password>";
-}
-
-const char* Server::InvalidPortException::what() const throw() {
-    return "Error: Port has to be between 1 and 65535";
-}
-
-const char* Server::EmptyPasswordException::what() const throw() {
-    return "Error: Password is empty";
-}
-
-const char* Server::NonAlnumPasswordException::what() const throw() {
-    return "Error: Password contains non-alphanumeric characters";
-}
-
 std::string Server::parsePort(const char* strp) {
     int port = strtol(strp, NULL, 10);
 
@@ -73,6 +68,43 @@ std::string Server::parsePassword(std::string pass) {
     return pass;
 }
 
-void Server::run() { _socket.listen(); }
+void Server::run() {
+    _socket.listen();
+    _epoll.subscribe(_socket.getFd(), _socket);
+    _socket.setRegistered();
+
+    std::cout << "Listening on " << _port << "\n";
+    while (_running) {
+        _epoll.poll();
+    }
+}
+
+void Server::stop() {
+    _running = false;
+    std::cout << "\nShutting down...\n";
+}
+
+void Server::addClient(Client* c) {
+    _clients.push_back(c);
+    _epoll.subscribe(c->getSocket().getFd(), c->getSocket());
+}
+
+Epoll& Server::getEpoll() { return this->_epoll; }
 
 bool Server::isRunning() const { return this->_running; }
+
+const char* Server::InvalidNumberOfParametersException::what() const throw() {
+    return "Error: Usage: ./ircserv <port> <password>";
+}
+
+const char* Server::InvalidPortException::what() const throw() {
+    return "Error: Port has to be between 1 and 65535";
+}
+
+const char* Server::EmptyPasswordException::what() const throw() {
+    return "Error: Password is empty";
+}
+
+const char* Server::NonAlnumPasswordException::what() const throw() {
+    return "Error: Password contains non-alphanumeric characters";
+}

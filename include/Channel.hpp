@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Client.hpp"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
+
+#include "Client.hpp"
 
 class Channel {
   private:

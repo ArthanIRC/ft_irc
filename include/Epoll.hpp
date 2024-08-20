@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Socket.hpp"
 #include <exception>
+
+#include "Socket.hpp"
 
 class Epoll {
   private:

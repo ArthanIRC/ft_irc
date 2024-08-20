@@ -1,24 +1,26 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
 #include <string>
-#include <vector>
+
+#include "ClientSocket.hpp"
+
+enum State { UNKNOWN, REGISTERED };
 
 class Client {
   private:
-    Client();
     std::string _realname;
     std::string _nickname;
     std::string _username;
-    int _fd;
+    ClientSocket _socket;
+    State _state;
 
   public:
-    Client(std::string name);
+    Client(int fd);
     ~Client();
+
     std::string const& getName() const;
     std::string const& getNickname() const;
-    int const& getFd() const;
-    void setFd(int& fd);
+    ClientSocket& getSocket();
+    State getState() const;
     void checkNameSyntaxCli(std::string nickname);
 };

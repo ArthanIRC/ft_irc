@@ -1,9 +1,10 @@
-#include "Epoll.hpp"
-#include "Server.hpp"
-#include "Socket.hpp"
 #include <cstring>
 #include <sys/epoll.h>
 #include <unistd.h>
+
+#include "Epoll.hpp"
+#include "Server.hpp"
+#include "Socket.hpp"
 
 Epoll::Epoll() {
     this->_epfd = epoll_create1(0);
@@ -14,18 +15,6 @@ Epoll::Epoll() {
 Epoll::~Epoll() {
     if (_epfd >= 0)
         close(_epfd);
-}
-
-const char* Epoll::EpollSubscribeException::what() const throw() {
-    return "Error: Creation of subscriber failed";
-}
-
-const char* Epoll::EpollUnsubscribeException::what() const throw() {
-    return "Error: Deletion of subscriber failed";
-}
-
-const char* Epoll::EpollWaitException::what() const throw() {
-    return "Error: Epoll wait failed";
 }
 
 void Epoll::subscribe(int fd, Socket& sock) {
@@ -57,4 +46,16 @@ void Epoll::poll() {
     for (int i = 0; i < fds; i++) {
         ((Socket*)events[i].data.ptr)->onPoll();
     }
+}
+
+const char* Epoll::EpollSubscribeException::what() const throw() {
+    return "Error: Creation of subscriber failed";
+}
+
+const char* Epoll::EpollUnsubscribeException::what() const throw() {
+    return "Error: Deletion of subscriber failed";
+}
+
+const char* Epoll::EpollWaitException::what() const throw() {
+    return "Error: Epoll wait failed";
 }
