@@ -2,6 +2,7 @@
 
 #include <exception>
 
+#include "Exception.hpp"
 #include "Socket.hpp"
 
 class ServerSocket : public Socket {
@@ -29,11 +30,17 @@ class ServerSocket : public Socket {
         virtual const char* what() const throw();
     };
 
-    class AcceptFailedException : public std::exception {
+    class ServerNonBlockException : public std::exception {
         virtual const char* what() const throw();
     };
 
-    class ClientNonBlockException : public std::exception {
+    class AcceptFailedException : public ClientException {
+      public:
+        virtual const char* what() const throw();
+    };
+
+    class ClientNonBlockException : public ClientException {
+      public:
         virtual const char* what() const throw();
     };
 

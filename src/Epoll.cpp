@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "Epoll.hpp"
+#include "Exception.hpp"
 #include "Server.hpp"
 #include "Socket.hpp"
 
@@ -44,7 +45,11 @@ void Epoll::poll() {
     }
 
     for (int i = 0; i < fds; i++) {
-        ((Socket*)events[i].data.ptr)->onPoll(events[i].events);
+        try {
+            ((Socket*)events[i].data.ptr)->onPoll(events[i].events);
+        } catch (ClientException& e) {
+            std::cerr << e.what() << "\n";
+        }
     }
 }
 

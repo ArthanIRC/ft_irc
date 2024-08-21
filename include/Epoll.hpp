@@ -23,6 +23,7 @@ class Epoll {
     };
 
     class EpollUnsubscribeException : public std::exception {
+      public:
         virtual const char* what() const throw();
     };
 

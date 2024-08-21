@@ -48,7 +48,7 @@ void ServerSocket::listen() {
         throw ServerSocket::ListenFailedException();
 
     if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
-        throw ServerSocket::ClientNonBlockException();
+        throw ServerSocket::ServerNonBlockException();
 }
 
 void ServerSocket::onPoll(uint32_t events) {
@@ -88,10 +88,14 @@ const char* ServerSocket::ListenFailedException::what() const throw() {
     return "Error: Failed to listen to the socket";
 }
 
+const char* ServerSocket::ServerNonBlockException::what() const throw() {
+    return "Error: Failed to set the server socket to nonblocking";
+};
+
 const char* ServerSocket::AcceptFailedException::what() const throw() {
-    return "Error: Failed to accept a client socket";
+    return "Warning: Failed to accept a client socket";
 }
 
 const char* ServerSocket::ClientNonBlockException::what() const throw() {
-    return "Error: Failed to set the client socket to nonblocking";
+    return "Warning: Failed to set the client socket to nonblocking";
 }
