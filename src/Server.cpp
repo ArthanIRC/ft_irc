@@ -11,7 +11,11 @@ Server::Server() {}
 Server::~Server() {
     for (std::vector<Client*>::iterator it = _clients.begin();
          it != _clients.end(); it++) {
-        _epoll.unsubscribe((*it)->getSocket().getFd());
+        try {
+            _epoll.unsubscribe((*it)->getSocket().getFd());
+        } catch (Epoll::EpollUnsubscribeException& e) {
+            std::cerr << e.what() << "\n";
+        }
         delete *it;
     }
     for (std::map<std::string, Channel*>::iterator it = _channels.begin();
@@ -19,7 +23,11 @@ Server::~Server() {
         delete it->second;
     }
     if (_socket.isRegistered())
-        _epoll.unsubscribe(_socket.getFd());
+        try {
+            _epoll.unsubscribe(_socket.getFd());
+        } catch (Epoll::EpollUnsubscribeException& e) {
+            std::cerr << e.what() << "\n";
+        }
 }
 
 void Server::init(int ac, char** data) {

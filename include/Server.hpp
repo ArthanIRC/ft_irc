@@ -25,6 +25,8 @@ class Server {
     std::map<std::string, Channel*> _channels;
 
     Server();
+    Server(Server const&);
+    void operator=(Server const&);
 
     static std::string parsePort(const char* strp);
     static std::string parsePassword(std::string pass);
