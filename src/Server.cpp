@@ -89,6 +89,27 @@ void Server::addClient(Client* c) {
     _epoll.subscribe(c->getSocket().getFd(), c->getSocket());
 }
 
+Client* Server::findClient(int fd) {
+    for (std::vector<Client*>::iterator it = _clients.begin();
+         it != _clients.end(); it++) {
+        if ((*it)->getSocket().getFd() == fd)
+            return *it;
+    }
+    throw Server::ClientNotFoundException();
+}
+
+void Server::removeClient(Client* client) {
+    std::vector<Client*>::iterator it =
+        std::find(_clients.begin(), _clients.end(), client);
+    if (it == _clients.end())
+        throw Server::ClientNotFoundException();
+    _epoll.unsubscribe(client->getSocket().getFd());
+    delete client;
+    _clients.erase(it);
+}
+
+void Server::removeClient(int fd) { removeClient(findClient(fd)); }
+
 Epoll& Server::getEpoll() { return this->_epoll; }
 
 bool Server::isRunning() const { return this->_running; }
@@ -107,4 +128,8 @@ const char* Server::EmptyPasswordException::what() const throw() {
 
 const char* Server::NonAlnumPasswordException::what() const throw() {
     return "Error: Password contains non-alphanumeric characters";
+}
+
+const char* Server::ClientNotFoundException::what() const throw() {
+    return "Warning: Client was not found in the clients list";
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 class Socket {
   protected:
     int _fd;
@@ -9,5 +11,5 @@ class Socket {
 
   public:
     int getFd() const;
-    virtual void onPoll() = 0;
+    virtual void onPoll(uint32_t events) = 0;
 };

@@ -36,6 +36,9 @@ class Server {
     void run();
     void stop();
     void addClient(Client* c);
+    Client* findClient(int fd);
+    void removeClient(Client* c);
+    void removeClient(int fd);
     bool isRunning() const;
     Epoll& getEpoll();
 
@@ -54,6 +57,11 @@ class Server {
     };
 
     class NonAlnumPasswordException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
+    class ClientNotFoundException : public std::exception {
+      public:
         virtual const char* what() const throw();
     };
 };

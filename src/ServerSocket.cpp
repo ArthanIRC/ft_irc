@@ -1,3 +1,4 @@
+#include <cerrno>
 #include <cstddef>
 #include <cstring>
 #include <fcntl.h>
@@ -50,10 +51,14 @@ void ServerSocket::listen() {
         throw ServerSocket::ClientNonBlockException();
 }
 
-void ServerSocket::onPoll() {
+void ServerSocket::onPoll(uint32_t events) {
+    (void)events;
     int clientFd = accept(_fd, NULL, NULL);
-    if (clientFd < 0)
+    if (clientFd < 0) {
+        if ((errno == EAGAIN) || (errno == EWOULDBLOCK))
+            return;
         throw ServerSocket::AcceptFailedException();
+    }
 
     if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
         throw ServerSocket::ClientNonBlockException();

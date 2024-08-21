@@ -21,7 +21,7 @@ void Epoll::subscribe(int fd, Socket& sock) {
     struct epoll_event event;
     memset(&event, 0, sizeof(struct epoll_event));
 
-    event.events = EPOLLIN;
+    event.events = EPOLLIN | EPOLLRDHUP;
     event.data.ptr = &sock;
 
     if (epoll_ctl(_epfd, EPOLL_CTL_ADD, fd, &event) < 0)
@@ -44,7 +44,7 @@ void Epoll::poll() {
     }
 
     for (int i = 0; i < fds; i++) {
-        ((Socket*)events[i].data.ptr)->onPoll();
+        ((Socket*)events[i].data.ptr)->onPoll(events[i].events);
     }
 }
 

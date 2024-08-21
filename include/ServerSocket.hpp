@@ -39,7 +39,7 @@ class ServerSocket : public Socket {
 
     void init(const char* port);
     void listen();
-    void onPoll();
+    void onPoll(uint32_t events);
     bool isRegistered();
     void setRegistered();
 };
