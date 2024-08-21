@@ -5,7 +5,7 @@
 
 Message::~Message() {}
 
-void Message::create(std::string& data) {
+bool Message::verify(std::string& data) {
     std::string prefix, command;
     std::vector<std::string> params;
     int res = Message::parse(data, prefix, command, params);
@@ -29,6 +29,8 @@ void Message::create(std::string& data) {
     if (Message::validate(prefix, command, params) == false) {
         throw(Message::InvalidFormatException());
     }
+
+    return (true);
 }
 
 int Message::parse(std::string& data, std::string& prefix, std::string& command,
