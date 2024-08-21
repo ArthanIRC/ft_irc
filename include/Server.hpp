@@ -7,29 +7,44 @@
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <vector>
 
 #include "Channel.hpp"
 #include "Client.hpp"
-#include "SocketServer.hpp"
+#include "Epoll.hpp"
+#include "ServerSocket.hpp"
 
 class Server {
   private:
+    bool _running;
     std::string _port;
     std::string _password;
-    SocketServer _socket;
-    std::map<std::string, Client*> _clients;
+    ServerSocket _socket;
+    Epoll _epoll;
+    std::vector<Client*> _clients;
     std::map<std::string, Channel*> _channels;
+
+    Server();
+    Server(Server const&);
+    void operator=(Server const&);
 
     static std::string parsePort(const char* strp);
     static std::string parsePassword(std::string pass);
 
   public:
-    Server(std::string port, std::string password);
     ~Server();
 
-    static Server create(int ac, char** data);
-
+    void init(int ac, char** data);
     void run();
+    void stop();
+    void addClient(Client* c);
+    Client* findClient(int fd);
+    void removeClient(Client* c);
+    void removeClient(int fd);
+    bool isRunning() const;
+    Epoll& getEpoll();
+
+    static Server& getInstance();
 
     class InvalidNumberOfParametersException : public std::exception {
         virtual const char* what() const throw();
@@ -44,6 +59,11 @@ class Server {
     };
 
     class NonAlnumPasswordException : public std::exception {
+        virtual const char* what() const throw();
+    };
+
+    class ClientNotFoundException : public std::exception {
+      public:
         virtual const char* what() const throw();
     };
 };

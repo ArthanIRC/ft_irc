@@ -1,12 +1,15 @@
 #pragma once
 
+#include <stdint.h>
+
 class Socket {
   protected:
     int _fd;
 
-  public:
     Socket();
-    virtual ~Socket() = 0;
+    virtual ~Socket();
 
-    int getFd();
+  public:
+    int getFd() const;
+    virtual void onPoll(uint32_t events) = 0;
 };

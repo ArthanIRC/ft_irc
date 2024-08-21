@@ -1,18 +1,36 @@
-#include "Server.hpp"
-#include "SocketServer.hpp"
 #include <cstdlib>
+
+#include "Channel.hpp"
+#include "Server.hpp"
+#include "ServerSocket.hpp"
 
 static const std::string defaultPort = "6667";
 
-Server::Server(std::string port, std::string password)
-    : _port(port), _password(password), _socket(SocketServer(port.c_str())) {}
+Server::Server() {}
 
 Server::~Server() {
-    _clients.clear();
-    _channels.clear();
+    for (std::vector<Client*>::iterator it = _clients.begin();
+         it != _clients.end(); it++) {
+        try {
+            _epoll.unsubscribe((*it)->getSocket().getFd());
+        } catch (Epoll::EpollUnsubscribeException& e) {
+            std::cerr << e.what() << "\n";
+        }
+        delete *it;
+    }
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin();
+         it != _channels.end(); it++) {
+        delete it->second;
+    }
+    if (_socket.isRegistered())
+        try {
+            _epoll.unsubscribe(_socket.getFd());
+        } catch (Epoll::EpollUnsubscribeException& e) {
+            std::cerr << e.what() << "\n";
+        }
 }
 
-Server Server::create(int ac, char** data) {
+void Server::init(int ac, char** data) {
     std::string port;
     std::string password;
 
@@ -27,23 +45,15 @@ Server Server::create(int ac, char** data) {
         password = parsePassword(data[2]);
     }
 
-    return Server(port, password);
+    this->_port = port;
+    this->_password = password;
+    this->_socket.init(_port.c_str());
+    this->_running = true;
 }
 
-const char* Server::InvalidNumberOfParametersException::what() const throw() {
-    return "Error: Usage: ./ircserv <port> <password>";
-}
-
-const char* Server::InvalidPortException::what() const throw() {
-    return "Error: Port has to be between 1 and 65535";
-}
-
-const char* Server::EmptyPasswordException::what() const throw() {
-    return "Error: Password is empty";
-}
-
-const char* Server::NonAlnumPasswordException::what() const throw() {
-    return "Error: Password contains non-alphanumeric characters";
+Server& Server::getInstance() {
+    static Server instance;
+    return instance;
 }
 
 std::string Server::parsePort(const char* strp) {
@@ -66,4 +76,68 @@ std::string Server::parsePassword(std::string pass) {
     return pass;
 }
 
-void Server::run() { this->_socket.listen(); }
+void Server::run() {
+    _socket.listen();
+    _epoll.subscribe(_socket.getFd(), _socket);
+    _socket.setRegistered();
+
+    std::cout << "Listening on " << _port << "\n";
+    while (_running) {
+        _epoll.poll();
+    }
+}
+
+void Server::stop() {
+    _running = false;
+    std::cout << "\nShutting down...\n";
+}
+
+void Server::addClient(Client* c) {
+    _clients.push_back(c);
+    _epoll.subscribe(c->getSocket().getFd(), c->getSocket());
+}
+
+Client* Server::findClient(int fd) {
+    for (std::vector<Client*>::iterator it = _clients.begin();
+         it != _clients.end(); it++) {
+        if ((*it)->getSocket().getFd() == fd)
+            return *it;
+    }
+    throw Server::ClientNotFoundException();
+}
+
+void Server::removeClient(Client* client) {
+    std::vector<Client*>::iterator it =
+        std::find(_clients.begin(), _clients.end(), client);
+    if (it == _clients.end())
+        throw Server::ClientNotFoundException();
+    _epoll.unsubscribe(client->getSocket().getFd());
+    delete client;
+    _clients.erase(it);
+}
+
+void Server::removeClient(int fd) { removeClient(findClient(fd)); }
+
+Epoll& Server::getEpoll() { return this->_epoll; }
+
+bool Server::isRunning() const { return this->_running; }
+
+const char* Server::InvalidNumberOfParametersException::what() const throw() {
+    return "Error: Usage: ./ircserv <port> <password>";
+}
+
+const char* Server::InvalidPortException::what() const throw() {
+    return "Error: Port has to be between 1 and 65535";
+}
+
+const char* Server::EmptyPasswordException::what() const throw() {
+    return "Error: Password is empty";
+}
+
+const char* Server::NonAlnumPasswordException::what() const throw() {
+    return "Error: Password contains non-alphanumeric characters";
+}
+
+const char* Server::ClientNotFoundException::what() const throw() {
+    return "Warning: Client was not found in the clients list";
+}

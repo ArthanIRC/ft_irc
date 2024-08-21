@@ -1,38 +1,38 @@
 #include "Client.hpp"
+#include "ClientSocket.hpp"
 
-Client::Client(std::string nickname)
-    : _realname(NULL), _nickname(nickname), _username(NULL), _fd(-1) {
-    checkNameSyntaxCli(nickname);
-}
+Client::Client(int fd)
+    : _realname(""), _nickname(""), _username(""), _socket(fd),
+      _state(UNKNOWN) {}
 
 Client::~Client() {}
 
-std::string const& Client::getName() const { return (this->_realname); }
+std::string const& Client::getName() const { return this->_realname; }
 
-std::string const& Client::getNickname() const { return (this->_nickname); }
+std::string const& Client::getNickname() const { return this->_nickname; }
 
-int const& Client::getFd() const { return (this->_fd); }
+State Client::getState() const { return this->_state; }
 
-void Client::setFd(int& fd) { this->_fd = fd; }
+ClientSocket& Client::getSocket() { return this->_socket; }
 
-void Client::checkNameSyntaxCli(std::string nickname) {
-    if (nickname[0] == '#' || nickname[0] == '&' || nickname[0] == '+' ||
-        nickname[0] == '%')
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname[0] == ':' || nickname[0] == '$')
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname.find(' ') != nickname.npos)
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname.find('*') != nickname.npos)
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname.find('?') != nickname.npos)
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname.find('.') != nickname.npos)
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname.find(',') != nickname.npos)
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname.find('!') != nickname.npos)
-        throw std::runtime_error("Error syntax nickname");
-    if (nickname.find('@') != nickname.npos)
-        throw std::runtime_error("Error syntax nickname");
-}
+// void Client::checkNameSyntaxCli(std::string nickname) {
+//     if (nickname[0] == '#' || nickname[0] == '&' || nickname[0] == '+' ||
+//         nickname[0] == '%')
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname[0] == ':' || nickname[0] == '$')
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname.find(' ') != nickname.npos)
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname.find('*') != nickname.npos)
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname.find('?') != nickname.npos)
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname.find('.') != nickname.npos)
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname.find(',') != nickname.npos)
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname.find('!') != nickname.npos)
+//         throw std::runtime_error("Error syntax nickname");
+//     if (nickname.find('@') != nickname.npos)
+//         throw std::runtime_error("Error syntax nickname");
+// }

@@ -1,9 +1,14 @@
 SOURCES += ./src/Channel.cpp
 SOURCES += ./src/Client.cpp
+SOURCES += ./src/ClientSocket.cpp
 SOURCES += ./src/Command.cpp
+SOURCES += ./src/Epoll.cpp
+SOURCES += ./src/InviteCommand.cpp
+SOURCES += ./src/JoinCommand.cpp
+SOURCES += ./src/KickCommand.cpp
 SOURCES += ./src/main.cpp
 SOURCES += ./src/Message.cpp
+SOURCES += ./src/PassCommand.cpp
 SOURCES += ./src/Server.cpp
-SOURCES += ./src/SocketClient.cpp
+SOURCES += ./src/ServerSocket.cpp
 SOURCES += ./src/Socket.cpp
-SOURCES += ./src/SocketServer.cpp
