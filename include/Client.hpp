@@ -22,5 +22,7 @@ class Client {
     std::string const& getNickname() const;
     ClientSocket& getSocket();
     State getState() const;
+    void setState(State newState);
+    bool isRegistered();
     void checkNameSyntaxCli(std::string nickname);
 };

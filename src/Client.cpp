@@ -15,6 +15,14 @@ State Client::getState() const { return this->_state; }
 
 ClientSocket& Client::getSocket() { return this->_socket; }
 
+void Client::setState(State newState) { this->_state = newState; }
+
+bool Client::isRegistered() {
+  if (this->_state != UNKNOWN)
+    return true;
+  return false;
+}
+
 // void Client::checkNameSyntaxCli(std::string nickname) {
 //     if (nickname[0] == '#' || nickname[0] == '&' || nickname[0] == '+' ||
 //         nickname[0] == '%')

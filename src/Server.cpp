@@ -2,6 +2,7 @@
 
 #include "Channel.hpp"
 #include "Server.hpp"
+#include "Client.hpp"
 #include "ServerSocket.hpp"
 
 static const std::string defaultPort = "6667";
@@ -97,6 +98,14 @@ void Server::addClient(Client* c) {
     _epoll.subscribe(c->getSocket().getFd(), c->getSocket());
 }
 
+void Server::addChannel(Channel* c) {
+    std::string name = c->getName();
+    if (_channels.find(name) != _channels.end()) {
+        throw ;
+    }
+    _channels[name] = c;
+}
+
 Client* Server::findClient(int fd) {
     for (std::vector<Client*>::iterator it = _clients.begin();
          it != _clients.end(); it++) {
@@ -104,6 +113,15 @@ Client* Server::findClient(int fd) {
             return *it;
     }
     throw Server::ClientNotFoundException();
+}
+
+Client* Server::findClient(std::string nickname) {
+    for (std::vector<Client*>::iterator it = _clients.begin();
+         it != _clients.end(); it++) {
+        if ((*it)->getState() == REGISTERED && (*it)->getNickname() == nickname)
+            return *it;
+    }
+    throw Server::ClientNotFoundException()
 }
 
 void Server::removeClient(Client* client) {

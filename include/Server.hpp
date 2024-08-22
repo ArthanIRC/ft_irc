@@ -38,7 +38,9 @@ class Server {
     void run();
     void stop();
     void addClient(Client* c);
+    void addChannel(Channel* c);
     Client* findClient(int fd);
+    Client* findClient(std::string nickname);
     void removeClient(Client* c);
     void removeClient(int fd);
     bool isRunning() const;
