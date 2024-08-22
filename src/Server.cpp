@@ -118,7 +118,7 @@ Client* Server::findClient(int fd) {
 Client* Server::findClient(std::string nickname) {
     for (std::vector<Client*>::iterator it = _clients.begin();
          it != _clients.end(); it++) {
-        if ((*it)->getState() == REGISTERED && (*it)->getNickname() == nickname)
+        if ((*it)->isRegistered() && (*it)->getNickname() == nickname)
             return *it;
     }
     throw Server::ClientNotFoundException()
