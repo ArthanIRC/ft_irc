@@ -28,7 +28,7 @@ STD := -std=c++98
 #* *                              INCLUDES                                  * *#
 #* ************************************************************************** *#
 
-INCLUDES := include
+INCLUDES := include include/Commands
 INCLUDES_FLAGS += $(addprefix -I, $(INCLUDES))
 
 #* ************************************************************************** *#
