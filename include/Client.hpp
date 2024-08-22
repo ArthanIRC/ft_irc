@@ -25,4 +25,5 @@ class Client {
     void setState(State newState);
     bool isRegistered();
     void checkNameSyntaxCli(std::string nickname);
+    void sendMessage(std::string message);
 };

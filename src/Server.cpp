@@ -136,11 +136,6 @@ void Server::removeClient(Client* client) {
 
 void Server::removeClient(int fd) { removeClient(findClient(fd)); }
 
-void Server::sendToClient(std::string message, Client* client) {
-    (void)message;
-    (void)client;
-}
-
 Epoll& Server::getEpoll() { return this->_epoll; }
 
 bool Server::isRunning() const { return this->_running; }

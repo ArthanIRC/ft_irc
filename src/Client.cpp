@@ -23,6 +23,8 @@ bool Client::isRegistered() {
     return false;
 }
 
+void Client::sendMessage(std::string message) { (void)message; }
+
 // void Client::checkNameSyntaxCli(std::string nickname) {
 //     if (nickname[0] == '#' || nickname[0] == '&' || nickname[0] == '+' ||
 //         nickname[0] == '%')
