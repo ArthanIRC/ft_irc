@@ -1,6 +1,7 @@
 #include <cstdlib>
 
 #include "Channel.hpp"
+#include "Client.hpp"
 #include "Server.hpp"
 #include "ServerSocket.hpp"
 
@@ -97,10 +98,27 @@ void Server::addClient(Client* c) {
     _epoll.subscribe(c->getSocket().getFd(), c->getSocket());
 }
 
+void Server::addChannel(Channel* c) {
+    std::string name = c->getName();
+    if (_channels.find(name) != _channels.end()) {
+        throw;
+    }
+    _channels[name] = c;
+}
+
 Client* Server::findClient(int fd) {
     for (std::vector<Client*>::iterator it = _clients.begin();
          it != _clients.end(); it++) {
         if ((*it)->getSocket().getFd() == fd)
+            return *it;
+    }
+    throw Server::ClientNotFoundException();
+}
+
+Client* Server::findClient(std::string nickname) {
+    for (std::vector<Client*>::iterator it = _clients.begin();
+         it != _clients.end(); it++) {
+        if ((*it)->isRegistered() && (*it)->getNickname() == nickname)
             return *it;
     }
     throw Server::ClientNotFoundException();
