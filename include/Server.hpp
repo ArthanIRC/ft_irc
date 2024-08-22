@@ -43,6 +43,7 @@ class Server {
     Client* findClient(std::string nickname);
     void removeClient(Client* c);
     void removeClient(int fd);
+    void sendToClient(std::string message, Client* client);
     bool isRunning() const;
     Epoll& getEpoll();
 
