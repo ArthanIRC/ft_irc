@@ -121,7 +121,7 @@ Client* Server::findClient(std::string nickname) {
         if ((*it)->isRegistered() && (*it)->getNickname() == nickname)
             return *it;
     }
-    throw Server::ClientNotFoundException()
+    throw Server::ClientNotFoundException();
 }
 
 void Server::removeClient(Client* client) {
