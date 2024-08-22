@@ -1,8 +1,8 @@
 #include <cstdlib>
 
 #include "Channel.hpp"
-#include "Server.hpp"
 #include "Client.hpp"
+#include "Server.hpp"
 #include "ServerSocket.hpp"
 
 static const std::string defaultPort = "6667";
@@ -101,7 +101,7 @@ void Server::addClient(Client* c) {
 void Server::addChannel(Channel* c) {
     std::string name = c->getName();
     if (_channels.find(name) != _channels.end()) {
-        throw ;
+        throw;
     }
     _channels[name] = c;
 }

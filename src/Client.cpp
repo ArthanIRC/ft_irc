@@ -18,9 +18,9 @@ ClientSocket& Client::getSocket() { return this->_socket; }
 void Client::setState(State newState) { this->_state = newState; }
 
 bool Client::isRegistered() {
-  if (this->_state != UNKNOWN)
-    return true;
-  return false;
+    if (this->_state != UNKNOWN)
+        return true;
+    return false;
 }
 
 // void Client::checkNameSyntaxCli(std::string nickname) {
