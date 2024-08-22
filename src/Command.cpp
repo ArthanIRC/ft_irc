@@ -7,27 +7,27 @@
 #include <iostream>
 #include <string>
 
-Command* Command::create(std::string& data) {
+Command* Command::create(std::string& data, Client* client) {
     try {
         Message::verify(data);
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
         return (NULL);
     }
-    std::string prefix, command;
+    std::string source, command;
     std::vector<std::string> params;
     data += "\r\n"; // ULTRA TMP MAIS POUR FAIRE MARCHER 2eme PARSING
-    Message::parse(data, prefix, command, params);
+    Message::parse(data, source, command, params);
     try {
         //     if (command == "CAP") {
-        //         return new CapCommand(prefix, params);
+        //         return new CapCommand(source, params);
         //     }
         if (command == "PASS") {
-            return new PassCommand(prefix, params);
+            return new PassCommand(source, params, client);
         } else if (command == "INVITE") {
-            return new InviteCommand(prefix, params);
+            return new InviteCommand(source, params, client);
         } else if (command == "JOIN") {
-            return new JoinCommand(prefix, params);
+            return new JoinCommand(source, params, client);
         }
         // else if (command == "KICK") {
         //     return new KickCommand(prefix, params);

@@ -4,7 +4,8 @@
 
 class JoinCommand : public Command {
   public:
-    JoinCommand(std::string prefix, std::vector<std::string> params);
+    JoinCommand(std::string prefix, std::vector<std::string> params,
+                Client* client);
     ~JoinCommand();
 
     void run();

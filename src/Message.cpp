@@ -6,9 +6,9 @@
 Message::~Message() {}
 
 bool Message::verify(std::string& data) {
-    std::string prefix, command;
+    std::string source, command;
     std::vector<std::string> params;
-    int res = Message::parse(data, prefix, command, params);
+    int res = Message::parse(data, source, command, params);
 
     switch (res) {
     case (0):
@@ -26,14 +26,14 @@ bool Message::verify(std::string& data) {
         throw(Message::UnknownErrorException());
         break;
     }
-    if (Message::validate(prefix, command, params) == false) {
+    if (Message::validate(source, command, params) == false) {
         throw(Message::InvalidFormatException());
     }
 
     return (true);
 }
 
-int Message::parse(std::string& data, std::string& prefix, std::string& command,
+int Message::parse(std::string& data, std::string& source, std::string& command,
                    std::vector<std::string>& params) {
     if (data.length() < 2 || data.substr(data.length() - 2) != "\r\n") {
         return (err_trailing);
@@ -49,7 +49,7 @@ int Message::parse(std::string& data, std::string& prefix, std::string& command,
 
     if (data[0] == ':') {
         iss >> word;
-        prefix = word.substr(1);
+        source = word.substr(1);
     }
 
     if (!(iss >> command)) {
@@ -74,12 +74,12 @@ int Message::parse(std::string& data, std::string& prefix, std::string& command,
     return (0);
 }
 
-bool Message::validate(const std::string& prefix, const std::string& command,
+bool Message::validate(const std::string& source, const std::string& command,
                        const std::vector<std::string>& params) {
-    if (!prefix.empty()) {
-        for (size_t i = 0; i < prefix.length(); ++i) {
-            if (!std::isalnum(prefix[i]) && prefix[i] != '-' &&
-                prefix[i] != '.' && prefix[i] != '!' && prefix[i] != '@') {
+    if (!source.empty()) {
+        for (size_t i = 0; i < source.length(); ++i) {
+            if (!std::isalnum(source[i]) && source[i] != '-' &&
+                source[i] != '.' && source[i] != '!' && source[i] != '@') {
                 return (false);
             }
         }
