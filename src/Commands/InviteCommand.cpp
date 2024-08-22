@@ -1,8 +1,8 @@
 #include "InviteCommand.hpp"
 
-InviteCommand::InviteCommand(std::string prefix,
-                             std::vector<std::string> params) {
-    if (!prefix.empty()) {
+InviteCommand::InviteCommand(std::string source,
+                             std::vector<std::string> params, Client* client) {
+    if (!source.empty()) {
         throw std::invalid_argument("PASS command should not have a prefix.");
     }
     if (params.size() != 2) {
@@ -18,6 +18,8 @@ InviteCommand::InviteCommand(std::string prefix,
     this->_nickname = nickname;
     this->_channel = channel;
     // rajouter un check pour voir si le channel/user exist
+
+    this->_client = client;
 }
 
 InviteCommand::~InviteCommand(){};

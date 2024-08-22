@@ -6,7 +6,8 @@ class KickCommand : public Command {
   private:
     // std::str
   public:
-    KickCommand(std::string prefix, std::vector<std::string> params);
+    KickCommand(std::string prefix, std::vector<std::string> params,
+                Client* client);
     ~KickCommand();
 
     void run();

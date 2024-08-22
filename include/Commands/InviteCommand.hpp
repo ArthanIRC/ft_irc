@@ -8,7 +8,8 @@ class InviteCommand : public Command {
     std::string _channel;
 
   public:
-    InviteCommand(std::string prefix, std::vector<std::string> params);
+    InviteCommand(std::string prefix, std::vector<std::string> params,
+                  Client* client);
     ~InviteCommand();
 
     void run();

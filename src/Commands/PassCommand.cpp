@@ -1,7 +1,8 @@
 #include "PassCommand.hpp"
 
-PassCommand::PassCommand(std::string prefix, std::vector<std::string> params) {
-    if (!prefix.empty()) {
+PassCommand::PassCommand(std::string source, std::vector<std::string> params,
+                         Client* client) {
+    if (!source.empty()) {
         throw std::invalid_argument("PASS command should not have a prefix.");
     }
     if (params.size() != 1) {
@@ -20,6 +21,8 @@ PassCommand::PassCommand(std::string prefix, std::vector<std::string> params) {
                 "Password contains invalid characters.");
         }
     }
+
+    this->_client = client;
 };
 
 PassCommand::~PassCommand(){};

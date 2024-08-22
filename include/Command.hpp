@@ -1,14 +1,19 @@
 #pragma once
 
-#include "Message.hpp"
 #include <iostream>
 #include <sstream>
 
+#include "Client.hpp"
+#include "Message.hpp"
+
 class Command : public Message {
+  protected:
+    Client* _client;
+
   public:
     virtual ~Command(){};
 
-    static Command* create(std::string& data);
+    static Command* create(std::string& data, Client* client);
 
     virtual void run() = 0; // a modifier avec un client un channel
 };

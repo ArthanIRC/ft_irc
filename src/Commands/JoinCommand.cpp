@@ -1,7 +1,8 @@
 #include "JoinCommand.hpp"
 
-JoinCommand::JoinCommand(std::string prefix, std::vector<std::string> params) {
-    if (!prefix.empty()) {
+JoinCommand::JoinCommand(std::string source, std::vector<std::string> params,
+                         Client* client) {
+    if (!source.empty()) {
         throw std::invalid_argument("JOIN command should not have a prefix.");
     }
     if (params.size() < 1 || params.size() > 2) {
@@ -28,6 +29,7 @@ JoinCommand::JoinCommand(std::string prefix, std::vector<std::string> params) {
             }
         }
     }
+    this->_client = client;
 }
 
 JoinCommand::~JoinCommand() {}

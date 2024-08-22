@@ -5,13 +5,13 @@
 
 class Message {
   private:
-    static bool validate(const std::string& prefix, const std::string& command,
+    static bool validate(const std::string& source, const std::string& command,
                          const std::vector<std::string>& params);
 
   protected:
     // PARSE TEMPO EN PROTECTED POUR AVOIR ACCES AVEC METHODE TMP DE REPARSE
     // DANS Command::Create
-    static int parse(std::string& data, std::string& prefix,
+    static int parse(std::string& data, std::string& source,
                      std::string& command, std::vector<std::string>& params);
     // ----
     static const unsigned int max_params = 15;
@@ -19,7 +19,7 @@ class Message {
     static const unsigned int err_newline = 1002;
     static const unsigned int err_missing_cmd = 1003;
 
-    std::string _prefix;
+    std::string _source;
     std::string _command;
     std::vector<std::string> _params;
 

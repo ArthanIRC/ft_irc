@@ -7,7 +7,8 @@ class PassCommand : public Command {
     std::string _password;
 
   public:
-    PassCommand(std::string prefix, std::vector<std::string> params);
+    PassCommand(std::string prefix, std::vector<std::string> params,
+                Client* client);
     ~PassCommand();
 
     void run();
