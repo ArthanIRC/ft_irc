@@ -106,6 +106,12 @@ void Channel::debanClient(Client& client) {
     removeClientFromMap(_blackList, client, "the user was not blacklisted");
 }
 
+bool Channel::isInChannel(Client& client) const {
+    if (verifClientOnMap(_clientsChan, client))
+        return (true);
+    return (false);
+}
+
 bool Channel::isWhitelisted(Client& client) const {
     if (verifClientOnMap(_whiteList, client))
         return (true);
@@ -120,6 +126,30 @@ bool Channel::isBlacklisted(Client& client) const {
 
 bool Channel::isOperator(Client& client) const {
     if (verifClientOnMap(_operatorList, client))
+        return (true);
+    return (false);
+}
+
+bool Channel::isInChannel(std::string nickname) const {
+    if (verifClientOnMap(_clientsChan, nickname))
+        return (true);
+    return (false);
+}
+
+bool Channel::isWhitelisted(std::string nickname) const {
+    if (verifClientOnMap(_whiteList, nickname))
+        return (true);
+    return (false);
+}
+
+bool Channel::isBlacklisted(std::string nickname) const {
+    if (verifClientOnMap(_blackList, nickname))
+        return (true);
+    return (false);
+}
+
+bool Channel::isOperator(std::string nickname) const {
+    if (verifClientOnMap(_operatorList, nickname))
         return (true);
     return (false);
 }

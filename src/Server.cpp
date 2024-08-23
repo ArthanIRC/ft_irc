@@ -167,3 +167,7 @@ const char* Server::NonAlnumPasswordException::what() const throw() {
 const char* Server::ClientNotFoundException::what() const throw() {
     return "Warning: Client was not found in the clients list";
 }
+
+const char* Server::ChannelNotFoundException::what() const throw() {
+    return "Warning: Channel was not found in the channels list";
+}
