@@ -12,7 +12,7 @@ InviteCommand::InviteCommand(std::string source,
     }
     try {
         chan = Server::getInstance().findChannel(params[1]);
-    } catch (Server::ChannelNotFoundException) {
+    } catch (Server::ChannelNotFoundException()) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
         throw;
     }
