@@ -7,18 +7,15 @@
 InviteCommand::InviteCommand(std::string source,
                              std::vector<std::string> params, Client* client) {
     Channel* chan;
-    this->_source = source;
-    this->_params = params;
-    this->_client = client;
-    this->_nickname = params[0];
-    this->_channel = params[1];
+    if (params.size() < 2) {
+        client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "INVITE"));
+        throw;
+    }
     try {
         chan = Server::getInstance().findChannel(params[1]);
     } catch (const std::exception& e) {
-        client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, _channel));
+        client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
         throw;
-    }
-    if (params.size() < 2) {
     }
     if (!chan->isInChannel(*client)) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(_client, chan));
@@ -32,6 +29,11 @@ InviteCommand::InviteCommand(std::string source,
         client->sendMessage(Replies::ERR_USERONCHANNEL());
         throw;
     }
+    this->_source = source;
+    this->_params = params;
+    this->_client = client;
+    this->_nickname = params[0];
+    this->_channel = params[1];
 }
 
 InviteCommand::~InviteCommand(){};
@@ -51,9 +53,3 @@ void InviteCommand::run() {
     }
     return;
 }
-
-/*
-When the invite is successful, the server MUST send a RPL_INVITING numeric to
-the command issuer, and an INVITE message, with the issuer as <source>, to the
-target user. Other channel members SHOULD NOT be notified.
-*/
