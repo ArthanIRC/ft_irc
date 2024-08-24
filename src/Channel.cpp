@@ -54,12 +54,12 @@ std::map<std::string, Client*>& Channel::getClientsChan() {
     return (this->_clientsChan);
 }
 
-std::map<std::string, Client*>& Channel::getWhitelist() {
-    return (this->_whiteList);
+std::map<std::string, Client*>& Channel::getInvitelist() {
+    return (this->_invitelist);
 }
 
-std::map<std::string, Client*>& Channel::getBlacklist() {
-    return (this->_blackList);
+std::map<std::string, Client*>& Channel::getBanlist() {
+    return (this->_banlist);
 }
 
 std::map<std::string, Client*>& Channel::getOperatorlist() {
@@ -77,7 +77,7 @@ void Channel::setMaxClients(size_t nbMaxClients) {
 }
 
 void Channel::addClient(Client& client) {
-    if (this->_inviteOnly == true && !isWhitelisted(client))
+    if (this->_inviteOnly == true && !isInvited(client))
         throw userNotInvited();
     std::string nickname = client.getNickname();
     if (_clientsChan.find(nickname) != _clientsChan.end()) {
@@ -87,11 +87,13 @@ void Channel::addClient(Client& client) {
 }
 
 void Channel::addOperator(Client& client) {
-    addClientToMap(_operatorList, client, "the user is already an operator");
+    addClientToMap(_operatorList, client);
 }
 
-void Channel::banClient(Client& client) {
-    addClientToMap(_operatorList, client, "the user is already an operator");
+void Channel::banClient(Client& client) { addClientToMap(_banlist, client); }
+
+void Channel::inviteClient(Client& client) {
+    addClientToMap(_invitelist, client);
 }
 
 void Channel::kickOperator(Client& client) {
@@ -103,19 +105,19 @@ void Channel::eraseClient(Client& client) {
 }
 
 void Channel::debanClient(Client& client) {
-    removeClientFromMap(_blackList, client, "the user was not blacklisted");
+    removeClientFromMap(_banlist, client, "the user was not blacklisted");
 }
 
 bool Channel::isInChannel(Client& client) const {
     return (verifClientOnMap(_clientsChan, client));
 }
 
-bool Channel::isWhitelisted(Client& client) const {
-    return (verifClientOnMap(_whiteList, client));
+bool Channel::isInvited(Client& client) const {
+    return (verifClientOnMap(_invitelist, client));
 }
 
-bool Channel::isBlacklisted(Client& client) const {
-    return (verifClientOnMap(_blackList, client));
+bool Channel::isBanned(Client& client) const {
+    return (verifClientOnMap(_banlist, client));
 }
 
 bool Channel::isOperator(Client& client) const {
@@ -126,12 +128,12 @@ bool Channel::isInChannel(std::string nickname) const {
     return (verifClientOnMap(_clientsChan, nickname));
 }
 
-bool Channel::isWhitelisted(std::string nickname) const {
-    return verifClientOnMap(_whiteList, nickname);
+bool Channel::isInvited(std::string nickname) const {
+    return verifClientOnMap(_invitelist, nickname);
 }
 
-bool Channel::isBlacklisted(std::string nickname) const {
-    return (verifClientOnMap(_blackList, nickname));
+bool Channel::isBanned(std::string nickname) const {
+    return (verifClientOnMap(_banlist, nickname));
 }
 
 bool Channel::isOperator(std::string nickname) const {
