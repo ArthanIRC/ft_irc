@@ -5,6 +5,8 @@
 
 #include "Client.hpp"
 #include "Message.hpp"
+#include "Replies.hpp"
+#include "Server.hpp"
 
 class Command : public Message {
   protected:

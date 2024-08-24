@@ -124,6 +124,14 @@ Client* Server::findClient(std::string nickname) {
     throw Server::ClientNotFoundException();
 }
 
+Channel* Server::findChannel(std::string name) {
+    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+    if (it == _channels.end()) {
+        throw Server::ChannelNotFoundException();
+    }
+    return it->second;
+}
+
 void Server::removeClient(Client* client) {
     std::vector<Client*>::iterator it =
         std::find(_clients.begin(), _clients.end(), client);
@@ -158,4 +166,8 @@ const char* Server::NonAlnumPasswordException::what() const throw() {
 
 const char* Server::ClientNotFoundException::what() const throw() {
     return "Warning: Client was not found in the clients list";
+}
+
+const char* Server::ChannelNotFoundException::what() const throw() {
+    return "Warning: Channel was not found in the channels list";
 }

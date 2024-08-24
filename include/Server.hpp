@@ -41,6 +41,7 @@ class Server {
     void addChannel(Channel* c);
     Client* findClient(int fd);
     Client* findClient(std::string nickname);
+    Channel* findChannel(std::string name);
     void removeClient(Client* c);
     void removeClient(int fd);
     bool isRunning() const;
@@ -65,6 +66,11 @@ class Server {
     };
 
     class ClientNotFoundException : public std::exception {
+      public:
+        virtual const char* what() const throw();
+    };
+
+    class ChannelNotFoundException : public std::exception {
       public:
         virtual const char* what() const throw();
     };

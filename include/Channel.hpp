@@ -52,6 +52,13 @@ class Channel {
         return it != map.end();
     }
 
+    template <typename MapType>
+    bool verifClientOnMap(const MapType& map,
+                          const std::string nickname) const {
+        typename MapType::const_iterator it = map.find(nickname);
+        return it != map.end();
+    }
+
   public:
     Channel(Client* client, std::string name);
     Channel(Client* newClient, std::string name, std::string password);
@@ -87,9 +94,14 @@ class Channel {
     void debanClient(Client& client);
     void eraseClient(Client& client);
 
+    bool isInChannel(Client& client) const;
     bool isWhitelisted(Client& client) const;
     bool isBlacklisted(Client& client) const;
     bool isOperator(Client& client) const;
+    bool isInChannel(std::string nickname) const;
+    bool isWhitelisted(std::string nickname) const;
+    bool isBlacklisted(std::string nickname) const;
+    bool isOperator(std::string nickname) const;
 
     std::string getChannelMode() const;
 
