@@ -52,7 +52,9 @@ class Replies : public Message {
     static std::string RPL_CREATIONTIME();
     static std::string RPL_WHOISACCOUNT();
     static std::string RPL_NOTOPIC();
-    static std::string RPL_TOPIC();
+    static std::string RPL_TOPIC(const std::string& nickname,
+                                 const std::string& chanName,
+                                 const std::string& topic);
     static std::string RPL_TOPICWHOTIME();
     static std::string RPL_INVITELIST();
     static std::string RPL_ENDOFINVITELIST();
@@ -84,7 +86,8 @@ class Replies : public Message {
     static std::string ERR_UNKNOWNERROR();
     static std::string ERR_NOSUCHNICK();
     static std::string ERR_NOSUCHSERVER();
-    static std::string ERR_NOSUCHCHANNEL();
+    static std::string ERR_NOSUCHCHANNEL(const std::string& nickname,
+                                         const std::string& chanName);
     static std::string ERR_CANNOTSENDTOCHAN();
     static std::string ERR_TOOMANYCHANNELS();
     static std::string ERR_WASNOSUCHNICK();
@@ -99,10 +102,12 @@ class Replies : public Message {
     static std::string ERR_NICKNAMEINUSE();
     static std::string ERR_NICKCOLLISION();
     static std::string ERR_USERNOTINCHANNEL();
-    static std::string ERR_NOTONCHANNEL();
+    static std::string ERR_NOTONCHANNEL(const std::string& nickname,
+                                        const std::string& chanName);
     static std::string ERR_USERONCHANNEL();
     static std::string ERR_NOTREGISTERED();
-    static std::string ERR_NEEDMOREPARAMS();
+    static std::string ERR_NEEDMOREPARAMS(const std::string& nickname,
+                                          std::string command);
     static std::string ERR_ALREADYREGISTERED();
     static std::string ERR_PASSWDMISMATCH();
     static std::string ERR_YOUREBANNEDCREEP();
@@ -113,7 +118,8 @@ class Replies : public Message {
     static std::string ERR_BADCHANNELKEY();
     static std::string ERR_BADCHANMASK();
     static std::string ERR_NOPRIVILEGES();
-    static std::string ERR_CHANOPRIVSNEEDED();
+    static std::string ERR_CHANOPRIVSNEEDED(const std::string& nickname,
+                                            const std::string& chanName);
     static std::string ERR_CANTKILLSERVER();
     static std::string ERR_NOOPERHOST();
     static std::string ERR_UMODEUNKNOWNFLAG();

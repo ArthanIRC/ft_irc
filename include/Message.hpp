@@ -29,6 +29,7 @@ class Message {
     std::string getRawMsg();
 
     static bool verify(std::string& data);
+    static std::string create(std::string& data);
 
     virtual void run() = 0;
 

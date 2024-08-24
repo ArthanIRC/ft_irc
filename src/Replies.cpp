@@ -225,9 +225,12 @@ std::string Replies::RPL_NOTOPIC() {
     return reply;
 }
 
-std::string Replies::RPL_TOPIC() {
+std::string Replies::RPL_TOPIC(const std::string& nickname,
+                               const std::string& chanName,
+                               const std::string& topic) {
     std::string reply;
-    return reply;
+    reply = nickname + " " + chanName + " :" + topic;
+    return Message::create(reply);
 }
 
 std::string Replies::RPL_TOPICWHOTIME() {
@@ -385,9 +388,11 @@ std::string Replies::ERR_NOSUCHSERVER() {
     return reply;
 }
 
-std::string Replies::ERR_NOSUCHCHANNEL() {
+std::string Replies::ERR_NOSUCHCHANNEL(const std::string& nickname,
+                                       const std::string& chanName) {
     std::string reply;
-    return reply;
+    reply = nickname + " " + chanName + " :No such channel";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_CANNOTSENDTOCHAN() {
@@ -460,9 +465,11 @@ std::string Replies::ERR_USERNOTINCHANNEL() {
     return reply;
 }
 
-std::string Replies::ERR_NOTONCHANNEL() {
+std::string Replies::ERR_NOTONCHANNEL(const std::string& nickname,
+                                      const std::string& chanName) {
     std::string reply;
-    return reply;
+    reply = nickname + " " + chanName + " :You're not on that channel";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_USERONCHANNEL() {
@@ -475,9 +482,11 @@ std::string Replies::ERR_NOTREGISTERED() {
     return reply;
 }
 
-std::string Replies::ERR_NEEDMOREPARAMS() {
+std::string Replies::ERR_NEEDMOREPARAMS(const std::string& nickname,
+                                        std::string command) {
     std::string reply;
-    return reply;
+    reply = nickname + " " + command + " :Not enough parameters";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_ALREADYREGISTERED() {
@@ -530,9 +539,11 @@ std::string Replies::ERR_NOPRIVILEGES() {
     return reply;
 }
 
-std::string Replies::ERR_CHANOPRIVSNEEDED() {
+std::string Replies::ERR_CHANOPRIVSNEEDED(const std::string& nickname,
+                                          const std::string& chanName) {
     std::string reply;
-    return reply;
+    reply = nickname + " " + chanName + " :You're not channel operator";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_CANTKILLSERVER() {

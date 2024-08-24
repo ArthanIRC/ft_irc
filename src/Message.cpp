@@ -110,3 +110,5 @@ bool Message::validate(const std::string& source, const std::string& command,
 
     return (true);
 }
+
+std::string Message::create(std::string& data) { return data += "\r\n"; }
