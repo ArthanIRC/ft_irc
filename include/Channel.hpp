@@ -18,17 +18,16 @@ class Channel {
     bool _inviteOnly;
     size_t _maxClients;
     std::map<std::string, Client*> _clientsChan;
-    std::map<std::string, Client*> _whiteList;
-    std::map<std::string, Client*> _blackList;
+    std::map<std::string, Client*> _invitelist;
+    std::map<std::string, Client*> _banlist;
     std::map<std::string, Client*> _operatorList;
     void checkNameSyntaxChan(std::string& name);
 
     template <typename MapType>
-    void addClientToMap(MapType& map, Client& client,
-                        const std::string& errorMsg) {
+    void addClientToMap(MapType& map, Client& client) {
         std::string nickname = client.getNickname();
         if (map.find(nickname) != map.end()) {
-            throw std::runtime_error(errorMsg);
+            return;
         }
         map[nickname] = &client;
     }
@@ -76,8 +75,8 @@ class Channel {
     void setModifTopicByOps(bool lock);
 
     std::map<std::string, Client*>& getClientsChan();
-    std::map<std::string, Client*>& getWhitelist();
-    std::map<std::string, Client*>& getBlacklist();
+    std::map<std::string, Client*>& getInvitelist();
+    std::map<std::string, Client*>& getBanlist();
     std::map<std::string, Client*>& getOperatorlist();
 
     bool getInviteOnly() const;
@@ -89,18 +88,19 @@ class Channel {
     void addClient(Client& client);
     void addOperator(Client& client);
     void banClient(Client& client);
+    void inviteClient(Client& client);
 
     void kickOperator(Client& client);
     void debanClient(Client& client);
     void eraseClient(Client& client);
 
     bool isInChannel(Client& client) const;
-    bool isWhitelisted(Client& client) const;
-    bool isBlacklisted(Client& client) const;
+    bool isInvited(Client& client) const;
+    bool isBanned(Client& client) const;
     bool isOperator(Client& client) const;
     bool isInChannel(std::string nickname) const;
-    bool isWhitelisted(std::string nickname) const;
-    bool isBlacklisted(std::string nickname) const;
+    bool isInvited(std::string nickname) const;
+    bool isBanned(std::string nickname) const;
     bool isOperator(std::string nickname) const;
 
     std::string getChannelMode() const;
