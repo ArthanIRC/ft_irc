@@ -1,4 +1,5 @@
 #include "Replies.hpp"
+#include "Channel.hpp"
 
 std::string Replies::RPL_WELCOME() {
     std::string reply;
@@ -225,9 +226,11 @@ std::string Replies::RPL_NOTOPIC() {
     return reply;
 }
 
-std::string Replies::RPL_TOPIC() {
+std::string Replies::RPL_TOPIC(Client* client, Channel* channel) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + " " + channel->getName() + " :" +
+            channel->getTopic();
+    return Message::create(reply);
 }
 
 std::string Replies::RPL_TOPICWHOTIME() {
@@ -385,9 +388,11 @@ std::string Replies::ERR_NOSUCHSERVER() {
     return reply;
 }
 
-std::string Replies::ERR_NOSUCHCHANNEL() {
+std::string Replies::ERR_NOSUCHCHANNEL(Client* client, Channel* channel) {
     std::string reply;
-    return reply;
+    reply =
+        client->getNickname() + " " + channel->getName() + " :No such channel";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_CANNOTSENDTOCHAN() {
@@ -460,9 +465,11 @@ std::string Replies::ERR_USERNOTINCHANNEL() {
     return reply;
 }
 
-std::string Replies::ERR_NOTONCHANNEL() {
+std::string Replies::ERR_NOTONCHANNEL(Client* client, Channel* channel) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + " " + channel->getName() +
+            " :You're not on that channel";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_USERONCHANNEL() {
@@ -475,9 +482,10 @@ std::string Replies::ERR_NOTREGISTERED() {
     return reply;
 }
 
-std::string Replies::ERR_NEEDMOREPARAMS() {
+std::string Replies::ERR_NEEDMOREPARAMS(Client* client, std::string command) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + " " + command + " :Not enough parameters";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_ALREADYREGISTERED() {
@@ -530,9 +538,11 @@ std::string Replies::ERR_NOPRIVILEGES() {
     return reply;
 }
 
-std::string Replies::ERR_CHANOPRIVSNEEDED() {
+std::string Replies::ERR_CHANOPRIVSNEEDED(Client* client, Channel* channel) {
     std::string reply;
-    return reply;
+    reply = client->getName() + " " + channel->getName() +
+            " :You're not channel operator";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_CANTKILLSERVER() {
