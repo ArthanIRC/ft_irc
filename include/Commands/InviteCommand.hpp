@@ -4,7 +4,7 @@
 
 class InviteCommand : public Command {
   private:
-    std::string _nickname;
+    std::string _targetNickname;
     std::string _channel;
 
   public:

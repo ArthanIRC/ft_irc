@@ -2,7 +2,6 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Replies.hpp"
-#include <exception>
 
 InviteCommand::InviteCommand(std::string source,
                              std::vector<std::string> params, Client* client) {
@@ -13,7 +12,7 @@ InviteCommand::InviteCommand(std::string source,
     }
     try {
         chan = Server::getInstance().findChannel(params[1]);
-    } catch (const std::exception& e) {
+    } catch (Server::ChannelNotFoundException) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
         throw;
     }
@@ -32,7 +31,7 @@ InviteCommand::InviteCommand(std::string source,
     this->_source = source;
     this->_params = params;
     this->_client = client;
-    this->_nickname = params[0];
+    this->_targetNickname = params[0];
     this->_channel = params[1];
 }
 
@@ -41,15 +40,15 @@ InviteCommand::~InviteCommand(){};
 void InviteCommand::run() {
     std::string reply;
 
-    reply = ":" + _client->getNickname() + " " + _command + " " + _params[0] +
-            " " + _params[1];
+    reply = ":" + _client->getNickname() + " " + _command + " " +
+            _targetNickname + " " + _channel;
     Message::create(reply);
     _client->sendMessage(Replies::RPL_INVITING());
-    Client* target = Server::getInstance().findClient(_params[0]);
+    Client* target;
     try {
-        target->sendMessage(reply);
+        target = Server::getInstance().findClient(_targetNickname);
     } catch (Server::ClientNotFoundException()) {
         return;
     }
-    return;
+    target->sendMessage(reply);
 }
