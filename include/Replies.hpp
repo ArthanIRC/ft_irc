@@ -82,7 +82,7 @@ class Replies : public Message {
     static std::string RPL_REHASHING();
     static std::string RPL_TIME();
     static std::string ERR_UNKNOWNERROR();
-    static std::string ERR_NOSUCHNICK();
+    static std::string ERR_NOSUCHNICK(Client* client, std::string& target);
     static std::string ERR_NOSUCHSERVER();
     static std::string ERR_NOSUCHCHANNEL(Client* client, std::string chanName);
     static std::string ERR_CANNOTSENDTOCHAN();
@@ -117,7 +117,7 @@ class Replies : public Message {
     static std::string ERR_CANTKILLSERVER();
     static std::string ERR_NOOPERHOST();
     static std::string ERR_UMODEUNKNOWNFLAG();
-    static std::string ERR_USERSDONTMATCH();
+    static std::string ERR_USERSDONTMATCH(Client* client);
     static std::string ERR_HELPNOTFOUND();
     static std::string ERR_INVALIDKEY();
     static std::string RPL_STARTTLS();

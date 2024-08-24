@@ -378,9 +378,10 @@ std::string Replies::ERR_UNKNOWNERROR() {
     return reply;
 }
 
-std::string Replies::ERR_NOSUCHNICK() {
+std::string Replies::ERR_NOSUCHNICK(Client* client, std::string& target) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + " " + target + " :No such nick";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_NOSUCHSERVER() {
@@ -559,9 +560,10 @@ std::string Replies::ERR_UMODEUNKNOWNFLAG() {
     return reply;
 }
 
-std::string Replies::ERR_USERSDONTMATCH() {
+std::string Replies::ERR_USERSDONTMATCH(Client* client) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + " :Cant change mode for other users";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_HELPNOTFOUND() {
