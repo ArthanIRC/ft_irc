@@ -43,12 +43,13 @@ void InviteCommand::run() {
     reply = ":" + _client->getNickname() + " " + _command + " " +
             _targetNickname + " " + _channel;
     Message::create(reply);
-    _client->sendMessage(Replies::RPL_INVITING());
     Client* target;
     try {
         target = Server::getInstance().findClient(_targetNickname);
     } catch (Server::ClientNotFoundException()) {
+        _client->sendMessage(Replies::ERR_NOSUCHNICK());
         return;
     }
+    _client->sendMessage(Replies::RPL_INVITING());
     target->sendMessage(reply);
 }
