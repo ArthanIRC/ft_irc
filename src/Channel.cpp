@@ -107,51 +107,35 @@ void Channel::debanClient(Client& client) {
 }
 
 bool Channel::isInChannel(Client& client) const {
-    if (verifClientOnMap(_clientsChan, client))
-        return (true);
-    return (false);
+    return (verifClientOnMap(_clientsChan, client));
 }
 
 bool Channel::isWhitelisted(Client& client) const {
-    if (verifClientOnMap(_whiteList, client))
-        return (true);
-    return (false);
+    return (verifClientOnMap(_whiteList, client));
 }
 
 bool Channel::isBlacklisted(Client& client) const {
-    if (verifClientOnMap(_blackList, client))
-        return (true);
-    return (false);
+    return (verifClientOnMap(_blackList, client));
 }
 
 bool Channel::isOperator(Client& client) const {
-    if (verifClientOnMap(_operatorList, client))
-        return (true);
-    return (false);
+    return (verifClientOnMap(_operatorList, client));
 }
 
 bool Channel::isInChannel(std::string nickname) const {
-    if (verifClientOnMap(_clientsChan, nickname))
-        return (true);
-    return (false);
+    return (verifClientOnMap(_clientsChan, nickname));
 }
 
 bool Channel::isWhitelisted(std::string nickname) const {
-    if (verifClientOnMap(_whiteList, nickname))
-        return (true);
-    return (false);
+    return verifClientOnMap(_whiteList, nickname);
 }
 
 bool Channel::isBlacklisted(std::string nickname) const {
-    if (verifClientOnMap(_blackList, nickname))
-        return (true);
-    return (false);
+    return (verifClientOnMap(_blackList, nickname));
 }
 
 bool Channel::isOperator(std::string nickname) const {
-    if (verifClientOnMap(_operatorList, nickname))
-        return (true);
-    return (false);
+    return (verifClientOnMap(_operatorList, nickname));
 }
 
 std::string Channel::getChannelMode() const {
