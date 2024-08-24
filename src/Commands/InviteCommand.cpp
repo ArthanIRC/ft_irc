@@ -1,27 +1,55 @@
 #include "InviteCommand.hpp"
+#include "Channel.hpp"
+#include "Client.hpp"
+#include "Replies.hpp"
 
 InviteCommand::InviteCommand(std::string source,
                              std::vector<std::string> params, Client* client) {
-    if (!source.empty()) {
-        throw std::invalid_argument("PASS command should not have a prefix.");
+    Channel* chan;
+    if (params.size() < 2) {
+        client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "INVITE"));
+        throw;
     }
-    if (params.size() != 2) {
-        throw std::invalid_argument(
-            "INVITE command requires exactly two parameter.");
+    try {
+        chan = Server::getInstance().findChannel(params[1]);
+    } catch (Server::ChannelNotFoundException()) {
+        client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
+        throw;
     }
-
-    std::string nickname = params[0];
-    std::string channel = params[1];
-    if (channel[0] != '#' && channel[0] != '&') {
-        throw std::invalid_argument("Channel name must start with '#' or '&'.");
+    if (!chan->isInChannel(*client)) {
+        client->sendMessage(Replies::ERR_NOTONCHANNEL(_client, chan));
+        throw;
     }
-    this->_nickname = nickname;
-    this->_channel = channel;
-    // rajouter un check pour voir si le channel/user exist
-
+    if (chan->getInviteOnly() && !chan->isOperator(*client)) {
+        client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(_client, chan));
+        throw;
+    }
+    if (chan->isInChannel(params[0])) {
+        client->sendMessage(Replies::ERR_USERONCHANNEL());
+        throw;
+    }
+    this->_source = source;
+    this->_params = params;
     this->_client = client;
+    this->_targetNickname = params[0];
+    this->_channel = params[1];
 }
 
 InviteCommand::~InviteCommand(){};
 
-void InviteCommand::run() { return; }
+void InviteCommand::run() {
+    std::string reply;
+
+    reply = ":" + _client->getNickname() + " " + _command + " " +
+            _targetNickname + " " + _channel;
+    Message::create(reply);
+    Client* target;
+    try {
+        target = Server::getInstance().findClient(_targetNickname);
+    } catch (Server::ClientNotFoundException()) {
+        _client->sendMessage(Replies::ERR_NOSUCHNICK());
+        return;
+    }
+    _client->sendMessage(Replies::RPL_INVITING());
+    target->sendMessage(reply);
+}

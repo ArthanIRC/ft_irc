@@ -17,5 +17,5 @@ class Command : public Message {
 
     static Command* create(std::string& data, Client* client);
 
-    virtual void run() = 0; // a modifier avec un client un channel
+    virtual void run() = 0;
 };

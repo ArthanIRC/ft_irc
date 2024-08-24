@@ -388,10 +388,9 @@ std::string Replies::ERR_NOSUCHSERVER() {
     return reply;
 }
 
-std::string Replies::ERR_NOSUCHCHANNEL(Client* client, Channel* channel) {
+std::string Replies::ERR_NOSUCHCHANNEL(Client* client, std::string chanName) {
     std::string reply;
-    reply =
-        client->getNickname() + " " + channel->getName() + " :No such channel";
+    reply = client->getNickname() + " " + chanName + " :No such channel";
     return Message::create(reply);
 }
 

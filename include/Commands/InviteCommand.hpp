@@ -4,11 +4,11 @@
 
 class InviteCommand : public Command {
   private:
-    std::string _nickname;
+    std::string _targetNickname;
     std::string _channel;
 
   public:
-    InviteCommand(std::string prefix, std::vector<std::string> params,
+    InviteCommand(std::string source, std::vector<std::string> params,
                   Client* client);
     ~InviteCommand();
 

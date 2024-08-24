@@ -84,7 +84,7 @@ class Replies : public Message {
     static std::string ERR_UNKNOWNERROR();
     static std::string ERR_NOSUCHNICK();
     static std::string ERR_NOSUCHSERVER();
-    static std::string ERR_NOSUCHCHANNEL(Client* client, Channel* channel);
+    static std::string ERR_NOSUCHCHANNEL(Client* client, std::string chanName);
     static std::string ERR_CANNOTSENDTOCHAN();
     static std::string ERR_TOOMANYCHANNELS();
     static std::string ERR_WASNOSUCHNICK();
