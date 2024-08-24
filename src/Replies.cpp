@@ -1,4 +1,5 @@
 #include "Replies.hpp"
+#include "Channel.hpp"
 
 std::string Replies::RPL_WELCOME() {
     std::string reply;
@@ -225,11 +226,10 @@ std::string Replies::RPL_NOTOPIC() {
     return reply;
 }
 
-std::string Replies::RPL_TOPIC(const std::string& nickname,
-                               const std::string& chanName,
-                               const std::string& topic) {
+std::string Replies::RPL_TOPIC(Client* client, Channel* channel) {
     std::string reply;
-    reply = nickname + " " + chanName + " :" + topic;
+    reply = client->getNickname() + " " + channel->getName() + " :" +
+            channel->getTopic();
     return Message::create(reply);
 }
 
@@ -388,10 +388,10 @@ std::string Replies::ERR_NOSUCHSERVER() {
     return reply;
 }
 
-std::string Replies::ERR_NOSUCHCHANNEL(const std::string& nickname,
-                                       const std::string& chanName) {
+std::string Replies::ERR_NOSUCHCHANNEL(Client* client, Channel* channel) {
     std::string reply;
-    reply = nickname + " " + chanName + " :No such channel";
+    reply =
+        client->getNickname() + " " + channel->getName() + " :No such channel";
     return Message::create(reply);
 }
 
@@ -465,10 +465,10 @@ std::string Replies::ERR_USERNOTINCHANNEL() {
     return reply;
 }
 
-std::string Replies::ERR_NOTONCHANNEL(const std::string& nickname,
-                                      const std::string& chanName) {
+std::string Replies::ERR_NOTONCHANNEL(Client* client, Channel* channel) {
     std::string reply;
-    reply = nickname + " " + chanName + " :You're not on that channel";
+    reply = client->getNickname() + " " + channel->getName() +
+            " :You're not on that channel";
     return Message::create(reply);
 }
 
@@ -482,10 +482,9 @@ std::string Replies::ERR_NOTREGISTERED() {
     return reply;
 }
 
-std::string Replies::ERR_NEEDMOREPARAMS(const std::string& nickname,
-                                        std::string command) {
+std::string Replies::ERR_NEEDMOREPARAMS(Client* client, std::string command) {
     std::string reply;
-    reply = nickname + " " + command + " :Not enough parameters";
+    reply = client->getNickname() + " " + command + " :Not enough parameters";
     return Message::create(reply);
 }
 
@@ -539,10 +538,10 @@ std::string Replies::ERR_NOPRIVILEGES() {
     return reply;
 }
 
-std::string Replies::ERR_CHANOPRIVSNEEDED(const std::string& nickname,
-                                          const std::string& chanName) {
+std::string Replies::ERR_CHANOPRIVSNEEDED(Client* client, Channel* channel) {
     std::string reply;
-    reply = nickname + " " + chanName + " :You're not channel operator";
+    reply = client->getName() + " " + channel->getName() +
+            " :You're not channel operator";
     return Message::create(reply);
 }
 
