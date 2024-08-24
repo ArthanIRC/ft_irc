@@ -36,6 +36,9 @@ void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
         client->sendMessage(Replies::ERR_USERNOTINCHANNEL());
         throw;
     }
+    if (params[params.size() - 2].find(',') == std::string::npos) {
+        this->_comment = params[params.size() - 1];
+    }
 }
 
 void KickCommand::run() {}

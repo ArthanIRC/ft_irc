@@ -6,6 +6,7 @@
 class KickCommand : public Command {
   private:
     Channel* _channel;
+    std::string _comment;
     void checkParams(Client* client, std::vector<std::string> params);
 
   public:
