@@ -46,6 +46,7 @@ class Server {
     void removeClient(int fd);
     bool isRunning() const;
     Epoll& getEpoll();
+    std::string getPassword() const;
 
     static Server& getInstance();
 

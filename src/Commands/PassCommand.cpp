@@ -1,30 +1,37 @@
 #include "PassCommand.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
+#include <cctype>
 
 PassCommand::PassCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
+    if (params.size() < 1) {
+        client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PASS"));
+        throw;
+    }
     if (!source.empty()) {
-        throw std::invalid_argument("PASS command should not have a prefix.");
+        throw;
     }
-    if (params.size() != 1) {
-        throw std::invalid_argument(
-            "PASS command requires exactly one parameter.");
-    }
-    this->_password = params[0];
-
-    if (_password.empty()) {
-        throw std::invalid_argument("Password cannot be empty.");
-    }
-    for (std::string::iterator it = _password.begin(); it != _password.end();
-         ++it) {
-        if (!std::isprint(*it) || std::isspace(*it)) {
-            throw std::invalid_argument(
-                "Password contains invalid characters.");
-        }
-    }
-
     this->_client = client;
+    this->_password = params[0];
 };
 
 PassCommand::~PassCommand(){};
 
-void PassCommand::run() { return; }
+void PassCommand::run() {
+    std::string serverPass = Server::getInstance().getPassword();
+
+    if (serverPass.empty()) {
+        return;
+    }
+    if (_client->getState() != UNKNOWN) {
+        client->sendMessage(Replies::ERR_ALREADYREGISTERED());
+        throw;
+    }
+    if (_password != serverPass) {
+        client->sendMessage(Replies::ERR_PASSWDMISMATCH());
+        throw;
+    }
+    _client->setState(PASS_DONE);
+    return;
+}

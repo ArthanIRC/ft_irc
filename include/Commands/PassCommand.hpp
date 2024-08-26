@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Client.hpp"
 #include "Command.hpp"
 
 class PassCommand : public Command {
   private:
+    Client* client;
     std::string _password;
 
   public:
