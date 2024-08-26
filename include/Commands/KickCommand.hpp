@@ -1,12 +1,17 @@
 #pragma once
 
 #include "Command.hpp"
+#include <vector>
 
 class KickCommand : public Command {
   private:
-    // std::str
+    Channel* _channel;
+    std::string _comment;
+    std::string _targetNickname;
+    void checkParams(Client* client, std::vector<std::string> params);
+
   public:
-    KickCommand(std::string prefix, std::vector<std::string> params,
+    KickCommand(std::string source, std::vector<std::string> params,
                 Client* client);
     ~KickCommand();
 
