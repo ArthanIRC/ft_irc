@@ -15,7 +15,7 @@ class Replies : public Message {
     static std::string RPL_BOUNCE();
     static std::string RPL_STATSCOMMANDS();
     static std::string RPL_ENDOFSTATS();
-    static std::string RPL_UMODEIS();
+    static std::string RPL_UMODEIS(Client* _client);
     static std::string RPL_STATSUPTIME();
     static std::string RPL_LUSERCLIENT();
     static std::string RPL_LUSEROP();
@@ -82,7 +82,7 @@ class Replies : public Message {
     static std::string RPL_REHASHING();
     static std::string RPL_TIME();
     static std::string ERR_UNKNOWNERROR();
-    static std::string ERR_NOSUCHNICK();
+    static std::string ERR_NOSUCHNICK(Client* client, std::string& target);
     static std::string ERR_NOSUCHSERVER();
     static std::string ERR_NOSUCHCHANNEL(Client* client, std::string chanName);
     static std::string ERR_CANNOTSENDTOCHAN();
@@ -116,8 +116,8 @@ class Replies : public Message {
     static std::string ERR_CHANOPRIVSNEEDED(Client* client, Channel* channel);
     static std::string ERR_CANTKILLSERVER();
     static std::string ERR_NOOPERHOST();
-    static std::string ERR_UMODEUNKNOWNFLAG();
-    static std::string ERR_USERSDONTMATCH();
+    static std::string ERR_UMODEUNKNOWNFLAG(Client* client);
+    static std::string ERR_USERSDONTMATCH(Client* client);
     static std::string ERR_HELPNOTFOUND();
     static std::string ERR_INVALIDKEY();
     static std::string RPL_STARTTLS();

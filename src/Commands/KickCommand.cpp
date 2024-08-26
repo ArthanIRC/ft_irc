@@ -55,7 +55,7 @@ void KickCommand::run() {
     try {
         target = Server::getInstance().findClient(_targetNickname);
     } catch (Server::ClientNotFoundException()) {
-        _client->sendMessage(Replies::ERR_NOSUCHNICK());
+        _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }
     _channel->eraseClient(*target);

@@ -1,5 +1,6 @@
 #include "Replies.hpp"
 #include "Channel.hpp"
+#include "Message.hpp"
 
 std::string Replies::RPL_WELCOME() {
     std::string reply;
@@ -41,9 +42,10 @@ std::string Replies::RPL_ENDOFSTATS() {
     return reply;
 }
 
-std::string Replies::RPL_UMODEIS() {
+std::string Replies::RPL_UMODEIS(Client* _client) {
     std::string reply;
-    return reply;
+    reply = _client->getNickname() + _client->getModes();
+    return Message::create(reply);
 }
 
 std::string Replies::RPL_STATSUPTIME() {
@@ -378,9 +380,10 @@ std::string Replies::ERR_UNKNOWNERROR() {
     return reply;
 }
 
-std::string Replies::ERR_NOSUCHNICK() {
+std::string Replies::ERR_NOSUCHNICK(Client* client, std::string& target) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + " " + target + " :No such nick";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_NOSUCHSERVER() {
@@ -554,14 +557,16 @@ std::string Replies::ERR_NOOPERHOST() {
     return reply;
 }
 
-std::string Replies::ERR_UMODEUNKNOWNFLAG() {
+std::string Replies::ERR_UMODEUNKNOWNFLAG(Client* client) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + ":Unknown MODE flag";
+    return Message::create(reply);
 }
 
-std::string Replies::ERR_USERSDONTMATCH() {
+std::string Replies::ERR_USERSDONTMATCH(Client* client) {
     std::string reply;
-    return reply;
+    reply = client->getNickname() + " :Cant change mode for other users";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_HELPNOTFOUND() {

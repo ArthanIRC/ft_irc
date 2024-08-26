@@ -2,8 +2,8 @@
 #include "ClientSocket.hpp"
 
 Client::Client(int fd)
-    : _realname(""), _nickname(""), _username(""), _socket(fd),
-      _state(UNKNOWN) {}
+    : _realname(""), _nickname(""), _username(""), _socket(fd), _state(UNKNOWN),
+      _invisible(false) {}
 
 Client::~Client() {}
 
@@ -17,13 +17,27 @@ ClientSocket& Client::getSocket() { return this->_socket; }
 
 void Client::setState(State newState) { this->_state = newState; }
 
-bool Client::isRegistered() {
-    if (this->_state != UNKNOWN)
-        return true;
-    return false;
-}
+bool Client::isRegistered() { return this->_state >= REGISTERED; }
+
+bool Client::isServerOperator() { return this->_state == OPERATOR; }
+
+bool Client::isInvisible() { return this->_invisible; }
+
+void Client::setInvisible(bool state) { this->_invisible = state; }
 
 void Client::sendMessage(std::string message) { (void)message; }
+
+std::string Client::getModes() {
+    std::string modes = "+";
+
+    if (isRegistered())
+        modes += "r";
+    if (isServerOperator())
+        modes += "o";
+    if (isInvisible())
+        modes += "i";
+    return modes;
+}
 
 // void Client::checkNameSyntaxCli(std::string nickname) {
 //     if (nickname[0] == '#' || nickname[0] == '&' || nickname[0] == '+' ||
