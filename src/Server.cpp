@@ -146,6 +146,8 @@ void Server::removeClient(int fd) { removeClient(findClient(fd)); }
 
 Epoll& Server::getEpoll() { return this->_epoll; }
 
+std::string Server::getPassword() const { return this->_password; }
+
 bool Server::isRunning() const { return this->_running; }
 
 const char* Server::InvalidNumberOfParametersException::what() const throw() {
