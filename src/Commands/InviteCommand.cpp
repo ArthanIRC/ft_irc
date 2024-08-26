@@ -32,7 +32,7 @@ InviteCommand::InviteCommand(std::string source,
     this->_params = params;
     this->_client = client;
     this->_targetNickname = params[0];
-    this->_channel = params[1];
+    this->_channel = chan;
 }
 
 InviteCommand::~InviteCommand(){};
@@ -40,8 +40,8 @@ InviteCommand::~InviteCommand(){};
 void InviteCommand::run() {
     std::string reply;
 
-    reply = ":" + _client->getNickname() + " " + _command + " " +
-            _targetNickname + " " + _channel;
+    reply = ":" + _client->getNickname() + " INVITE " + _targetNickname + " " +
+            _channel->getName();
     Message::create(reply);
     Client* target;
     try {
@@ -50,6 +50,7 @@ void InviteCommand::run() {
         _client->sendMessage(Replies::ERR_NOSUCHNICK());
         return;
     }
+    _channel->inviteClient(*target);
     _client->sendMessage(Replies::RPL_INVITING());
     target->sendMessage(reply);
 }
