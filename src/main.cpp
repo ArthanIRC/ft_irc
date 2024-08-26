@@ -2,6 +2,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <exception>
+#include <iostream>
 
 #include "Server.hpp"
 

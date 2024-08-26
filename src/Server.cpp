@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <cstdlib>
+#include <iostream>
 
 #include "Channel.hpp"
 #include "Client.hpp"

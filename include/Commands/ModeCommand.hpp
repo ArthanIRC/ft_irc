@@ -11,6 +11,7 @@ class ModeCommand : public Command {
 
     void chanMode();
     void userMode();
+    void setInvisible(bool oper);
 
   public:
     ModeCommand(std::string source, std::vector<std::string> params,

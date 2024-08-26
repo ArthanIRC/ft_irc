@@ -4,7 +4,7 @@
 
 #include "ClientSocket.hpp"
 
-enum State { UNKNOWN, REGISTERED };
+enum State { UNKNOWN, PASS_DONE, NICK_DONE, USER_DONE, REGISTERED, OPERATOR };
 
 class Client {
   private:
@@ -14,6 +14,7 @@ class Client {
     std::string _modes;
     ClientSocket _socket;
     State _state;
+    bool _invisible;
 
   public:
     Client(int fd);
@@ -21,11 +22,14 @@ class Client {
 
     std::string const& getName() const;
     std::string const& getNickname() const;
-    std::string const& getModes() const;
+    std::string getModes();
     ClientSocket& getSocket();
     bool isRegistered();
+    bool isServerOperator();
+    bool isInvisible();
     State getState() const;
     void setState(State newState);
+    void setInvisible(bool state);
     void checkNameSyntaxCli(std::string nickname);
     void sendMessage(std::string message);
 };

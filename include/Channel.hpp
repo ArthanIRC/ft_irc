@@ -1,26 +1,23 @@
 #pragma once
 
-#include <algorithm>
-#include <fstream>
-#include <iostream>
 #include <map>
+#include <stdexcept>
 #include <string>
 
 #include "Client.hpp"
 
 class Channel {
   private:
-    Channel();
     std::string _name;
-    std::string _password;
+    std::string _key;
     std::string _topic;
-    bool _modifTopicByOps;
+    bool _protectedTopic;
     bool _inviteOnly;
     size_t _maxClients;
-    std::map<std::string, Client*> _clientsChan;
-    std::map<std::string, Client*> _invitelist;
-    std::map<std::string, Client*> _banlist;
-    std::map<std::string, Client*> _operatorList;
+    std::map<std::string, Client*> _clients;
+    std::map<std::string, Client*> _inviteList;
+    std::map<std::string, Client*> _banList;
+    std::map<std::string, Client*> _operatorsList;
     void checkNameSyntaxChan(std::string& name);
 
     template <typename MapType>
@@ -60,26 +57,27 @@ class Channel {
 
   public:
     Channel(Client* client, std::string name);
-    Channel(Client* newClient, std::string name, std::string password);
+    Channel(Client* newClient, std::string name, std::string key);
     ~Channel();
 
     std::string const& getName() const;
 
-    std::string getPassword() const;
-    void setPassword(std::string newPassword);
-    void clearPassword();
+    std::string getKey() const;
+    void setKey(std::string newKey);
+    void clearKey();
+    bool isKeyed() const;
 
     std::string getTopic() const;
     void setTopic(std::string newTopic);
-    bool getModifTopicByOps() const;
-    void setModifTopicByOps(bool lock);
+    bool isProtectedTopic() const;
+    void setProtectedTopic(bool lock);
 
-    std::map<std::string, Client*>& getClientsChan();
+    std::map<std::string, Client*>& getClients();
     std::map<std::string, Client*>& getInvitelist();
-    std::map<std::string, Client*>& getBanlist();
-    std::map<std::string, Client*>& getOperatorlist();
+    std::map<std::string, Client*>& getBanList();
+    std::map<std::string, Client*>& getOperatorsList();
 
-    bool getInviteOnly() const;
+    bool isInviteOnly() const;
     void setInviteOnly(bool inviteMode);
 
     size_t getMaxClients(void) const;
@@ -91,7 +89,7 @@ class Channel {
     void inviteClient(Client& client);
 
     void kickOperator(Client& client);
-    void debanClient(Client& client);
+    void unbanClient(Client& client);
     void eraseClient(Client& client);
 
     bool isInChannel(Client& client) const;
@@ -103,7 +101,7 @@ class Channel {
     bool isBanned(std::string nickname) const;
     bool isOperator(std::string nickname) const;
 
-    std::string getChannelMode() const;
+    std::string getModes() const;
 
     class userNotInvited : public std::exception {
       public:

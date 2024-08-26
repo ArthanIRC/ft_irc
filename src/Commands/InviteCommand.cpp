@@ -20,7 +20,7 @@ InviteCommand::InviteCommand(std::string source,
         client->sendMessage(Replies::ERR_NOTONCHANNEL(_client, chan));
         throw;
     }
-    if (chan->getInviteOnly() && !chan->isOperator(*client)) {
+    if (chan->isInviteOnly() && !chan->isOperator(*client)) {
         client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(_client, chan));
         throw;
     }
@@ -47,7 +47,7 @@ void InviteCommand::run() {
     try {
         target = Server::getInstance().findClient(_targetNickname);
     } catch (Server::ClientNotFoundException()) {
-        _client->sendMessage(Replies::ERR_NOSUCHNICK());
+        _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }
     _channel->inviteClient(*target);
