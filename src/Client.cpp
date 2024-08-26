@@ -19,7 +19,7 @@ void Client::setState(State newState) { this->_state = newState; }
 
 bool Client::isRegistered() { return this->_state >= REGISTERED; }
 
-bool Client::isServerOperator() { return this->_state = OPERATOR; }
+bool Client::isServerOperator() { return this->_state == OPERATOR; }
 
 bool Client::isInvisible() { return this->_invisible; }
 
