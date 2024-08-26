@@ -19,23 +19,14 @@ PassCommand::PassCommand(std::string source, std::vector<std::string> params,
 PassCommand::~PassCommand(){};
 
 void PassCommand::run() {
-    if (_password != Server::getInstance().getPassword()) {
-        client->sendMessage(Replies::ERR_PASSWDMISMATCH());
-        throw;
-    }
     if (_client->getState() != UNKNOWN) {
         client->sendMessage(Replies::ERR_ALREADYREGISTERED());
+        throw;
+    }
+    if (_password != Server::getInstance().getPassword()) {
+        client->sendMessage(Replies::ERR_PASSWDMISMATCH());
         throw;
     }
     _client->setState(PASS_DONE);
     return;
 }
-
-/*
-donc :
-si la commande pass a un mot de passe correct, je modifie le state du client
-pour qu'il aie PASS_DONE, et c'est tout si le serveur n'az aucun mot de passe,
-je fais rien si le mot de passe est invalide, je retourne la numeric reply si
-l'utilisateur n'a pas le state UNKNOWN; je retourne la numeric reply s'il manque
-des params, je retourne la numeric reply
-*/
