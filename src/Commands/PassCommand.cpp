@@ -1,4 +1,5 @@
 #include "PassCommand.hpp"
+#include "Client.hpp"
 #include "Server.hpp"
 #include <cctype>
 
@@ -11,15 +12,24 @@ PassCommand::PassCommand(std::string source, std::vector<std::string> params,
     if (!source.empty()) {
         throw;
     }
-    if (params[0] != Server::getInstance().getPassword()) {
-        client->sendMessage(Replies::ERR_PASSWDMISMATCH());
-        throw;
-    }
+    this->_client = client;
+    this->_password = params[0];
 };
 
 PassCommand::~PassCommand(){};
 
-void PassCommand::run() { return; }
+void PassCommand::run() {
+    if (_password != Server::getInstance().getPassword()) {
+        client->sendMessage(Replies::ERR_PASSWDMISMATCH());
+        throw;
+    }
+    if (_client->getState() != UNKNOWN) {
+        client->sendMessage(Replies::ERR_ALREADYREGISTERED());
+        throw;
+    }
+    _client->setState(PASS_DONE);
+    return;
+}
 
 /*
 donc :
