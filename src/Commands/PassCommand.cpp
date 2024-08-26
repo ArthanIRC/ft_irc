@@ -19,11 +19,16 @@ PassCommand::PassCommand(std::string source, std::vector<std::string> params,
 PassCommand::~PassCommand(){};
 
 void PassCommand::run() {
+    std::string serverPass = Server::getInstance().getPassword();
+
+    if (serverPass.empty()) {
+        return;
+    }
     if (_client->getState() != UNKNOWN) {
         client->sendMessage(Replies::ERR_ALREADYREGISTERED());
         throw;
     }
-    if (_password != Server::getInstance().getPassword()) {
+    if (_password != serverPass) {
         client->sendMessage(Replies::ERR_PASSWDMISMATCH());
         throw;
     }
