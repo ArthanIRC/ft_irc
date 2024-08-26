@@ -8,7 +8,8 @@ class JoinCommand : public Command {
     std::vector<Channel*> _chanlist;
     std::vector<std::string> _keylist;
     void checkParams(Client* client, std::vector<std::string> params);
-    void setLists(Client* client, std::vector<std::string> params);
+    void setLists();
+    void joinAndReplies(Channel* channel);
 
   public:
     JoinCommand(std::string source, std::vector<std::string> params,
