@@ -14,7 +14,7 @@ UserCommand::UserCommand(std::string source, std::vector<std::string> params,
             this->_realname = params[3].substr(1);
         else
             this->_realname = params[3];
-    } catch (std::out_of_range) {
+    } catch (std::out_of_range const&) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "USER"));
         throw;
     }
