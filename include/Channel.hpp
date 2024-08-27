@@ -102,6 +102,7 @@ class Channel {
     bool isOperator(std::string nickname) const;
 
     std::string getModes() const;
+    std::string getPrefix(Client& client);
 
     class userNotInvited : public std::exception {
       public:
