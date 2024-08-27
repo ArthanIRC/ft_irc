@@ -297,6 +297,7 @@ std::string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
     std::map<std::string, Client*> mapClients = channel->getClients();
     std::map<std::string, Client*>::const_iterator it = mapClients.begin();
     while (++it != mapClients.end()) {
+        // if client invisble continue
         reply += " " + it->first;
     }
     return Message::create(reply);
