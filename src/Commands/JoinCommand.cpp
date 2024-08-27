@@ -74,18 +74,18 @@ void JoinCommand::joinAndReplies(Channel* channel) {
 }
 
 void JoinCommand::leaveChannels() {
-    std::vector<std::string> chanList;
+    std::vector<std::string> chanParams;
     std::map<std::string, Channel*> mapChannel = _client->getChannels();
     std::map<std::string, Channel*>::const_iterator it = mapChannel.begin();
     if (it != mapChannel.end()) {
-        chanList[0] = it->first;
+        chanParams[0] = it->first;
         ++it;
     }
     while (it != mapChannel.end()) {
-        chanList[0] += "," + it->first;
+        chanParams[0] += "," + it->first;
         it++;
     }
-    PartCommand p("", chanList, _client);
+    PartCommand p("", chanParams, _client);
     p.run();
 }
 
