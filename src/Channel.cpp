@@ -29,6 +29,17 @@ void Channel::checkNameSyntaxChan(std::string& name) {
         throw wrongSyntaxChannelName();
 }
 
+std::string Channel::getPrefix(Client& client) {
+    std::string prefix = "+";
+    if (this->isOperator(client))
+        prefix += "o";
+    if (this->isVoiced(client))
+        prefix += "v";
+    if (prefix == "+")
+        prefix = "";
+    return prefix;
+}
+
 std::string const& Channel::getName() const { return this->_name; }
 
 std::string Channel::getKey() const { return this->_key; }
