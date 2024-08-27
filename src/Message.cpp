@@ -2,12 +2,16 @@
 #include <cstddef>
 #include <cstdio>
 #include <sstream>
+#include <vector>
+
+using std::string;
+using std::vector;
 
 Message::~Message() {}
 
-bool Message::verify(std::string& data) {
-    std::string source, command;
-    std::vector<std::string> params;
+bool Message::verify(string& data) {
+    string source, command;
+    vector<string> params;
     int res = Message::parse(data, source, command, params);
 
     switch (res) {
@@ -33,19 +37,18 @@ bool Message::verify(std::string& data) {
     return (true);
 }
 
-int Message::parse(std::string& data, std::string& source, std::string& command,
-                   std::vector<std::string>& params) {
+int Message::parse(string& data, string& source, string& command,
+                   vector<string>& params) {
     if (data.length() < 2 || data.substr(data.length() - 2) != "\r\n") {
         return (err_trailing);
     }
     data = data.substr(0, data.length() - 2);
-    if (data.find('\n') != std::string::npos ||
-        data.find('\r') != std::string::npos) {
+    if (data.find('\n') != string::npos || data.find('\r') != string::npos) {
         return (err_newline);
     }
 
     std::istringstream iss(data);
-    std::string word;
+    string word;
 
     if (data[0] == ':') {
         iss >> word;
@@ -58,14 +61,14 @@ int Message::parse(std::string& data, std::string& source, std::string& command,
 
     while (iss >> word) {
         if (word[0] == ':') {
-            std::string trailing;
+            string trailing;
             getline(iss, trailing);
             word.erase(0, 1);
             word += trailing;
             params.push_back(word);
             break;
         }
-        if (word.find(':') != std::string::npos) {
+        if (word.find(':') != string::npos) {
             return (err_trailing);
         }
         params.push_back(word);
@@ -74,8 +77,8 @@ int Message::parse(std::string& data, std::string& source, std::string& command,
     return (0);
 }
 
-bool Message::validate(const std::string& source, const std::string& command,
-                       const std::vector<std::string>& params) {
+bool Message::validate(const string& source, const string& command,
+                       const vector<string>& params) {
     if (!source.empty()) {
         for (size_t i = 0; i < source.length(); ++i) {
             if (!std::isalnum(source[i]) && source[i] != '-' &&
@@ -89,7 +92,7 @@ bool Message::validate(const std::string& source, const std::string& command,
         return (false);
     }
 
-    for (std::string::const_iterator it = command.begin(); it != command.end();
+    for (string::const_iterator it = command.begin(); it != command.end();
          ++it) {
         if (!std::isupper(*it) && !std::isdigit(*it)) {
             return (false);
@@ -111,4 +114,15 @@ bool Message::validate(const std::string& source, const std::string& command,
     return (true);
 }
 
-std::string Message::create(std::string& data) { return data += "\r\n"; }
+vector<string> Message::split(string& str, char delim) {
+    std::istringstream iss(str);
+    string buffer;
+    vector<string> result;
+
+    while (std::getline(iss, buffer, delim))
+        result.push_back(buffer);
+
+    return result;
+}
+
+string Message::create(string& data) { return data += "\r\n"; }
