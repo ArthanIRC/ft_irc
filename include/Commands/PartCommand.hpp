@@ -6,8 +6,9 @@
 class PartCommand : public Command {
   private:
     std::vector<Channel*> _channels;
+    std::string _reason;
     void checkParams(Client* client, std::vector<std::string> params);
-    void parseParams(Client* client);
+    void parseParams(Client* client, std::vector<std::string> params);
 
   public:
     PartCommand(std::string source, std::vector<std::string> params,

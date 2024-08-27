@@ -4,7 +4,7 @@
 PartCommand::PartCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
     checkParams(client, params);
-    parseParams(client);
+    parseParams(client, params);
     this->_source = source;
     this->_params = params;
     this->_client = client;
@@ -17,8 +17,8 @@ void PartCommand::checkParams(Client* client, std::vector<std::string> params) {
     }
 }
 
-void PartCommand::parseParams(Client* client) {
-    std::istringstream iss(_params[0]);
+void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
+    std::istringstream iss(params[0]);
     std::string chanName;
     size_t i = 0;
 
@@ -31,10 +31,21 @@ void PartCommand::parseParams(Client* client) {
         }
         i++;
     }
+    if (params.size() > 1) {
+        _reason = params[1];
+    }
 }
 
 void PartCommand::run() {
     for (size_t i = 0; i < _channels.size(); ++i) {
-        if
+        if (_channels[i]->isInChannel(*_client)) {
+            if (_channels[i]->isOperator(*_client))
+                _channels[i]->kickOperator(*_client);
+            _channels[i]->eraseClient(*_client);
+
+        } else {
+            _client->sendMessage(
+                Replies::ERR_NOTONCHANNEL(_client, _channels[i]));
+        }
     }
 }
