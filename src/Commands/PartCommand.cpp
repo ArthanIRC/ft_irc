@@ -24,6 +24,7 @@ void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
     std::istringstream iss(params[0]);
     std::string chanName;
     size_t i = 0;
+    this->_reason = "";
 
     while (std::getline(iss, chanName, ',')) {
         try {
