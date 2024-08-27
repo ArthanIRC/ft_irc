@@ -36,5 +36,7 @@ class Client {
     void setState(State newState);
     void setInvisible(bool state);
     void setNickname(std::string& nick);
+    void setUsername(std::string& username);
+    void setRealname(std::string& realname);
     void sendMessage(std::string message);
 };

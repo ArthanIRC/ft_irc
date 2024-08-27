@@ -36,6 +36,10 @@ void Client::setInvisible(bool state) { this->_invisible = state; }
 
 void Client::setNickname(string& nick) { this->_nickname = nick; }
 
+void Client::setUsername(string& username) { this->_username = username; }
+
+void Client::setRealname(string& realname) { this->_realname = realname; }
+
 void Client::sendMessage(string message) { (void)message; }
 
 string Client::getModes() {

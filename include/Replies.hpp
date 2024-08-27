@@ -103,7 +103,7 @@ class Replies : public Message {
     static std::string ERR_USERONCHANNEL();
     static std::string ERR_NOTREGISTERED();
     static std::string ERR_NEEDMOREPARAMS(Client* client, std::string command);
-    static std::string ERR_ALREADYREGISTERED();
+    static std::string ERR_ALREADYREGISTERED(Client* client);
     static std::string ERR_PASSWDMISMATCH();
     static std::string ERR_YOUREBANNEDCREEP();
     static std::string ERR_CHANNELISFULL();
