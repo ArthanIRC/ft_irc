@@ -1,5 +1,9 @@
 #include "Client.hpp"
 #include "ClientSocket.hpp"
+#include "Server.hpp"
+
+using std::map;
+using std::string;
 
 Client::Client(int fd)
     : _realname(""), _nickname(""), _username(""), _socket(fd), _state(UNKNOWN),
@@ -7,9 +11,14 @@ Client::Client(int fd)
 
 Client::~Client() {}
 
-std::string const& Client::getName() const { return this->_realname; }
+string const& Client::getName() const { return this->_realname; }
 
-std::string const& Client::getNickname() const { return this->_nickname; }
+string const& Client::getNickname() const { return this->_nickname; }
+
+string const Client::getSource() const {
+    string source = _nickname + "!" + _username + "@localhost";
+    return source;
+}
 
 State Client::getState() const { return this->_state; }
 
@@ -25,10 +34,12 @@ bool Client::isInvisible() { return this->_invisible; }
 
 void Client::setInvisible(bool state) { this->_invisible = state; }
 
-void Client::sendMessage(std::string message) { (void)message; }
+void Client::setNickname(string& nick) { this->_nickname = nick; }
 
-std::string Client::getModes() {
-    std::string modes = "+";
+void Client::sendMessage(string message) { (void)message; }
+
+string Client::getModes() {
+    string modes = "+";
 
     if (isRegistered())
         modes += "r";
@@ -39,24 +50,16 @@ std::string Client::getModes() {
     return modes;
 }
 
-// void Client::checkNameSyntaxCli(std::string nickname) {
-//     if (nickname[0] == '#' || nickname[0] == '&' || nickname[0] == '+' ||
-//         nickname[0] == '%')
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname[0] == ':' || nickname[0] == '$')
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname.find(' ') != nickname.npos)
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname.find('*') != nickname.npos)
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname.find('?') != nickname.npos)
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname.find('.') != nickname.npos)
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname.find(',') != nickname.npos)
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname.find('!') != nickname.npos)
-//         throw std::runtime_error("Error syntax nickname");
-//     if (nickname.find('@') != nickname.npos)
-//         throw std::runtime_error("Error syntax nickname");
-// }
+map<string, Channel*> Client::getChannels() {
+    map<string, Channel*> servMap = Server::getInstance().getChannels();
+    map<string, Channel*> result = servMap;
+    for (map<string, Channel*>::iterator it = servMap.begin();
+         it != servMap.end();) {
+        if (it->second->isInChannel(*this))
+            ++it;
+        else
+            result.erase(it++);
+    }
+
+    return result;
+}

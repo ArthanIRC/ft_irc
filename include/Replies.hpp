@@ -94,9 +94,9 @@ class Replies : public Message {
     static std::string ERR_INPUTTOOLONG();
     static std::string ERR_UNKNOWNCOMMAND();
     static std::string ERR_NOMOTD();
-    static std::string ERR_NONICKNAMEGIVEN();
-    static std::string ERR_ERRONEUSNICKNAME();
-    static std::string ERR_NICKNAMEINUSE();
+    static std::string ERR_NONICKNAMEGIVEN(Client* client);
+    static std::string ERR_ERRONEUSNICKNAME(Client* client, std::string& nick);
+    static std::string ERR_NICKNAMEINUSE(Client* client, std::string& nick);
     static std::string ERR_NICKCOLLISION();
     static std::string ERR_USERNOTINCHANNEL();
     static std::string ERR_NOTONCHANNEL(Client* client, Channel* channel);

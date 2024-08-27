@@ -42,11 +42,16 @@ class Server {
     Client* findClient(int fd);
     Client* findClient(std::string nickname);
     Channel* findChannel(std::string name);
+    std::vector<Client*> getClients();
+    std::map<std::string, Channel*> getChannels();
     void removeClient(Client* c);
     void removeClient(int fd);
     bool isRunning() const;
     Epoll& getEpoll();
     std::string getPassword() const;
+    void sendMessage(Channel* channel, std::string message);
+    void sendMessage(std::map<std::string, Channel*> channels,
+                     std::string message);
 
     static Server& getInstance();
 

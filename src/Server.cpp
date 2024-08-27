@@ -1,19 +1,25 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <set>
 
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 #include "ServerSocket.hpp"
 
-static const std::string defaultPort = "6667";
+using std::map;
+using std::set;
+using std::string;
+using std::vector;
+
+static const string defaultPort = "6667";
 
 Server::Server() {}
 
 Server::~Server() {
-    for (std::vector<Client*>::iterator it = _clients.begin();
-         it != _clients.end(); it++) {
+    for (vector<Client*>::iterator it = _clients.begin(); it != _clients.end();
+         it++) {
         try {
             _epoll.unsubscribe((*it)->getSocket().getFd());
         } catch (Epoll::EpollUnsubscribeException& e) {
@@ -21,7 +27,7 @@ Server::~Server() {
         }
         delete *it;
     }
-    for (std::map<std::string, Channel*>::iterator it = _channels.begin();
+    for (map<string, Channel*>::iterator it = _channels.begin();
          it != _channels.end(); it++) {
         delete it->second;
     }
@@ -34,8 +40,8 @@ Server::~Server() {
 }
 
 void Server::init(int ac, char** data) {
-    std::string port;
-    std::string password;
+    string port;
+    string password;
 
     if (ac < 2 || ac > 3) {
         throw Server::InvalidNumberOfParametersException();
@@ -59,7 +65,7 @@ Server& Server::getInstance() {
     return instance;
 }
 
-std::string Server::parsePort(const char* strp) {
+string Server::parsePort(const char* strp) {
     int port = strtol(strp, NULL, 10);
 
     if (port < 1 || port > 65535)
@@ -67,7 +73,7 @@ std::string Server::parsePort(const char* strp) {
     return strp;
 }
 
-std::string Server::parsePassword(std::string pass) {
+string Server::parsePassword(std::string pass) {
     if (pass.empty()) {
         throw Server::EmptyPasswordException();
     }
@@ -101,7 +107,7 @@ void Server::addClient(Client* c) {
 }
 
 void Server::addChannel(Channel* c) {
-    std::string name = c->getName();
+    string name = c->getName();
     if (_channels.find(name) != _channels.end()) {
         throw;
     }
@@ -109,25 +115,25 @@ void Server::addChannel(Channel* c) {
 }
 
 Client* Server::findClient(int fd) {
-    for (std::vector<Client*>::iterator it = _clients.begin();
-         it != _clients.end(); it++) {
+    for (vector<Client*>::iterator it = _clients.begin(); it != _clients.end();
+         it++) {
         if ((*it)->getSocket().getFd() == fd)
             return *it;
     }
     throw Server::ClientNotFoundException();
 }
 
-Client* Server::findClient(std::string nickname) {
-    for (std::vector<Client*>::iterator it = _clients.begin();
-         it != _clients.end(); it++) {
+Client* Server::findClient(string nickname) {
+    for (vector<Client*>::iterator it = _clients.begin(); it != _clients.end();
+         it++) {
         if ((*it)->isRegistered() && (*it)->getNickname() == nickname)
             return *it;
     }
     throw Server::ClientNotFoundException();
 }
 
-Channel* Server::findChannel(std::string name) {
-    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+Channel* Server::findChannel(string name) {
+    std::map<string, Channel*>::iterator it = _channels.find(name);
     if (it == _channels.end()) {
         throw Server::ChannelNotFoundException();
     }
@@ -135,7 +141,7 @@ Channel* Server::findChannel(std::string name) {
 }
 
 void Server::removeClient(Client* client) {
-    std::vector<Client*>::iterator it =
+    vector<Client*>::iterator it =
         std::find(_clients.begin(), _clients.end(), client);
     if (it == _clients.end())
         throw Server::ClientNotFoundException();
@@ -146,11 +152,37 @@ void Server::removeClient(Client* client) {
 
 void Server::removeClient(int fd) { removeClient(findClient(fd)); }
 
+vector<Client*> Server::getClients() { return this->_clients; }
+
+map<std::string, Channel*> Server::getChannels() { return this->_channels; }
+
 Epoll& Server::getEpoll() { return this->_epoll; }
 
-std::string Server::getPassword() const { return this->_password; }
+string Server::getPassword() const { return this->_password; }
 
 bool Server::isRunning() const { return this->_running; }
+
+void Server::sendMessage(Channel* channel, string message) {
+    map<string, Client*> clients = channel->getClients();
+    for (map<string, Client*>::iterator it = clients.begin();
+         it != clients.end(); it++)
+        it->second->sendMessage(message);
+}
+
+void Server::sendMessage(map<string, Channel*> channels, string message) {
+    set<Client*> clients;
+    for (map<string, Channel*>::iterator it = channels.begin();
+         it != channels.end(); it++) {
+        map<string, Client*> clientsMap = it->second->getClients();
+        for (map<string, Client*>::iterator ut = clientsMap.begin();
+             ut != clientsMap.end(); ut++) {
+            clients.insert(ut->second);
+        }
+    }
+
+    for (set<Client*>::iterator it = clients.begin(); it != clients.end(); it++)
+        (*it)->sendMessage(message);
+}
 
 const char* Server::InvalidNumberOfParametersException::what() const throw() {
     return "Error: Usage: ./ircserv <port> <password>";
