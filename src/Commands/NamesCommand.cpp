@@ -19,7 +19,14 @@ NamesCommand::~NamesCommand(){};
 
 void NamesCommand::run() {
     if (_params[0].empty()) {
-
+        std::map<std::string, Channel*> allChannels =
+            Server::getInstance().getChannels();
+        for (std::map<std::string, Channel*>::iterator it = allChannels.begin();
+             it != allChannels.end(); ++it) {
+            _client->sendMessage(Replies::RPL_NAMREPLY(_client, it->second));
+            _client->sendMessage(
+                Replies::RPL_ENDOFNAMES(_client, it->second->getName()));
+        }
     } else {
         std::vector<std::string> channels = split(_params[0], ',');
         Channel* currChannel;
@@ -39,10 +46,6 @@ void NamesCommand::run() {
     }
     return;
 }
-/*
-je loop selon les virgules dans _channels, pour chaque channel je liste les
-clients, pour chaque client je check si il a ope ou
-*/
 
 /*
 Channel map operator, la get et voir si client et dedans
