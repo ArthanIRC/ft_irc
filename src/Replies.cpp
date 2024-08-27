@@ -313,9 +313,9 @@ std::string Replies::RPL_ENDOFLINKS() {
     return reply;
 }
 
-std::string Replies::RPL_ENDOFNAMES(Client* client, Channel* channel) {
+std::string Replies::RPL_ENDOFNAMES(Client* client, std::string channelName) {
     std::string reply;
-    reply = "365 " + client->getNickname() + " " + channel->getName() +
+    reply = "365 " + client->getNickname() + " " + channelName +
             " :End of /NAMES list";
     return Message::create(reply);
 }
