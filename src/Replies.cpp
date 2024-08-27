@@ -505,9 +505,10 @@ std::string Replies::ERR_NEEDMOREPARAMS(Client* client, std::string command) {
     return Message::create(reply);
 }
 
-std::string Replies::ERR_ALREADYREGISTERED() {
+std::string Replies::ERR_ALREADYREGISTERED(Client* client) {
     std::string reply;
-    return reply;
+    reply = "462 " + client->getNickname() + " :You may not reregister";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_PASSWDMISMATCH() {

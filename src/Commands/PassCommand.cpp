@@ -26,7 +26,7 @@ void PassCommand::run() {
         return;
     }
     if (_client->getState() != UNKNOWN) {
-        client->sendMessage(Replies::ERR_ALREADYREGISTERED());
+        client->sendMessage(Replies::ERR_ALREADYREGISTERED(_client));
         throw;
     }
     if (_password != serverPass) {

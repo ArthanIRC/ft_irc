@@ -16,3 +16,4 @@ SOURCES += ./src/Commands/ModeCommand.cpp
 SOURCES += ./src/Commands/NickCommand.cpp
 SOURCES += ./src/Commands/PassCommand.cpp
 SOURCES += ./src/Commands/TopicCommand.cpp
+SOURCES += ./src/Commands/UserCommand.cpp
