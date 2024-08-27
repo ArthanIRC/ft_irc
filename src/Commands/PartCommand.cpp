@@ -15,7 +15,7 @@ PartCommand::~PartCommand() {}
 
 void PartCommand::checkParams(Client* client, std::vector<std::string> params) {
     if (params.size() < 1) {
-        client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "JOIN"));
+        client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PART"));
         throw;
     }
 }
