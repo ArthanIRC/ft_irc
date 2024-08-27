@@ -1,5 +1,6 @@
 #include "PartCommand.hpp"
 #include "Replies.hpp"
+#include <string>
 
 PartCommand::PartCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
@@ -9,6 +10,8 @@ PartCommand::PartCommand(std::string source, std::vector<std::string> params,
     this->_params = params;
     this->_client = client;
 }
+
+PartCommand::~PartCommand() {}
 
 void PartCommand::checkParams(Client* client, std::vector<std::string> params) {
     if (params.size() < 1) {
@@ -36,13 +39,24 @@ void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
     }
 }
 
+std::string PartCommand::createReply(Channel* channel) {
+    std::string reply;
+
+    reply = ":" + _client->getNickname() + " PART " + channel->getName() + " " +
+            _reason;
+
+    return reply;
+}
+
 void PartCommand::run() {
     for (size_t i = 0; i < _channels.size(); ++i) {
         if (_channels[i]->isInChannel(*_client)) {
             if (_channels[i]->isOperator(*_client))
                 _channels[i]->kickOperator(*_client);
             _channels[i]->eraseClient(*_client);
-
+            std::string reply = createReply(_channels[i]);
+            Message::create(reply);
+            Server::getInstance().sendMessage(_channels[i], reply);
         } else {
             _client->sendMessage(
                 Replies::ERR_NOTONCHANNEL(_client, _channels[i]));

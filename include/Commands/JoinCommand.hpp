@@ -10,6 +10,7 @@ class JoinCommand : public Command {
     std::vector<std::string> _keys;
     void checkParams(Client* client, std::vector<std::string> params);
     void parseParams();
+    void leaveChannels();
     void joinAndReplies(Channel* channel);
 
   public:

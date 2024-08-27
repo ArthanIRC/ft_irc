@@ -9,6 +9,7 @@ class PartCommand : public Command {
     std::string _reason;
     void checkParams(Client* client, std::vector<std::string> params);
     void parseParams(Client* client, std::vector<std::string> params);
+    std::string createReply(Channel* channel);
 
   public:
     PartCommand(std::string source, std::vector<std::string> params,
