@@ -292,7 +292,7 @@ std::string Replies::RPL_WHOREPLY() {
 
 std::string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
     std::string reply;
-    reply = client->getNickname() + " = " + channel->getName() + " :" +
+    reply = "353 " + client->getNickname() + " = " + channel->getName() + " :" +
             client->getNickname();
     std::map<std::string, Client*> mapClients = channel->getClients();
     std::map<std::string, Client*>::const_iterator it = mapClients.begin();
@@ -314,7 +314,7 @@ std::string Replies::RPL_ENDOFLINKS() {
 
 std::string Replies::RPL_ENDOFNAMES(Client* client, Channel* channel) {
     std::string reply;
-    reply = client->getNickname() + " " + channel->getName() +
+    reply = "365 " + client->getNickname() + " " + channel->getName() +
             " :End of /NAMES list";
     return Message::create(reply);
 }

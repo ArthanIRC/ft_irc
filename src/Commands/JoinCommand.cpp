@@ -2,6 +2,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Replies.hpp"
+#include <iterator>
 #include <map>
 #include <sstream>
 #include <vector>
@@ -67,18 +68,27 @@ void JoinCommand::joinAndReplies(Channel* channel) {
         _client->sendMessage(Replies::RPL_TOPICWHOTIME());
     }
 
-    // reply = _client->getNickname() + " = " + channel->getName() + ":";
-    // std::map<std::string, Client*> mapClients = channel->getClients();
-    // std::map<std::string, Client*>::const_iterator it = mapClients.begin();
-    // while (it != mapClients.end()) {
-    //     reply += " " + it->first;
-    //     it++;
-    // }
     _client->sendMessage(Replies::RPL_NAMREPLY(_client, channel));
     _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, channel));
 }
 
 void JoinCommand::run() {
+    // if (_params[0] == "0") {
+    //     std::vector<std::string> chanList;
+    //     std::map<std::string, Channel*> mapChannel = _client.getChannels();
+    //     std::map<std::string, Channel*>::const_iterator it =
+    //     mapChannel.begin(); if (it != mapChannel.end()) {
+    //         chanList[0] = it->first;
+    //         ++it;
+    //     }
+    //     while (it != mapChannel.end()) {
+    //         chanList[0] += "," + it->first;
+    //         it++;
+    //     }
+    //     PartCommand p("", chanList, _client);
+    //     p.run();
+    //     return;
+    // }
     setLists();
 
     size_t i = 0;
@@ -108,5 +118,3 @@ void JoinCommand::run() {
         i++;
     }
 }
-
-// PENSER A FAIRE LE PARAM "0";
