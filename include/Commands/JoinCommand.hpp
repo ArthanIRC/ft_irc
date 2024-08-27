@@ -5,10 +5,10 @@
 
 class JoinCommand : public Command {
   private:
-    std::vector<Channel*> _chanlist;
-    std::vector<std::string> _keylist;
+    std::vector<Channel*> _channels;
+    std::vector<std::string> _keys;
     void checkParams(Client* client, std::vector<std::string> params);
-    void setLists();
+    void parseParams();
     void joinAndReplies(Channel* channel);
 
   public:

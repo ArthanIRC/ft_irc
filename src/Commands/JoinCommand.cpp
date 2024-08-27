@@ -24,31 +24,31 @@ void JoinCommand::checkParams(Client* client, std::vector<std::string> params) {
     }
 }
 
-void JoinCommand::setLists() {
-    std::istringstream iss(_params[0]);
-    std::istringstream iss2(_params[1]);
+void JoinCommand::parseParams() {
+    std::istringstream iss(_params[1]);
+    std::istringstream iss2(_params[0]);
     std::string chanName;
     size_t i = 0;
     size_t j = 0;
 
-    while (std::getline(iss, chanName, ',')) {
+    while (std::getline(iss, _keys[i], ','))
+        j++;
+    while (std::getline(iss2, chanName, ',')) {
         try {
-            _chanlist[i] = Server::getInstance().findChannel(chanName);
+            _channels[j] = Server::getInstance().findChannel(chanName);
         } catch (const Server::ChannelNotFoundException()) {
             try {
-                if (i < _keylist.size())
-                    _chanlist[i] = new Channel(_client, chanName, _keylist[i]);
+                if (i < _keys.size())
+                    _channels[j] = new Channel(_client, chanName, _keys[j]);
                 else
-                    _chanlist[i] = new Channel(_client, chanName);
-                Server::getInstance().addChannel(_chanlist[i]);
+                    _channels[j] = new Channel(_client, chanName);
+                Server::getInstance().addChannel(_channels[j]);
             } catch (Channel::wrongSyntaxChannelName()) {
-                throw Channel::wrongSyntaxChannelName();
+                break;
             }
         }
         i++;
     }
-    while (std::getline(iss2, _keylist[j], ','))
-        j++;
 }
 
 void JoinCommand::joinAndReplies(Channel* channel) {
@@ -89,32 +89,29 @@ void JoinCommand::run() {
     //     p.run();
     //     return;
     // }
-    setLists();
+    parseParams();
 
-    size_t i = 0;
-    while (i < _chanlist.size()) {
-        if (_chanlist[i]->isKeyed()) {
-            if (i < _keylist.size() || _keylist[i] != _chanlist[i]->getKey()) {
+    for (size_t i = 0; i < _channels.size(); ++i) {
+        if (_channels[i]->isKeyed()) {
+            if (i < _keys.size() || _keys[i] != _channels[i]->getKey()) {
                 _client->sendMessage(Replies::ERR_BADCHANNELKEY());
                 continue;
             }
         }
 
-        if (_chanlist[i]->isBanned(*_client))
+        if (_channels[i]->isBanned(*_client))
             _client->sendMessage(Replies::ERR_BANNEDFROMCHAN());
 
-        else if (_chanlist[i]->getMaxClients() != 0 &&
-                 _chanlist[i]->getMaxClients() ==
-                     _chanlist[i]->getClients().size())
+        else if (_channels[i]->getMaxClients() != 0 &&
+                 _channels[i]->getMaxClients() ==
+                     _channels[i]->getClients().size())
             _client->sendMessage(Replies::ERR_CHANNELISFULL());
 
-        else if (_chanlist[i]->isInviteOnly() &&
-                 !_chanlist[i]->isInvited(*_client))
+        else if (_channels[i]->isInviteOnly() &&
+                 !_channels[i]->isInvited(*_client))
             _client->sendMessage(Replies::ERR_INVITEONLYCHAN());
 
         else
-            joinAndReplies(_chanlist[i]);
-
-        i++;
+            joinAndReplies(_channels[i]);
     }
 }
