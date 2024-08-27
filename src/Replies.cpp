@@ -452,19 +452,23 @@ std::string Replies::ERR_NOMOTD() {
     return reply;
 }
 
-std::string Replies::ERR_NONICKNAMEGIVEN() {
+std::string Replies::ERR_NONICKNAMEGIVEN(Client* client) {
     std::string reply;
-    return reply;
+    reply = "431 " + client->getNickname() + " :No nickname given";
+    return Message::create(reply);
 }
 
-std::string Replies::ERR_ERRONEUSNICKNAME() {
+std::string Replies::ERR_ERRONEUSNICKNAME(Client* client, std::string& nick) {
     std::string reply;
-    return reply;
+    reply = "432 " + client->getNickname() + " " + nick + " :Erroneus nickname";
+    return Message::create(reply);
 }
 
-std::string Replies::ERR_NICKNAMEINUSE() {
+std::string Replies::ERR_NICKNAMEINUSE(Client* client, std::string& nick) {
     std::string reply;
-    return reply;
+    reply = "433 " + client->getNickname() + " " + nick +
+            " :Nickname is already in use";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_NICKCOLLISION() {

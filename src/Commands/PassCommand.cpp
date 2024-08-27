@@ -22,6 +22,7 @@ void PassCommand::run() {
     std::string serverPass = Server::getInstance().getPassword();
 
     if (serverPass.empty()) {
+        _client->setState(PASS_DONE);
         return;
     }
     if (_client->getState() != UNKNOWN) {
