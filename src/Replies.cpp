@@ -290,9 +290,16 @@ std::string Replies::RPL_WHOREPLY() {
     return reply;
 }
 
-std::string Replies::RPL_NAMREPLY() {
+std::string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
     std::string reply;
-    return reply;
+    reply = "353 " + client->getNickname() + " = " + channel->getName() + " :" +
+            client->getNickname();
+    std::map<std::string, Client*> mapClients = channel->getClients();
+    std::map<std::string, Client*>::const_iterator it = mapClients.begin();
+    while (++it != mapClients.end()) {
+        reply += " " + it->first;
+    }
+    return Message::create(reply);
 }
 
 std::string Replies::RPL_LINKS() {
@@ -305,9 +312,11 @@ std::string Replies::RPL_ENDOFLINKS() {
     return reply;
 }
 
-std::string Replies::RPL_ENDOFNAMES() {
+std::string Replies::RPL_ENDOFNAMES(Client* client, Channel* channel) {
     std::string reply;
-    return reply;
+    reply = "365 " + client->getNickname() + " " + channel->getName() +
+            " :End of /NAMES list";
+    return Message::create(reply);
 }
 
 std::string Replies::RPL_BANLIST() {

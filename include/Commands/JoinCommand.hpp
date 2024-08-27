@@ -1,10 +1,18 @@
 #pragma once
 
 #include "Command.hpp"
+#include <vector>
 
 class JoinCommand : public Command {
+  private:
+    std::vector<Channel*> _channels;
+    std::vector<std::string> _keys;
+    void checkParams(Client* client, std::vector<std::string> params);
+    void parseParams();
+    void joinAndReplies(Channel* channel);
+
   public:
-    JoinCommand(std::string prefix, std::vector<std::string> params,
+    JoinCommand(std::string source, std::vector<std::string> params,
                 Client* client);
     ~JoinCommand();
 

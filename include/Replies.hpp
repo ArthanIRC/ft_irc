@@ -64,10 +64,10 @@ class Replies : public Message {
     static std::string RPL_ENDOFEXCEPTLIST();
     static std::string RPL_VERSION();
     static std::string RPL_WHOREPLY();
-    static std::string RPL_NAMREPLY();
+    static std::string RPL_NAMREPLY(Client* client, Channel* channel);
     static std::string RPL_LINKS();
     static std::string RPL_ENDOFLINKS();
-    static std::string RPL_ENDOFNAMES();
+    static std::string RPL_ENDOFNAMES(Client* client, Channel* channel);
     static std::string RPL_BANLIST();
     static std::string RPL_ENDOFBANLIST();
     static std::string RPL_ENDOFWHOWAS();
