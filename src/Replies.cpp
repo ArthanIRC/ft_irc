@@ -44,7 +44,7 @@ std::string Replies::RPL_ENDOFSTATS() {
 
 std::string Replies::RPL_UMODEIS(Client* _client) {
     std::string reply;
-    reply = _client->getNickname() + _client->getModes();
+    reply = "221 " + _client->getNickname() + _client->getModes();
     return Message::create(reply);
 }
 
@@ -230,7 +230,7 @@ std::string Replies::RPL_NOTOPIC() {
 
 std::string Replies::RPL_TOPIC(Client* client, Channel* channel) {
     std::string reply;
-    reply = client->getNickname() + " " + channel->getName() + " :" +
+    reply = "332 " + client->getNickname() + " " + channel->getName() + " :" +
             channel->getTopic();
     return Message::create(reply);
 }
@@ -382,7 +382,7 @@ std::string Replies::ERR_UNKNOWNERROR() {
 
 std::string Replies::ERR_NOSUCHNICK(Client* client, std::string& target) {
     std::string reply;
-    reply = client->getNickname() + " " + target + " :No such nick";
+    reply = "401 " + client->getNickname() + " " + target + " :No such nick";
     return Message::create(reply);
 }
 
@@ -393,7 +393,8 @@ std::string Replies::ERR_NOSUCHSERVER() {
 
 std::string Replies::ERR_NOSUCHCHANNEL(Client* client, std::string chanName) {
     std::string reply;
-    reply = client->getNickname() + " " + chanName + " :No such channel";
+    reply =
+        "403 " + client->getNickname() + " " + chanName + " :No such channel";
     return Message::create(reply);
 }
 
@@ -469,7 +470,7 @@ std::string Replies::ERR_USERNOTINCHANNEL() {
 
 std::string Replies::ERR_NOTONCHANNEL(Client* client, Channel* channel) {
     std::string reply;
-    reply = client->getNickname() + " " + channel->getName() +
+    reply = "442 " + client->getNickname() + " " + channel->getName() +
             " :You're not on that channel";
     return Message::create(reply);
 }
@@ -486,7 +487,8 @@ std::string Replies::ERR_NOTREGISTERED() {
 
 std::string Replies::ERR_NEEDMOREPARAMS(Client* client, std::string command) {
     std::string reply;
-    reply = client->getNickname() + " " + command + " :Not enough parameters";
+    reply = "461 " + client->getNickname() + " " + command +
+            " :Not enough parameters";
     return Message::create(reply);
 }
 
@@ -542,7 +544,7 @@ std::string Replies::ERR_NOPRIVILEGES() {
 
 std::string Replies::ERR_CHANOPRIVSNEEDED(Client* client, Channel* channel) {
     std::string reply;
-    reply = client->getName() + " " + channel->getName() +
+    reply = "482 " + client->getName() + " " + channel->getName() +
             " :You're not channel operator";
     return Message::create(reply);
 }
@@ -559,13 +561,14 @@ std::string Replies::ERR_NOOPERHOST() {
 
 std::string Replies::ERR_UMODEUNKNOWNFLAG(Client* client) {
     std::string reply;
-    reply = client->getNickname() + ":Unknown MODE flag";
+    reply = "501 " + client->getNickname() + ":Unknown MODE flag";
     return Message::create(reply);
 }
 
 std::string Replies::ERR_USERSDONTMATCH(Client* client) {
     std::string reply;
-    reply = client->getNickname() + " :Cant change mode for other users";
+    reply =
+        "502 " + client->getNickname() + " :Cant change mode for other users";
     return Message::create(reply);
 }
 
