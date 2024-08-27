@@ -22,15 +22,19 @@ void NamesCommand::run() {
 
     } else {
         std::vector<std::string> channels = split(_params[0], ',');
-        for (std::vector<std::string> it = channels.begin();
+        Channel* currChannel;
+        for (std::vector<std::string>::iterator it = channels.begin();
              it != channels.end(); ++it) {
-            try(Server::getInstance().findChannel(std::string name)) {
-                // asd
-                // asd
+            try {
+                currChannel = Server::getInstance().findChannel(*it);
+                _client->sendMessage(
+                    Replies::RPL_NAMREPLY(_client, currChannel));
+            } catch (Server::ChannelNotFoundException()) {
+                _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, *it));
+                continue;
             }
-            catch (Server::ChannelNotFoundException()) {
-                // envoyer un endofnames
-            }
+            _client->sendMessage(
+                Replies::RPL_ENDOFNAMES(_client, currChannel->getName()));
         }
     }
     return;
