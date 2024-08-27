@@ -4,7 +4,7 @@
 
 UserCommand::UserCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
-    if (params.size() < 4 || params[0].empty() || params[3].empty()) {
+    if (params.size() < 4) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "USER"));
         throw;
     }
