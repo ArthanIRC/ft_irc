@@ -9,11 +9,10 @@ class Message {
                          const std::vector<std::string>& params);
 
   protected:
-    // PARSE TEMPO EN PROTECTED POUR AVOIR ACCES AVEC METHODE TMP DE REPARSE
-    // DANS Command::Create
     static int parse(std::string& data, std::string& source,
                      std::string& command, std::vector<std::string>& params);
-    // ----
+    static std::vector<std::string> split(std::string& str, char delim);
+
     static const unsigned int max_params = 15;
     static const unsigned int err_trailing = 1001;
     static const unsigned int err_newline = 1002;
