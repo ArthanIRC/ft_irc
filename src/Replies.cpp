@@ -296,10 +296,13 @@ std::string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
             client->getNickname();
     std::map<std::string, Client*> mapClients = channel->getClients();
     std::map<std::string, Client*>::const_iterator it = mapClients.begin();
+    std::string prefix;
+
     while (++it != mapClients.end()) {
         if (it->second->isInvisible() && !channel->isInChannel(*client))
             continue;
-        reply += " " + it->first;
+        prefix = channel.getPrefix(it->second);
+        reply += " " + prefix + it->first;
     }
     return Message::create(reply);
 }
