@@ -46,13 +46,3 @@ void NamesCommand::run() {
     }
     return;
 }
-
-/*
-Channel map operator, la get et voir si client et dedans
-Creer une map dans channel qui doit s’appeler voiceqqch
-Get celle la aussi pour voir si voice
-*/
-
-/*
-NAMES sans rien server::getclient et filtrer tous les user invisible
-*/
