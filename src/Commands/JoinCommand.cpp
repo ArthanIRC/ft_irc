@@ -2,7 +2,6 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Replies.hpp"
-#include <iterator>
 #include <map>
 #include <sstream>
 #include <vector>
