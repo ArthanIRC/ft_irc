@@ -496,8 +496,11 @@ std::string Replies::ERR_NOTONCHANNEL(Client* client, Channel* channel) {
     return Message::create(reply);
 }
 
-std::string Replies::ERR_USERONCHANNEL() {
+std::string Replies::ERR_USERONCHANNEL(Client* client, std::string targetName,
+                                       Channel* chan) {
     std::string reply;
+    reply = "443 " + client->getNickname() + " " + targetName + " " +
+            chan->getName() + " :is already on channel";
     return reply;
 }
 

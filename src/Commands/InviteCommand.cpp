@@ -25,7 +25,8 @@ InviteCommand::InviteCommand(std::string source,
         throw;
     }
     if (chan->isInChannel(params[0])) {
-        client->sendMessage(Replies::ERR_USERONCHANNEL());
+        client->sendMessage(
+            Replies::ERR_USERONCHANNEL(client, params[0], chan));
         throw;
     }
     this->_source = source;

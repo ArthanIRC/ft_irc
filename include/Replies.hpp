@@ -101,7 +101,8 @@ class Replies : public Message {
     static std::string ERR_NICKCOLLISION();
     static std::string ERR_USERNOTINCHANNEL();
     static std::string ERR_NOTONCHANNEL(Client* client, Channel* channel);
-    static std::string ERR_USERONCHANNEL();
+    static std::string ERR_USERONCHANNEL(Client* client, std::string targetName,
+                                         Channel* chan);
     static std::string ERR_NOTREGISTERED();
     static std::string ERR_NEEDMOREPARAMS(Client* client, std::string command);
     static std::string ERR_ALREADYREGISTERED(Client* client);
