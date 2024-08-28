@@ -57,7 +57,8 @@ class Replies : public Message {
     static std::string RPL_INVITELIST();
     static std::string RPL_ENDOFINVITELIST();
     static std::string RPL_WHOISACTUALLY();
-    static std::string RPL_INVITING();
+    static std::string RPL_INVITING(Client* client, std::string targetName,
+                                    Channel* channel);
     static std::string RPL_INVEXLIST();
     static std::string RPL_ENDOFINVEXLIST();
     static std::string RPL_EXCEPTLIST();
@@ -90,8 +91,8 @@ class Replies : public Message {
     static std::string ERR_TOOMANYCHANNELS();
     static std::string ERR_WASNOSUCHNICK();
     static std::string ERR_NOORIGIN();
-    static std::string ERR_NORECIPIENT();
-    static std::string ERR_NOTEXTTOSEND();
+    static std::string ERR_NORECIPIENT(Client* client);
+    static std::string ERR_NOTEXTTOSEND(Client* client);
     static std::string ERR_INPUTTOOLONG();
     static std::string ERR_UNKNOWNCOMMAND();
     static std::string ERR_NOMOTD();
@@ -99,19 +100,22 @@ class Replies : public Message {
     static std::string ERR_ERRONEUSNICKNAME(Client* client, std::string& nick);
     static std::string ERR_NICKNAMEINUSE(Client* client, std::string& nick);
     static std::string ERR_NICKCOLLISION();
-    static std::string ERR_USERNOTINCHANNEL();
+    static std::string ERR_USERNOTINCHANNEL(Client* client,
+                                            std::string targetName,
+                                            Channel* channel);
     static std::string ERR_NOTONCHANNEL(Client* client, Channel* channel);
-    static std::string ERR_USERONCHANNEL();
+    static std::string ERR_USERONCHANNEL(Client* client, std::string targetName,
+                                         Channel* chan);
     static std::string ERR_NOTREGISTERED();
     static std::string ERR_NEEDMOREPARAMS(Client* client, std::string command);
     static std::string ERR_ALREADYREGISTERED(Client* client);
-    static std::string ERR_PASSWDMISMATCH();
+    static std::string ERR_PASSWDMISMATCH(Client* client);
     static std::string ERR_YOUREBANNEDCREEP();
-    static std::string ERR_CHANNELISFULL();
+    static std::string ERR_CHANNELISFULL(Client* client, Channel* channel);
     static std::string ERR_UNKNOWNMODE();
-    static std::string ERR_INVITEONLYCHAN();
-    static std::string ERR_BANNEDFROMCHAN();
-    static std::string ERR_BADCHANNELKEY();
+    static std::string ERR_INVITEONLYCHAN(Client* client, Channel* channel);
+    static std::string ERR_BANNEDFROMCHAN(Client* client, Channel* channel);
+    static std::string ERR_BADCHANNELKEY(Client* client, Channel* channel);
     static std::string ERR_BADCHANMASK();
     static std::string ERR_NOPRIVILEGES();
     static std::string ERR_CHANOPRIVSNEEDED(Client* client, Channel* channel);

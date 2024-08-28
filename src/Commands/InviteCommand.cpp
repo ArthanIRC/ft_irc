@@ -25,7 +25,8 @@ InviteCommand::InviteCommand(std::string source,
         throw;
     }
     if (chan->isInChannel(params[0])) {
-        client->sendMessage(Replies::ERR_USERONCHANNEL());
+        client->sendMessage(
+            Replies::ERR_USERONCHANNEL(client, params[0], chan));
         throw;
     }
     this->_source = source;
@@ -51,6 +52,7 @@ void InviteCommand::run() {
         return;
     }
     _channel->inviteClient(target);
-    _client->sendMessage(Replies::RPL_INVITING());
+    _client->sendMessage(
+        Replies::RPL_INVITING(_client, _targetNickname, _channel));
     target->sendMessage(reply);
 }

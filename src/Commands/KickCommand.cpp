@@ -35,7 +35,8 @@ void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
         throw;
     }
     if (!chan->isInChannel(params[1])) {
-        client->sendMessage(Replies::ERR_USERNOTINCHANNEL());
+        client->sendMessage(
+            Replies::ERR_USERNOTINCHANNEL(_client, params[1], _channel));
         throw;
     }
     this->_targetNickname = params[1];
