@@ -28,7 +28,7 @@ void PrivmsgCommand::sendToChannel(string& target) {
     Channel* chan;
     try {
         chan = Server::getInstance().findChannel(target);
-    } catch (Server::ChannelNotFoundException) {
+    } catch (Server::ChannelNotFoundException&) {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, target));
         return;
     }
@@ -52,7 +52,7 @@ void PrivmsgCommand::sendToClient(string& target) {
 
     try {
         cli = Server::getInstance().findClient(target);
-    } catch (Server::ClientNotFoundException) {
+    } catch (Server::ClientNotFoundException&) {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, target));
         return;
     }
