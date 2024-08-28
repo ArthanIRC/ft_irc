@@ -1,6 +1,6 @@
 #include "OperCommand.hpp"
-#include "Channel.hpp"
 #include "Client.hpp"
+#include "ModeCommand.hpp"
 #include "Replies.hpp"
 #include "Server.hpp"
 #include <map>
@@ -29,8 +29,13 @@ void OperCommand::run() {
         return;
     } else {
         if (serverOperators[_name] != _password) {
-            _client->sendMessage(Replies::ERR_PASSWDMISMATCH());
+            _client->sendMessage(Replies::ERR_PASSWDMISMATCH(_client));
             return;
         }
     }
+    _client->setState(OPERATOR);
+    _client->sendMessage(Replies::RPL_YOUREOPER());
+    std::string reply = Server::getInstance().getPrefix() + " MODE " +
+                        _client->getNickname() + " +o";
+    _client->sendMessage(Message::create(reply));
 }
