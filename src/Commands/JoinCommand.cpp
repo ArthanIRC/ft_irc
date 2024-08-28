@@ -70,25 +70,30 @@ void JoinCommand::joinAndReplies(Channel* channel) {
 
     _client->sendMessage(Replies::RPL_NAMREPLY(_client, channel));
     _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, channel));
+    Server::getInstance().sendMessage(channel, reply);
+}
+
+void JoinCommand::leaveChannels() {
+    std::vector<std::string> chanParams;
+    std::map<std::string, Channel*> mapChannel = _client->getChannels();
+    std::map<std::string, Channel*>::const_iterator it = mapChannel.begin();
+    if (it != mapChannel.end()) {
+        chanParams[0] = it->first;
+        ++it;
+    }
+    while (it != mapChannel.end()) {
+        chanParams[0] += "," + it->first;
+        it++;
+    }
+    PartCommand p("", chanParams, _client);
+    p.run();
 }
 
 void JoinCommand::run() {
-    // if (_params[0] == "0") {
-    //     std::vector<std::string> chanList;
-    //     std::map<std::string, Channel*> mapChannel = _client.getChannels();
-    //     std::map<std::string, Channel*>::const_iterator it =
-    //     mapChannel.begin(); if (it != mapChannel.end()) {
-    //         chanList[0] = it->first;
-    //         ++it;
-    //     }
-    //     while (it != mapChannel.end()) {
-    //         chanList[0] += "," + it->first;
-    //         it++;
-    //     }
-    //     PartCommand p("", chanList, _client);
-    //     p.run();
-    //     return;
-    // }
+    if (_params[0] == "0") {
+        leaveChannels();
+        return;
+    }
     parseParams();
 
     for (size_t i = 0; i < _channels.size(); ++i) {

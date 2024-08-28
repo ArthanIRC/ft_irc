@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Command.hpp"
+#include "PartCommand.hpp"
 #include <vector>
 
 class JoinCommand : public Command {
@@ -9,6 +10,7 @@ class JoinCommand : public Command {
     std::vector<std::string> _keys;
     void checkParams(Client* client, std::vector<std::string> params);
     void parseParams();
+    void leaveChannels();
     void joinAndReplies(Channel* channel);
 
   public:
