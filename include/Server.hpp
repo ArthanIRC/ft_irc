@@ -17,7 +17,7 @@
 class Server {
   private:
     bool _running;
-    std::string _prefixServIdBangbang;
+    std::string _prefix;
     std::string _port;
     std::string _password;
     ServerSocket _socket;
@@ -43,7 +43,7 @@ class Server {
     Client* findClient(int fd);
     Client* findClient(std::string nickname);
     Channel* findChannel(std::string name);
-    std::string getPrefixServIdBangbang();
+    std::string getPrefix();
     std::vector<Client*> getClients();
     std::map<std::string, Channel*> getChannels();
     void removeClient(Client* c);

@@ -13,6 +13,7 @@ class Channel {
     std::string _topic;
     bool _protectedTopic;
     bool _inviteOnly;
+    bool _moderated;
     size_t _maxClients;
     std::map<std::string, Client*> _clients;
     std::map<std::string, Client*> _inviteList;
@@ -81,6 +82,9 @@ class Channel {
 
     bool isInviteOnly() const;
     void setInviteOnly(bool inviteMode);
+
+    bool isModerated() const;
+    void setModerated(bool flag);
 
     size_t getMaxClients(void) const;
     void setMaxClients(size_t nbMaxClients);

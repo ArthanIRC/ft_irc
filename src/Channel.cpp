@@ -67,6 +67,10 @@ bool Channel::isInviteOnly() const { return this->_inviteOnly; }
 
 void Channel::setInviteOnly(bool inviteMode) { this->_inviteOnly = inviteMode; }
 
+bool Channel::isModerated() const { return this->_moderated; }
+
+void Channel::setModerated(bool flag) { this->_moderated = flag; }
+
 size_t Channel::getMaxClients() const { return this->_maxClients; }
 
 void Channel::setMaxClients(size_t nbMaxClients) {
