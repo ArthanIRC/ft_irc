@@ -30,7 +30,7 @@ void PassCommand::run() {
         throw;
     }
     if (_password != serverPass) {
-        client->sendMessage(Replies::ERR_PASSWDMISMATCH());
+        client->sendMessage(Replies::ERR_PASSWDMISMATCH(_client));
         throw;
     }
     _client->setState(PASS_DONE);

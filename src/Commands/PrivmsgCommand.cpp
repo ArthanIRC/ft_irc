@@ -7,11 +7,11 @@ using std::vector;
 PrivmsgCommand::PrivmsgCommand(string source, vector<string> params,
                                Client* client) {
     if (params.size() < 1) {
-        client->sendMessage(Replies::ERR_NORECIPIENT());
+        client->sendMessage(Replies::ERR_NORECIPIENT(client));
         throw;
     }
     if (params.size() < 2) {
-        client->sendMessage(Replies::ERR_NOTEXTTOSEND());
+        client->sendMessage(Replies::ERR_NOTEXTTOSEND(client));
         throw;
     }
 

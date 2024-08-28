@@ -99,22 +99,26 @@ void JoinCommand::run() {
     for (size_t i = 0; i < _channels.size(); ++i) {
         if (_channels[i]->isKeyed()) {
             if (i < _keys.size() || _keys[i] != _channels[i]->getKey()) {
-                _client->sendMessage(Replies::ERR_BADCHANNELKEY());
+                _client->sendMessage(
+                    Replies::ERR_BADCHANNELKEY(_client, _channels[i]));
                 continue;
             }
         }
 
         if (_channels[i]->isBanned(_client))
-            _client->sendMessage(Replies::ERR_BANNEDFROMCHAN());
+            _client->sendMessage(
+                Replies::ERR_BANNEDFROMCHAN(_client, _channels[i]));
 
         else if (_channels[i]->getMaxClients() != 0 &&
                  _channels[i]->getMaxClients() ==
                      _channels[i]->getClients().size())
-            _client->sendMessage(Replies::ERR_CHANNELISFULL());
+            _client->sendMessage(
+                Replies::ERR_CHANNELISFULL(_client, _channels[i]));
 
         else if (_channels[i]->isInviteOnly() &&
                  !_channels[i]->isInvited(_client))
-            _client->sendMessage(Replies::ERR_INVITEONLYCHAN());
+            _client->sendMessage(
+                Replies::ERR_INVITEONLYCHAN(_client, _channels[i]));
 
         else
             joinAndReplies(_channels[i]);

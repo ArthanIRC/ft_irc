@@ -52,6 +52,7 @@ void InviteCommand::run() {
         return;
     }
     _channel->inviteClient(target);
-    _client->sendMessage(Replies::RPL_INVITING());
+    _client->sendMessage(
+        Replies::RPL_INVITING(_client, _targetNickname, _channel));
     target->sendMessage(reply);
 }
