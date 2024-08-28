@@ -73,57 +73,57 @@ void Channel::setMaxClients(size_t nbMaxClients) {
     this->_maxClients = nbMaxClients;
 }
 
-void Channel::addClient(Client& client) {
+void Channel::addClient(Client* client) {
     if (this->_inviteOnly == true && !isInvited(client))
         throw userNotInvited();
-    std::string nickname = client.getNickname();
+    std::string nickname = client->getNickname();
     if (_clients.find(nickname) != _clients.end()) {
         throw userAlreadyExists();
     }
-    _clients[nickname] = &client;
+    _clients[nickname] = client;
 }
 
-void Channel::addOperator(Client& client) {
+void Channel::addOperator(Client* client) {
     addClientToMap(_operatorsList, client);
 }
 
-void Channel::addVoiced(Client& client) { addClientToMap(_voicedList, client); }
+void Channel::addVoiced(Client* client) { addClientToMap(_voicedList, client); }
 
-void Channel::banClient(Client& client) { addClientToMap(_banList, client); }
+void Channel::banClient(Client* client) { addClientToMap(_banList, client); }
 
-void Channel::inviteClient(Client& client) {
+void Channel::inviteClient(Client* client) {
     addClientToMap(_inviteList, client);
 }
 
-void Channel::kickOperator(Client& client) {
+void Channel::kickOperator(Client* client) {
     removeClientFromMap(_operatorsList, client, "the user was not an operator");
 }
 
-void Channel::eraseClient(Client& client) {
+void Channel::eraseClient(Client* client) {
     removeClientFromMap(_clients, client, "the user does not exist");
 }
 
-void Channel::unbanClient(Client& client) {
+void Channel::unbanClient(Client* client) {
     removeClientFromMap(_banList, client, "the user was not blacklisted");
 }
 
-bool Channel::isInChannel(Client& client) const {
+bool Channel::isInChannel(Client* client) const {
     return (verifClientOnMap(_clients, client));
 }
 
-bool Channel::isInvited(Client& client) const {
+bool Channel::isInvited(Client* client) const {
     return (verifClientOnMap(_inviteList, client));
 }
 
-bool Channel::isBanned(Client& client) const {
+bool Channel::isBanned(Client* client) const {
     return (verifClientOnMap(_banList, client));
 }
 
-bool Channel::isOperator(Client& client) const {
+bool Channel::isOperator(Client* client) const {
     return (verifClientOnMap(_operatorsList, client));
 }
 
-bool Channel::isVoiced(Client& client) const {
+bool Channel::isVoiced(Client* client) const {
     return (verifClientOnMap(_voicedList, client));
 }
 
@@ -157,7 +157,7 @@ std::string Channel::getModes() const {
     return modes;
 }
 
-std::string Channel::getPrefix(Client& client) {
+std::string Channel::getPrefix(Client* client) {
     std::string prefix = "+";
     if (this->isOperator(client))
         prefix += "o";

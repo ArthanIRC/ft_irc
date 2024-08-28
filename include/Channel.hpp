@@ -22,8 +22,8 @@ class Channel {
     void checkNameSyntaxChan(std::string& name);
 
     template <typename MapType>
-    void addClientToMap(MapType& map, Client& client) {
-        std::string nickname = client.getNickname();
+    void addClientToMap(MapType& map, Client* client) {
+        std::string nickname = client->getNickname();
         if (map.find(nickname) != map.end()) {
             return;
         }
@@ -31,9 +31,9 @@ class Channel {
     }
 
     template <typename MapType>
-    void removeClientFromMap(MapType& map, Client& client,
+    void removeClientFromMap(MapType& map, Client* client,
                              const std::string& errorMsg) {
-        std::string nickname = client.getNickname();
+        std::string nickname = client->getNickname();
         typename MapType::iterator it = map.find(nickname);
         if (it != map.end()) {
             map.erase(it);
@@ -43,8 +43,8 @@ class Channel {
     }
 
     template <typename MapType>
-    bool verifClientOnMap(const MapType& map, const Client& client) const {
-        std::string nickname = client.getNickname();
+    bool verifClientOnMap(const MapType& map, const Client* client) const {
+        std::string nickname = client->getNickname();
         typename MapType::const_iterator it = map.find(nickname);
         return it != map.end();
     }
@@ -85,28 +85,28 @@ class Channel {
     size_t getMaxClients(void) const;
     void setMaxClients(size_t nbMaxClients);
 
-    void addClient(Client& client);
-    void addOperator(Client& client);
-    void addVoiced(Client& client);
-    void banClient(Client& client);
-    void inviteClient(Client& client);
+    void addClient(Client* client);
+    void addOperator(Client* client);
+    void addVoiced(Client* client);
+    void banClient(Client* client);
+    void inviteClient(Client* client);
 
-    void kickOperator(Client& client);
-    void unbanClient(Client& client);
-    void eraseClient(Client& client);
+    void kickOperator(Client* client);
+    void unbanClient(Client* client);
+    void eraseClient(Client* client);
 
-    bool isInChannel(Client& client) const;
-    bool isInvited(Client& client) const;
-    bool isBanned(Client& client) const;
-    bool isOperator(Client& client) const;
-    bool isVoiced(Client& client) const;
+    bool isInChannel(Client* client) const;
+    bool isInvited(Client* client) const;
+    bool isBanned(Client* client) const;
+    bool isOperator(Client* client) const;
+    bool isVoiced(Client* client) const;
     bool isInChannel(std::string nickname) const;
     bool isInvited(std::string nickname) const;
     bool isBanned(std::string nickname) const;
     bool isOperator(std::string nickname) const;
 
     std::string getModes() const;
-    std::string getPrefix(Client& client);
+    std::string getPrefix(Client* client);
 
     class userNotInvited : public std::exception {
       public:
@@ -128,11 +128,4 @@ class Channel {
             return ("Error: Wrong syntax for channel name");
         }
     };
-    // KICK: ejecter un user
-    // MODE : changer les mode du chan
-    // INVITE : inviter un user sur le chan sur invitation
-    // TOPIC : changer le sujet du chan
-
-    // '+' ajoute les modes qui suivent et '-' les supprimes
-    // '+t'
 };
