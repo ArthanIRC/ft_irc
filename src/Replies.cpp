@@ -440,7 +440,7 @@ std::string Replies::ERR_NOORIGIN() {
 
 std::string Replies::ERR_NORECIPIENT(Client* client) {
     std::string reply;
-    reply = "411 " + client->getNickname() + " :No recipient given PRIVMSG";
+    reply = "411 " + client->getNickname() + " :No recipient given (PRIVMSG)";
     return Message::create(reply);
 }
 
