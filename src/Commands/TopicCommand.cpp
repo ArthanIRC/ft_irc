@@ -26,12 +26,12 @@ void TopicCommand::checkParams(Client* client,
         throw;
     }
     this->_channel = chan;
-    if (!(chan->isInChannel(*client))) {
+    if (!(chan->isInChannel(client))) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(client, chan));
         throw;
     }
     if (params.size() > 1 && chan->isProtectedTopic()) {
-        if (!chan->isOperator(*client)) {
+        if (!chan->isOperator(client)) {
             client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(client, chan));
             throw;
         }

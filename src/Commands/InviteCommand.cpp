@@ -16,11 +16,11 @@ InviteCommand::InviteCommand(std::string source,
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
         throw;
     }
-    if (!chan->isInChannel(*client)) {
+    if (!chan->isInChannel(client)) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(_client, chan));
         throw;
     }
-    if (chan->isInviteOnly() && !chan->isOperator(*client)) {
+    if (chan->isInviteOnly() && !chan->isOperator(client)) {
         client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(_client, chan));
         throw;
     }
@@ -50,7 +50,7 @@ void InviteCommand::run() {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }
-    _channel->inviteClient(*target);
+    _channel->inviteClient(target);
     _client->sendMessage(Replies::RPL_INVITING());
     target->sendMessage(reply);
 }

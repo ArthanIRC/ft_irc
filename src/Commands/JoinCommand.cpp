@@ -2,7 +2,6 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Replies.hpp"
-#include <iterator>
 #include <map>
 #include <sstream>
 #include <vector>
@@ -53,7 +52,7 @@ void JoinCommand::parseParams() {
 
 void JoinCommand::joinAndReplies(Channel* channel) {
     try {
-        channel->addClient(*_client);
+        channel->addClient(_client);
     } catch (const Channel::userAlreadyExists()) {
         return;
     }
@@ -69,7 +68,7 @@ void JoinCommand::joinAndReplies(Channel* channel) {
     }
 
     _client->sendMessage(Replies::RPL_NAMREPLY(_client, channel));
-    _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, channel));
+    _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, channel->getName()));
     Server::getInstance().sendMessage(channel, reply);
 }
 
@@ -104,7 +103,7 @@ void JoinCommand::run() {
             }
         }
 
-        if (_channels[i]->isBanned(*_client))
+        if (_channels[i]->isBanned(_client))
             _client->sendMessage(Replies::ERR_BANNEDFROMCHAN());
 
         else if (_channels[i]->getMaxClients() != 0 &&
@@ -113,7 +112,7 @@ void JoinCommand::run() {
             _client->sendMessage(Replies::ERR_CHANNELISFULL());
 
         else if (_channels[i]->isInviteOnly() &&
-                 !_channels[i]->isInvited(*_client))
+                 !_channels[i]->isInvited(_client))
             _client->sendMessage(Replies::ERR_INVITEONLYCHAN());
 
         else

@@ -67,7 +67,7 @@ class Replies : public Message {
     static std::string RPL_NAMREPLY(Client* client, Channel* channel);
     static std::string RPL_LINKS();
     static std::string RPL_ENDOFLINKS();
-    static std::string RPL_ENDOFNAMES(Client* client, Channel* channel);
+    static std::string RPL_ENDOFNAMES(Client* client, std::string channelName);
     static std::string RPL_BANLIST();
     static std::string RPL_ENDOFBANLIST();
     static std::string RPL_ENDOFWHOWAS();

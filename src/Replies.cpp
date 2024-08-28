@@ -296,8 +296,13 @@ std::string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
             client->getNickname();
     std::map<std::string, Client*> mapClients = channel->getClients();
     std::map<std::string, Client*>::const_iterator it = mapClients.begin();
+    std::string prefix;
+
     while (++it != mapClients.end()) {
-        reply += " " + it->first;
+        if (it->second->isInvisible() && !channel->isInChannel(client))
+            continue;
+        prefix = channel->getPrefix(it->second);
+        reply += " " + prefix + it->first;
     }
     return Message::create(reply);
 }
@@ -312,9 +317,9 @@ std::string Replies::RPL_ENDOFLINKS() {
     return reply;
 }
 
-std::string Replies::RPL_ENDOFNAMES(Client* client, Channel* channel) {
+std::string Replies::RPL_ENDOFNAMES(Client* client, std::string channelName) {
     std::string reply;
-    reply = "365 " + client->getNickname() + " " + channel->getName() +
+    reply = "365 " + client->getNickname() + " " + channelName +
             " :End of /NAMES list";
     return Message::create(reply);
 }
