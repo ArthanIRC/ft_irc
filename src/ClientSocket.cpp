@@ -6,6 +6,8 @@
 #include <sys/types.h>
 
 #include "ClientSocket.hpp"
+#include "Command.hpp"
+#include "Exception.hpp"
 #include "Server.hpp"
 
 ClientSocket::ClientSocket(int fd) : Socket() { this->_fd = fd; }
@@ -43,5 +45,29 @@ void ClientSocket::onPoll(uint32_t events) {
         return;
     }
 
-    // TODO: Command creation
+    Client* client;
+    try {
+        client = Server::getInstance().findClient(_fd);
+    } catch (Server::ClientNotFoundException&) {
+        return;
+    }
+
+    Command* c = Command::create(data, client);
+
+    try {
+        c->run();
+    } catch (ClientException&) {
+        return;
+    } catch (ServerException& e) {
+        std::cerr << e.what() << "\n";
+    }
+}
+
+void ClientSocket::sendMessage(std::string message) {
+    if (send(_fd, message.c_str(), message.size(), 0) == -1)
+        throw SendException();
+}
+
+const char* ClientSocket::SendException::what() const throw() {
+    return "Error: Send failed.";
 }
