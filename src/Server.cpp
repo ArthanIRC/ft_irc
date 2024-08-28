@@ -20,6 +20,7 @@ static const string networkName = "ArThAn";
 static const string serverName = "JUSTICE";
 static const string userModes = "ior";
 static const string version = "1.0.0";
+static const string creationDate = "27/07/2024";
 
 Server::Server() {}
 
@@ -176,6 +177,14 @@ Epoll& Server::getEpoll() { return this->_epoll; }
 string Server::getPassword() const { return this->_password; }
 
 string Server::getMotd() const { return motd; }
+
+string Server::getNetworkName() const { return networkName; }
+
+string Server::getServerName() const { return serverName; }
+
+string Server::getVersion() const { return version; }
+
+string Server::getCreationDate() const { return creationDate; }
 
 bool Server::isRunning() const { return this->_running; }
 

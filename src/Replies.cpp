@@ -5,18 +5,25 @@
 #include "Server.hpp"
 #include <map>
 
-std::string Replies::RPL_WELCOME() {
+std::string Replies::RPL_WELCOME(Client* client, std::string network) {
     std::string reply;
+    reply = "001 " + client->getNickname() + " :Welcome to the " + network +
+            " Network, " + client->getNickname();
     return Message::create(reply);
 }
 
-std::string Replies::RPL_YOURHOST() {
+std::string Replies::RPL_YOURHOST(Client* client, std::string server,
+                                  std::string version) {
     std::string reply;
+    reply = "002 " + client->getNickname() + " :Your host is " + server +
+            ", running version " + version;
     return Message::create(reply);
 }
 
-std::string Replies::RPL_CREATED() {
+std::string Replies::RPL_CREATED(Client* client, std::string creationDate) {
     std::string reply;
+    reply = "003 " + client->getNickname() + " :This server was created " +
+            creationDate;
     return Message::create(reply);
 }
 

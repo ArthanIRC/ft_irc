@@ -15,9 +15,10 @@ class Replies : public Message {
 
   public:
     virtual ~Replies(){};
-    static std::string RPL_WELCOME();
-    static std::string RPL_YOURHOST();
-    static std::string RPL_CREATED();
+    static std::string RPL_WELCOME(Client* client, std::string network);
+    static std::string RPL_YOURHOST(Client* client, std::string server,
+                                    std::string version);
+    static std::string RPL_CREATED(Client* client, std::string creationDate);
     static std::string RPL_MYINFO();
     static std::string RPL_ISUPPORT();
     static std::string RPL_BOUNCE();

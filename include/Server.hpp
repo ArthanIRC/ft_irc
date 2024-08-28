@@ -54,6 +54,10 @@ class Server {
     Epoll& getEpoll();
     std::string getPassword() const;
     std::string getMotd() const;
+    std::string getNetworkName() const;
+    std::string getServerName() const;
+    std::string getVersion() const;
+    std::string getCreationDate() const;
     void sendMessage(Channel* channel, std::string message);
     void sendMessage(std::map<std::string, Channel*> channels,
                      std::string message);

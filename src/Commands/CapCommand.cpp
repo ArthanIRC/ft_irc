@@ -24,9 +24,13 @@ void CapCommand::run() {
             _client->sendMessage(Replies::ERR_REGFAILED());
         } else
             _client->setState(REGISTERED);
-        _client->sendMessage(Replies::RPL_WELCOME());
-        _client->sendMessage(Replies::RPL_YOURHOST());
-        _client->sendMessage(Replies::RPL_CREATED());
+        _client->sendMessage(Replies::RPL_WELCOME(
+            _client, Server::getInstance().getNetworkName()));
+        _client->sendMessage(Replies::RPL_YOURHOST(
+            _client, Server::getInstance().getServerName(),
+            Server::getInstance().getVersion()));
+        _client->sendMessage(Replies::RPL_CREATED(
+            _client, Server::getInstance().getCreationDate()));
         _client->sendMessage(Replies::RPL_MYINFO());
         _client->sendMessage(Replies::RPL_ISUPPORT());
         // LUSER Command
