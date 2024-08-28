@@ -2,6 +2,8 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Replies.hpp"
+#include "Server.hpp"
+#include <map>
 
 OperCommand::OperCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
@@ -9,10 +11,26 @@ OperCommand::OperCommand(std::string source, std::vector<std::string> params,
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "OPER"));
         throw;
     }
+    this->_name = params[0];
+    this->_password = params[1];
     this->_source = source;
     this->_client = client;
 }
 
 OperCommand::~OperCommand() {}
 
-void OperCommand::run() {}
+void OperCommand::run() {
+    if (_name.empty() || _password.empty())
+        return;
+    std::map<std::string, std::string> serverOperators =
+        Server::getInstance().getServerOperators();
+    if (serverOperators.find(_name) == serverOperators.end()) {
+        _client->sendMessage(Replies::ERR_NOOPERHOST());
+        return;
+    } else {
+        if (serverOperators[_name] != _password) {
+            _client->sendMessage(Replies::ERR_PASSWDMISMATCH());
+            return;
+        }
+    }
+}
