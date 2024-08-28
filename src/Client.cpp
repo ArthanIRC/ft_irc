@@ -40,7 +40,7 @@ void Client::setUsername(string& username) { this->_username = username; }
 
 void Client::setRealname(string& realname) { this->_realname = realname; }
 
-void Client::sendMessage(string message) { (void)message; }
+void Client::sendMessage(string message) { _socket.sendMessage(message); }
 
 string Client::getModes() {
     string modes = "+";
