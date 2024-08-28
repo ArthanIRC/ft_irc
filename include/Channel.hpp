@@ -27,7 +27,7 @@ class Channel {
         if (map.find(nickname) != map.end()) {
             return;
         }
-        map[nickname] = &client;
+        map[nickname] = client;
     }
 
     template <typename MapType>

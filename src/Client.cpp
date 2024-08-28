@@ -59,7 +59,7 @@ map<string, Channel*> Client::getChannels() {
     map<string, Channel*> result = servMap;
     for (map<string, Channel*>::iterator it = servMap.begin();
          it != servMap.end();) {
-        if (it->second->isInChannel(*this))
+        if (it->second->isInChannel(this))
             ++it;
         else
             result.erase(it++);

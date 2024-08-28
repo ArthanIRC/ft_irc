@@ -52,7 +52,7 @@ void JoinCommand::parseParams() {
 
 void JoinCommand::joinAndReplies(Channel* channel) {
     try {
-        channel->addClient(*_client);
+        channel->addClient(_client);
     } catch (const Channel::userAlreadyExists()) {
         return;
     }
@@ -103,7 +103,7 @@ void JoinCommand::run() {
             }
         }
 
-        if (_channels[i]->isBanned(*_client))
+        if (_channels[i]->isBanned(_client))
             _client->sendMessage(Replies::ERR_BANNEDFROMCHAN());
 
         else if (_channels[i]->getMaxClients() != 0 &&
@@ -112,7 +112,7 @@ void JoinCommand::run() {
             _client->sendMessage(Replies::ERR_CHANNELISFULL());
 
         else if (_channels[i]->isInviteOnly() &&
-                 !_channels[i]->isInvited(*_client))
+                 !_channels[i]->isInvited(_client))
             _client->sendMessage(Replies::ERR_INVITEONLYCHAN());
 
         else

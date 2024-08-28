@@ -26,11 +26,11 @@ void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
         throw;
     }
     this->_channel = chan;
-    if (!chan->isInChannel(*client)) {
+    if (!chan->isInChannel(client)) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(client, chan));
         throw;
     }
-    if (!chan->isOperator(*client)) {
+    if (!chan->isOperator(client)) {
         client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(client, chan));
         throw;
     }
@@ -58,8 +58,8 @@ void KickCommand::run() {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }
-    _channel->eraseClient(*target);
-    if (_channel->isOperator(*target))
-        _channel->kickOperator(*target);
+    _channel->eraseClient(target);
+    if (_channel->isOperator(target))
+        _channel->kickOperator(target);
     target->sendMessage(reply);
 }

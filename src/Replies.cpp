@@ -299,9 +299,9 @@ std::string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
     std::string prefix;
 
     while (++it != mapClients.end()) {
-        if (it->second->isInvisible() && !channel->isInChannel(*client))
+        if (it->second->isInvisible() && !channel->isInChannel(client))
             continue;
-        prefix = channel->getPrefix(*it->second);
+        prefix = channel->getPrefix(it->second);
         reply += " " + prefix + it->first;
     }
     return Message::create(reply);
