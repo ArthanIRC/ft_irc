@@ -18,6 +18,7 @@ class Channel {
     std::map<std::string, Client*> _inviteList;
     std::map<std::string, Client*> _banList;
     std::map<std::string, Client*> _operatorsList;
+    std::map<std::string, Client*> _voicedList;
     void checkNameSyntaxChan(std::string& name);
 
     template <typename MapType>
@@ -76,6 +77,7 @@ class Channel {
     std::map<std::string, Client*>& getInvitelist();
     std::map<std::string, Client*>& getBanList();
     std::map<std::string, Client*>& getOperatorsList();
+    std::map<std::string, Client*>& getVoicedList();
 
     bool isInviteOnly() const;
     void setInviteOnly(bool inviteMode);
@@ -85,6 +87,7 @@ class Channel {
 
     void addClient(Client& client);
     void addOperator(Client& client);
+    void addVoiced(Client& client);
     void banClient(Client& client);
     void inviteClient(Client& client);
 
@@ -96,6 +99,7 @@ class Channel {
     bool isInvited(Client& client) const;
     bool isBanned(Client& client) const;
     bool isOperator(Client& client) const;
+    bool isVoiced(Client& client) const;
     bool isInChannel(std::string nickname) const;
     bool isInvited(std::string nickname) const;
     bool isBanned(std::string nickname) const;

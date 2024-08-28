@@ -59,6 +59,10 @@ std::map<std::string, Client*>& Channel::getOperatorsList() {
     return this->_operatorsList;
 }
 
+std::map<std::string, Client*>& Channel::getVoicedList() {
+    return this->_voicedList;
+}
+
 bool Channel::isInviteOnly() const { return this->_inviteOnly; }
 
 void Channel::setInviteOnly(bool inviteMode) { this->_inviteOnly = inviteMode; }
@@ -82,6 +86,8 @@ void Channel::addClient(Client& client) {
 void Channel::addOperator(Client& client) {
     addClientToMap(_operatorsList, client);
 }
+
+void Channel::addVoiced(Client& client) { addClientToMap(_voicedList, client); }
 
 void Channel::banClient(Client& client) { addClientToMap(_banList, client); }
 
@@ -115,6 +121,10 @@ bool Channel::isBanned(Client& client) const {
 
 bool Channel::isOperator(Client& client) const {
     return (verifClientOnMap(_operatorsList, client));
+}
+
+bool Channel::isVoiced(Client& client) const {
+    return (verifClientOnMap(_voicedList, client));
 }
 
 bool Channel::isInChannel(std::string nickname) const {
