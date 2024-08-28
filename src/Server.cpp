@@ -54,6 +54,9 @@ void Server::init(int ac, char** data) {
         password = parsePassword(data[2]);
     }
 
+    _operators["thibrac"] = "pirate";
+    _operators["andrew"] = "saske";
+    _operators["arluc"] = "crepuscule";
     this->_port = port;
     this->_password = password;
     this->_socket.init(_port.c_str());
@@ -157,6 +160,10 @@ std::string Server::getPrefix() { return this->_prefix; }
 vector<Client*> Server::getClients() { return this->_clients; }
 
 map<std::string, Channel*> Server::getChannels() { return this->_channels; }
+
+map<std::string, std::string> Server::getOperators() {
+    return this->_operators;
+}
 
 Epoll& Server::getEpoll() { return this->_epoll; }
 
