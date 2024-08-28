@@ -24,6 +24,7 @@ class Server {
     Epoll _epoll;
     std::vector<Client*> _clients;
     std::map<std::string, Channel*> _channels;
+    std::map<std::string, std::string> _serverOperators;
 
     Server();
     Server(Server const&);
@@ -46,6 +47,7 @@ class Server {
     std::string getPrefix();
     std::vector<Client*> getClients();
     std::map<std::string, Channel*> getChannels();
+    std::map<std::string, std::string> getServerOperators();
     void removeClient(Client* c);
     void removeClient(int fd);
     bool isRunning() const;

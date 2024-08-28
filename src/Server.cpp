@@ -54,6 +54,9 @@ void Server::init(int ac, char** data) {
         password = parsePassword(data[2]);
     }
 
+    _serverOperators["thibrac"] = "pirate";
+    _serverOperators["andrew"] = "saske";
+    _serverOperators["arluc"] = "crepuscule";
     this->_port = port;
     this->_password = password;
     this->_socket.init(_port.c_str());
