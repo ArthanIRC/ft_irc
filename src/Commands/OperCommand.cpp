@@ -23,7 +23,7 @@ void OperCommand::run() {
     if (_name.empty() || _password.empty())
         return;
     std::map<std::string, std::string> serverOperators =
-        Server::getInstance().getServerOperators();
+        Server::getInstance().getOperators();
     if (serverOperators.find(_name) == serverOperators.end()) {
         _client->sendMessage(Replies::ERR_NOOPERHOST());
         return;
@@ -35,7 +35,7 @@ void OperCommand::run() {
     }
     _client->setState(OPERATOR);
     _client->sendMessage(Replies::RPL_YOUREOPER());
-    std::string reply = Server::getInstance().getPrefix() + " MODE " +
+    std::string reply = ":" + Server::getInstance().getPrefix() + " MODE " +
                         _client->getNickname() + " +o";
     _client->sendMessage(Message::create(reply));
 }

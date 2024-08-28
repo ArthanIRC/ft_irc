@@ -161,6 +161,10 @@ vector<Client*> Server::getClients() { return this->_clients; }
 
 map<std::string, Channel*> Server::getChannels() { return this->_channels; }
 
+map<std::string, std::string> Server::getOperators() {
+    return this->_operators;
+}
+
 Epoll& Server::getEpoll() { return this->_epoll; }
 
 string Server::getPassword() const { return this->_password; }
