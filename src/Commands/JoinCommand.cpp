@@ -69,7 +69,7 @@ void JoinCommand::joinAndReplies(Channel* channel) {
     }
 
     _client->sendMessage(Replies::RPL_NAMREPLY(_client, channel));
-    _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, channel));
+    _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, channel->getName()));
     Server::getInstance().sendMessage(channel, reply);
 }
 
