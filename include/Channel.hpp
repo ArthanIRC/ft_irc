@@ -91,7 +91,7 @@ class Channel {
     void banClient(Client* client);
     void inviteClient(Client* client);
 
-    void kickOperator(Client* client);
+    void eraseOperator(Client* client);
     void unbanClient(Client* client);
     void eraseClient(Client* client);
 

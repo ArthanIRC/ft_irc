@@ -60,6 +60,6 @@ void KickCommand::run() {
     }
     _channel->eraseClient(target);
     if (_channel->isOperator(target))
-        _channel->kickOperator(target);
+        _channel->eraseOperator(target);
     target->sendMessage(reply);
 }

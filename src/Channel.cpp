@@ -95,7 +95,7 @@ void Channel::inviteClient(Client* client) {
     addClientToMap(_inviteList, client);
 }
 
-void Channel::kickOperator(Client* client) {
+void Channel::eraseOperator(Client* client) {
     removeClientFromMap(_operatorsList, client, "the user was not an operator");
 }
 
