@@ -16,6 +16,10 @@ using std::vector;
 static const string defaultPort = "6667";
 static const string motd =
     "In effect, we conjure the spirits of the computer with our spells.";
+static const string networkName = "ArThAn";
+static const string serverName = "JUSTICE";
+static const string userModes = "ior";
+static const string version = "1.0.0";
 
 Server::Server() {}
 

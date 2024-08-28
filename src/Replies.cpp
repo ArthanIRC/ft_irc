@@ -769,3 +769,9 @@ std::string Replies::RPL_SASLMECHS() {
     std::string reply;
     return Message::create(reply);
 }
+
+std::string Replies::ERR_REGFAILED() {
+    std::string reply;
+    reply = "ERROR :Registration failed";
+    return Message::create(reply);
+}

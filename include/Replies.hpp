@@ -151,4 +151,5 @@ class Replies : public Message {
     static std::string ERR_SASLABORTED();
     static std::string ERR_SASLALREADY();
     static std::string RPL_SASLMECHS();
+    static std::string ERR_REGFAILED();
 };
