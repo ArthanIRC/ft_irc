@@ -405,16 +405,19 @@ std::string Replies::ERR_NOSUCHSERVER() {
     return reply;
 }
 
-std::string Replies::ERR_NOSUCHCHANNEL(Client* client, std::string chanName) {
+std::string Replies::ERR_NOSUCHCHANNEL(Client* client, std::string& chanName) {
     std::string reply;
     reply =
         "403 " + client->getNickname() + " " + chanName + " :No such channel";
     return Message::create(reply);
 }
 
-std::string Replies::ERR_CANNOTSENDTOCHAN() {
+std::string Replies::ERR_CANNOTSENDTOCHAN(Client* client,
+                                          std::string& chanName) {
     std::string reply;
-    return reply;
+    reply = "404 " + client->getNickname() + " " + chanName +
+            " :Cannot send to channel";
+    return Message::create(reply);
 }
 
 std::string Replies::ERR_TOOMANYCHANNELS() {
