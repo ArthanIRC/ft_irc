@@ -152,6 +152,10 @@ void Server::removeClient(Client* client) {
 
 void Server::removeClient(int fd) { removeClient(findClient(fd)); }
 
+std::string Server::getPrefixServIdBangbang() {
+    return this->_prefixServIdBangbang;
+}
+
 vector<Client*> Server::getClients() { return this->_clients; }
 
 map<std::string, Channel*> Server::getChannels() { return this->_channels; }

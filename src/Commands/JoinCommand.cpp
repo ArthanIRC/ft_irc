@@ -1,6 +1,7 @@
 #include "JoinCommand.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "PartCommand.hpp"
 #include "Replies.hpp"
 #include <map>
 #include <sstream>
