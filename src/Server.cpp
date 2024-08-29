@@ -14,6 +14,8 @@ using std::string;
 using std::vector;
 
 static const string defaultPort = "6667";
+static const string motd =
+    "In effect, we conjure the spirits of the computer with our spells.";
 
 Server::Server() {}
 
