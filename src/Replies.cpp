@@ -3,7 +3,6 @@
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Server.hpp"
-#include <iterator>
 #include <map>
 
 std::string Replies::RPL_WELCOME() {
@@ -372,18 +371,23 @@ std::string Replies::RPL_ENDOFLINKS() {
 
 std::string Replies::RPL_ENDOFNAMES(Client* client, std::string channelName) {
     std::string reply;
-    reply = "365 " + client->getNickname() + " " + channelName +
+    reply = "366 " + client->getNickname() + " " + channelName +
             " :End of /NAMES list";
     return Message::create(reply);
 }
 
-std::string Replies::RPL_BANLIST() {
+std::string Replies::RPL_BANLIST(Client* client, Client* banned,
+                                 Channel* chan) {
     std::string reply;
+    reply = "367 " + client->getNickname() + " " + chan->getName() + " " +
+            banned->getNickname();
     return Message::create(reply);
 }
 
-std::string Replies::RPL_ENDOFBANLIST() {
+std::string Replies::RPL_ENDOFBANLIST(Client* client, Channel* chan) {
     std::string reply;
+    reply = "368 " + client->getNickname() + " " + chan->getName() +
+            " :End of channel ban list";
     return Message::create(reply);
 }
 
@@ -674,8 +678,10 @@ std::string Replies::ERR_HELPNOTFOUND() {
     return Message::create(reply);
 }
 
-std::string Replies::ERR_INVALIDKEY() {
+std::string Replies::ERR_INVALIDKEY(Client* client, Channel* chan) {
     std::string reply;
+    reply = "525 " + client->getNickname() + " " + chan->getName() +
+            ":Key is not well-formed";
     return Message::create(reply);
 }
 

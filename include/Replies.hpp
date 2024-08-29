@@ -77,8 +77,9 @@ class Replies : public Message {
     static std::string RPL_LINKS();
     static std::string RPL_ENDOFLINKS();
     static std::string RPL_ENDOFNAMES(Client* client, std::string channelName);
-    static std::string RPL_BANLIST();
-    static std::string RPL_ENDOFBANLIST();
+    static std::string RPL_BANLIST(Client* client, Client* banned,
+                                   Channel* chan);
+    static std::string RPL_ENDOFBANLIST(Client* client, Channel* chan);
     static std::string RPL_ENDOFWHOWAS();
     static std::string RPL_INFO();
     static std::string RPL_MOTD(Client* client, std::string motd);
@@ -132,7 +133,7 @@ class Replies : public Message {
     static std::string ERR_UMODEUNKNOWNFLAG(Client* client);
     static std::string ERR_USERSDONTMATCH(Client* client);
     static std::string ERR_HELPNOTFOUND();
-    static std::string ERR_INVALIDKEY();
+    static std::string ERR_INVALIDKEY(Client* client, Channel* chan);
     static std::string RPL_STARTTLS();
     static std::string RPL_WHOISSECURE();
     static std::string ERR_STARTTLS();

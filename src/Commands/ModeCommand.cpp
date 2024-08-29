@@ -7,6 +7,7 @@
 #include "Replies.hpp"
 #include "Server.hpp"
 
+using std::map;
 using std::string;
 using std::vector;
 
@@ -23,7 +24,7 @@ ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
         Channel* channel;
         try {
             channel = Server::getInstance().findChannel(_target);
-        } catch (Server::ChannelNotFoundException& e) {
+        } catch (Server::ChannelNotFoundException&) {
             client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, _target));
             throw;
         }
@@ -32,7 +33,7 @@ ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
         Client* ctarget;
         try {
             ctarget = Server::getInstance().findClient(_target);
-        } catch (Server::ClientNotFoundException& e) {
+        } catch (Server::ClientNotFoundException&) {
             client->sendMessage(Replies::ERR_NOSUCHNICK(client, _target));
             throw;
         }
@@ -70,8 +71,12 @@ void ModeCommand::banMode(bool oper, size_t& p) {
     if (param.empty()) {
         if (!oper)
             return;
-        _client->sendMessage(Replies::RPL_BANLIST());
-        _client->sendMessage(Replies::RPL_ENDOFBANLIST());
+        map<string, Client*> banlist = _channel->getBanList();
+        for (map<string, Client*>::iterator it = banlist.begin();
+             it != banlist.end(); it++)
+            _client->sendMessage(
+                Replies::RPL_BANLIST(_client, it->second, _channel));
+        _client->sendMessage(Replies::RPL_ENDOFBANLIST(_client, _channel));
         return;
     }
 
@@ -122,7 +127,7 @@ void ModeCommand::keyMode(bool oper, size_t& p) {
 
     string param = retrieveParam(_params, p);
     if (param.empty()) {
-        _client->sendMessage(Replies::ERR_INVALIDKEY());
+        _client->sendMessage(Replies::ERR_INVALIDKEY(_client, _channel));
         return;
     }
 
@@ -152,7 +157,7 @@ void ModeCommand::operatorMode(bool oper, size_t& p) {
     Client* target;
     try {
         target = Server::getInstance().findClient(param);
-    } catch (Server::ClientNotFoundException) {
+    } catch (Server::ClientNotFoundException&) {
         return;
     }
 
@@ -175,7 +180,7 @@ void ModeCommand::voiceMode(bool oper, size_t& p) {
     Client* target;
     try {
         target = Server::getInstance().findClient(param);
-    } catch (Server::ClientNotFoundException) {
+    } catch (Server::ClientNotFoundException&) {
         return;
     }
 
