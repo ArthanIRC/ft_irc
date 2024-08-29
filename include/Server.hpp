@@ -53,6 +53,7 @@ class Server {
     bool isRunning() const;
     Epoll& getEpoll();
     std::string getPassword() const;
+    std::string getMotd() const;
     void sendMessage(Channel* channel, std::string message);
     void sendMessage(std::map<std::string, Channel*> channels,
                      std::string message);

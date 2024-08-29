@@ -171,6 +171,8 @@ Epoll& Server::getEpoll() { return this->_epoll; }
 
 string Server::getPassword() const { return this->_password; }
 
+string Server::getMotd() const { return motd; }
+
 bool Server::isRunning() const { return this->_running; }
 
 void Server::sendMessage(Channel* channel, string message) {
