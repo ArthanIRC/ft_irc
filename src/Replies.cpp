@@ -68,7 +68,7 @@ std::string Replies::RPL_LUSERCLIENT(Client* client) {
             i++;
     }
     reply = "251 " + client->getNickname() + " :There are " + toString(u) +
-            " users and " + toString(i) + " invisible on 0 server";
+            " users and " + toString(i) + " invisible on 1 servers";
     return Message::create(reply);
 }
 
