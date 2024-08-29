@@ -14,6 +14,8 @@ using std::string;
 using std::vector;
 
 static const string defaultPort = "6667";
+static const string motd =
+    "In effect, we conjure the spirits of the computer with our spells.";
 
 Server::Server() {}
 
@@ -168,6 +170,8 @@ map<std::string, std::string> Server::getOperators() {
 Epoll& Server::getEpoll() { return this->_epoll; }
 
 string Server::getPassword() const { return this->_password; }
+
+string Server::getMotd() const { return motd; }
 
 bool Server::isRunning() const { return this->_running; }
 

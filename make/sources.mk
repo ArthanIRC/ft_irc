@@ -13,6 +13,7 @@ SOURCES += ./src/Commands/InviteCommand.cpp
 SOURCES += ./src/Commands/JoinCommand.cpp
 SOURCES += ./src/Commands/KickCommand.cpp
 SOURCES += ./src/Commands/ModeCommand.cpp
+SOURCES += ./src/Commands/MotdCommand.cpp
 SOURCES += ./src/Commands/NamesCommand.cpp
 SOURCES += ./src/Commands/NickCommand.cpp
 SOURCES += ./src/Commands/OperCommand.cpp

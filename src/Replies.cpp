@@ -395,8 +395,9 @@ std::string Replies::RPL_INFO() {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_MOTD() {
+std::string Replies::RPL_MOTD(Client* client, std::string motd) {
     std::string reply;
+    reply = "372 " + client->getNickname() + " :" + motd;
     return Message::create(reply);
 }
 
@@ -405,13 +406,15 @@ std::string Replies::RPL_ENDOFINFO() {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_MOTDSTART() {
+std::string Replies::RPL_MOTDSTART(Client* client) {
     std::string reply;
+    reply = "375 " + client->getNickname() + " :- Message of the day - ";
     return Message::create(reply);
 }
 
-std::string Replies::RPL_ENDOFMOTD() {
+std::string Replies::RPL_ENDOFMOTD(Client* client) {
     std::string reply;
+    reply = "376 " + client->getNickname() + " :End of the /MOTD command.";
     return Message::create(reply);
 }
 
@@ -508,8 +511,9 @@ std::string Replies::ERR_UNKNOWNCOMMAND() {
     return Message::create(reply);
 }
 
-std::string Replies::ERR_NOMOTD() {
+std::string Replies::ERR_NOMOTD(Client* client) {
     std::string reply;
+    reply = "422 " + client->getNickname() + " :MOTD File is missing";
     return Message::create(reply);
 }
 

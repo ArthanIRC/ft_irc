@@ -1,6 +1,5 @@
 #include "OperCommand.hpp"
 #include "Client.hpp"
-#include "ModeCommand.hpp"
 #include "Replies.hpp"
 #include "Server.hpp"
 #include <map>
