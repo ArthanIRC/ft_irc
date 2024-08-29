@@ -256,8 +256,10 @@ std::string Replies::RPL_LISTEND() {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_CHANNELMODEIS() {
+std::string Replies::RPL_CHANNELMODEIS(Client* client, Channel* channel) {
     std::string reply;
+    reply = "324 " + client->getNickname() + " " + channel->getName() + " " +
+            channel->getModes();
     return Message::create(reply);
 }
 
