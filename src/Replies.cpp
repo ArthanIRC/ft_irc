@@ -803,3 +803,9 @@ string Replies::ERR_REGFAILED() {
     reply = "ERROR :Registration failed";
     return Message::create(reply);
 }
+
+std::string Replies::ERR_QUIT(Client* client) {
+    std::string reply;
+    reply = client->getName() + " quit";
+    return Message::create(reply);
+}
