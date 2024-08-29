@@ -5,7 +5,7 @@
 
 MotdCommand::MotdCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
-    (void)params;
+    this->_params = params;
     this->_source = source;
     this->_client = client;
 }

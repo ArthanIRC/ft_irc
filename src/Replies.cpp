@@ -397,7 +397,7 @@ std::string Replies::RPL_INFO() {
 
 std::string Replies::RPL_MOTD(Client* client, std::string motd) {
     std::string reply;
-    reply = client->getNickname() + " :" + motd;
+    reply = "372 " + client->getNickname() + " :" + motd;
     return Message::create(reply);
 }
 
@@ -408,13 +408,13 @@ std::string Replies::RPL_ENDOFINFO() {
 
 std::string Replies::RPL_MOTDSTART(Client* client) {
     std::string reply;
-    reply = client->getNickname() + " :- Message of the day - ";
+    reply = "375 " + client->getNickname() + " :- Message of the day - ";
     return Message::create(reply);
 }
 
 std::string Replies::RPL_ENDOFMOTD(Client* client) {
     std::string reply;
-    reply = client->getNickname() + " :End of the /MOTD command.";
+    reply = "376 " + client->getNickname() + " :End of the /MOTD command.";
     return Message::create(reply);
 }
 
