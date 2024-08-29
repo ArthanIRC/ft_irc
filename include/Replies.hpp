@@ -81,10 +81,10 @@ class Replies : public Message {
     static std::string RPL_ENDOFBANLIST();
     static std::string RPL_ENDOFWHOWAS();
     static std::string RPL_INFO();
-    static std::string RPL_MOTD();
+    static std::string RPL_MOTD(Client* client, std::string motd);
     static std::string RPL_ENDOFINFO();
-    static std::string RPL_MOTDSTART();
-    static std::string RPL_ENDOFMOTD();
+    static std::string RPL_MOTDSTART(Client* client);
+    static std::string RPL_ENDOFMOTD(Client* client);
     static std::string RPL_WHOISHOST();
     static std::string RPL_WHOISMODES();
     static std::string RPL_YOUREOPER();
@@ -103,7 +103,7 @@ class Replies : public Message {
     static std::string ERR_NOTEXTTOSEND(Client* client);
     static std::string ERR_INPUTTOOLONG();
     static std::string ERR_UNKNOWNCOMMAND();
-    static std::string ERR_NOMOTD();
+    static std::string ERR_NOMOTD(Client* client);
     static std::string ERR_NONICKNAMEGIVEN(Client* client);
     static std::string ERR_ERRONEUSNICKNAME(Client* client, std::string& nick);
     static std::string ERR_NICKNAMEINUSE(Client* client, std::string& nick);
