@@ -1,6 +1,10 @@
 #include "Replies.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #include "Message.hpp"
+#include "Server.hpp"
+#include <iterator>
+#include <map>
 
 std::string Replies::RPL_WELCOME() {
     std::string reply;
@@ -53,28 +57,58 @@ std::string Replies::RPL_STATSUPTIME() {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_LUSERCLIENT() {
+std::string Replies::RPL_LUSERCLIENT(Client* client) {
     std::string reply;
+    std::vector<Client*> clients = Server::getInstance().getClients();
+    size_t u = clients.size();
+    size_t i = 0;
+    for (std::vector<Client*>::iterator it = clients.begin();
+         it != clients.end(); it++) {
+        if ((*it)->isInvisible())
+            i++;
+    }
+    reply = "251 " + client->getNickname() + " :There are " + toString(u) +
+            " users and " + toString(i) + " invisible on 0 server";
     return Message::create(reply);
 }
 
-std::string Replies::RPL_LUSEROP() {
+std::string Replies::RPL_LUSEROP(Client* client) {
     std::string reply;
+
+    size_t ops = Server::getInstance().getOperators().size();
+
+    reply = "252 " + client->getNickname() + " " + toString(ops) +
+            " :operator(s) online";
     return Message::create(reply);
 }
 
-std::string Replies::RPL_LUSERUNKNOWN() {
+std::string Replies::RPL_LUSERUNKNOWN(Client* client) {
     std::string reply;
+    size_t i = 0;
+    std::vector<Client*> clients = Server::getInstance().getClients();
+    for (std::vector<Client*>::iterator it = clients.begin();
+         it != clients.end(); it++) {
+        if ((*it)->getState() == UNKNOWN)
+            i++;
+    }
+    reply = "253 " + client->getNickname() + " " + toString(i) +
+            " :unknown connection(s)";
     return Message::create(reply);
 }
 
-std::string Replies::RPL_LUSERCHANNELS() {
+std::string Replies::RPL_LUSERCHANNELS(Client* client) {
     std::string reply;
+    size_t channels = Server::getInstance().getChannels().size();
+    reply = "254 " + client->getNickname() + " " + toString(channels) +
+            " :channels formed";
     return Message::create(reply);
 }
 
-std::string Replies::RPL_LUSERME() {
+std::string Replies::RPL_LUSERME(Client* client) {
     std::string reply;
+    size_t c = Server::getInstance().getClients().size();
+    reply = "255 " + client->getNickname() + " :I have " + toString(c) +
+            " clients and 0 server(s)";
     return Message::create(reply);
 }
 
@@ -103,13 +137,27 @@ std::string Replies::RPL_TRYAGAIN() {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_LOCALUSERS() {
+std::string Replies::RPL_LOCALUSERS(Client* client) {
     std::string reply;
+    (void)client;
+    size_t u = Server::getInstance().getClients().size();
+    (void)u;
+    // size_t m = Server::getInstance().getMaxClients();
+    // reply = "265 " + client->getNickname() + " " + toString(u) + " " +
+    //         tostring(m) + " :Current local users " + toString(u) + ", max " +
+    //         toString(m);
     return Message::create(reply);
 }
 
-std::string Replies::RPL_GLOBALUSERS() {
+std::string Replies::RPL_GLOBALUSERS(Client* client) {
     std::string reply;
+    (void)client;
+    size_t u = Server::getInstance().getClients().size();
+    (void)u;
+    // size_t m = Server::getInstance().getMaxClients();
+    // reply = "265 " + client->getNickname() + " " + toString(u) + " " +
+    //         tostring(m) + " :Current local users " + toString(u) + ", max " +
+    //         toString(m);
     return Message::create(reply);
 }
 

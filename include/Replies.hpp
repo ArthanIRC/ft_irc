@@ -3,8 +3,16 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Message.hpp"
+#include <sstream>
 
 class Replies : public Message {
+  private:
+    template <typename T> static std::string toString(T Number) {
+        std::ostringstream ss;
+        ss << Number;
+        return ss.str();
+    }
+
   public:
     virtual ~Replies(){};
     static std::string RPL_WELCOME();
@@ -17,18 +25,18 @@ class Replies : public Message {
     static std::string RPL_ENDOFSTATS();
     static std::string RPL_UMODEIS(Client* _client);
     static std::string RPL_STATSUPTIME();
-    static std::string RPL_LUSERCLIENT();
-    static std::string RPL_LUSEROP();
-    static std::string RPL_LUSERUNKNOWN();
-    static std::string RPL_LUSERCHANNELS();
-    static std::string RPL_LUSERME();
+    static std::string RPL_LUSERCLIENT(Client* client);
+    static std::string RPL_LUSEROP(Client* client);
+    static std::string RPL_LUSERUNKNOWN(Client* client);
+    static std::string RPL_LUSERCHANNELS(Client* client);
+    static std::string RPL_LUSERME(Client* client);
     static std::string RPL_ADMINME();
     static std::string RPL_ADMINLOC1();
     static std::string RPL_ADMINLOC2();
     static std::string RPL_ADMINEMAIL();
     static std::string RPL_TRYAGAIN();
-    static std::string RPL_LOCALUSERS();
-    static std::string RPL_GLOBALUSERS();
+    static std::string RPL_LOCALUSERS(Client* client);
+    static std::string RPL_GLOBALUSERS(Client* client);
     static std::string RPL_WHOISCERTFP();
     static std::string RPL_NONE();
     static std::string RPL_AWAY();
