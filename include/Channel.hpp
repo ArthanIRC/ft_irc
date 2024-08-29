@@ -92,6 +92,7 @@ class Channel {
     void addClient(Client* client);
     void addOperator(Client* client);
     void addVoiced(Client* client);
+    void eraseVoiced(Client* client);
     void banClient(Client* client);
     void inviteClient(Client* client);
 

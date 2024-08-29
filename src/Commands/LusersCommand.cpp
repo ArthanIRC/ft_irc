@@ -7,6 +7,8 @@ LusersCommand::LusersCommand(std::string source,
     this->_client = client;
 }
 
+LusersCommand::~LusersCommand() {}
+
 void LusersCommand::run() {
     _client->sendMessage(Replies::RPL_LUSERCLIENT(_client));
     _client->sendMessage(Replies::RPL_LUSEROP(_client));

@@ -93,6 +93,10 @@ void Channel::addOperator(Client* client) {
 
 void Channel::addVoiced(Client* client) { addClientToMap(_voicedList, client); }
 
+void Channel::eraseVoiced(Client* client) {
+    removeClientFromMap(_voicedList, client, "");
+}
+
 void Channel::banClient(Client* client) { addClientToMap(_banList, client); }
 
 void Channel::inviteClient(Client* client) {
@@ -124,7 +128,8 @@ bool Channel::isBanned(Client* client) const {
 }
 
 bool Channel::isOperator(Client* client) const {
-    return (verifClientOnMap(_operatorsList, client));
+    return (verifClientOnMap(_operatorsList, client)) ||
+           client->isServerOperator();
 }
 
 bool Channel::isVoiced(Client* client) const {
