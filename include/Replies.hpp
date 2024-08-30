@@ -3,6 +3,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Message.hpp"
+#include "Server.hpp"
 #include <sstream>
 
 class Replies : public Message {
@@ -15,12 +16,12 @@ class Replies : public Message {
 
   public:
     virtual ~Replies(){};
-    static std::string RPL_WELCOME(Client* client, std::string network);
-    static std::string RPL_YOURHOST(Client* client, std::string server,
-                                    std::string version);
-    static std::string RPL_CREATED(Client* client, std::string creationDate);
-    static std::string RPL_MYINFO();
-    static std::string RPL_ISUPPORT();
+    static std::string RPL_WELCOME(Client* client, Server& server);
+    static std::string RPL_YOURHOST(Client* client, Server& server);
+    static std::string RPL_CREATED(Client* client, Server& server);
+    static std::string RPL_MYINFO(Client* client, Server& server);
+    static std::string RPL_ISUPPORT1(Client* client, Server& server);
+    static std::string RPL_ISUPPORT2(Client* client, Server& server);
     static std::string RPL_BOUNCE();
     static std::string RPL_STATSCOMMANDS();
     static std::string RPL_ENDOFSTATS();

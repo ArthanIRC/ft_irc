@@ -5,35 +5,46 @@
 #include "Server.hpp"
 #include <map>
 
-std::string Replies::RPL_WELCOME(Client* client, std::string network) {
+std::string Replies::RPL_WELCOME(Client* client, Server& server) {
     std::string reply;
-    reply = "001 " + client->getNickname() + " :Welcome to the " + network +
-            " Network, " + client->getNickname();
+    reply = "001 " + client->getNickname() + " :Welcome to the " +
+            server.getNetworkName() + " Network, " + client->getNickname();
     return Message::create(reply);
 }
 
-std::string Replies::RPL_YOURHOST(Client* client, std::string server,
-                                  std::string version) {
+std::string Replies::RPL_YOURHOST(Client* client, Server& server) {
     std::string reply;
-    reply = "002 " + client->getNickname() + " :Your host is " + server +
-            ", running version " + version;
+    reply = "002 " + client->getNickname() + " :Your host is " +
+            server.getServerName() + ", running version " + server.getVersion();
     return Message::create(reply);
 }
 
-std::string Replies::RPL_CREATED(Client* client, std::string creationDate) {
+std::string Replies::RPL_CREATED(Client* client, Server& server) {
     std::string reply;
     reply = "003 " + client->getNickname() + " :This server was created " +
-            creationDate;
+            server.getCreationDate();
     return Message::create(reply);
 }
 
-std::string Replies::RPL_MYINFO() {
+std::string Replies::RPL_MYINFO(Client* client, Server& server) {
     std::string reply;
+    reply = "004 " + client->getNickname() + " " + server.getServerName() +
+            " " + server.getVersion() + " " + server.getUserModes() + " " +
+            server.getChannelModes();
     return Message::create(reply);
 }
 
-std::string Replies::RPL_ISUPPORT() {
+std::string Replies::RPL_ISUPPORT1(Client* client, Server& server) {
     std::string reply;
+    reply = "005 " + client->getNickname() + " " + server.getRplSupport1() +
+            " :are supported by this server";
+    return Message::create(reply);
+}
+
+std::string Replies::RPL_ISUPPORT2(Client* client, Server& server) {
+    std::string reply;
+    reply = "005 " + client->getNickname() + " " + server.getRplSupport2() +
+            " :are supported by this server";
     return Message::create(reply);
 }
 

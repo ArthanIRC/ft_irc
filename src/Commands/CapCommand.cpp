@@ -1,5 +1,7 @@
 #include "CapCommand.hpp"
 #include "Client.hpp"
+#include "LusersCommand.hpp"
+#include "MotdCommand.hpp"
 
 using std::string;
 using std::vector;
@@ -24,17 +26,22 @@ void CapCommand::run() {
             _client->sendMessage(Replies::ERR_REGFAILED());
         } else
             _client->setState(REGISTERED);
-        _client->sendMessage(Replies::RPL_WELCOME(
-            _client, Server::getInstance().getNetworkName()));
-        _client->sendMessage(Replies::RPL_YOURHOST(
-            _client, Server::getInstance().getServerName(),
-            Server::getInstance().getVersion()));
-        _client->sendMessage(Replies::RPL_CREATED(
-            _client, Server::getInstance().getCreationDate()));
-        _client->sendMessage(Replies::RPL_MYINFO());
-        _client->sendMessage(Replies::RPL_ISUPPORT());
-        // LUSER Command
-        // MOTD Command
+        _client->sendMessage(
+            Replies::RPL_WELCOME(_client, Server::getInstance()));
+        _client->sendMessage(
+            Replies::RPL_YOURHOST(_client, Server::getInstance()));
+        _client->sendMessage(
+            Replies::RPL_CREATED(_client, Server::getInstance()));
+        _client->sendMessage(
+            Replies::RPL_MYINFO(_client, Server::getInstance()));
+        _client->sendMessage(
+            Replies::RPL_ISUPPORT1(_client, Server::getInstance()));
+        _client->sendMessage(
+            Replies::RPL_ISUPPORT2(_client, Server::getInstance()));
+        LusersCommand lusers(_source, _params, _client);
+        lusers.run();
+        MotdCommand motd(_source, _params, _client);
+        motd.run();
         _client->sendMessage(Replies::RPL_UMODEIS(_client));
     }
 }
