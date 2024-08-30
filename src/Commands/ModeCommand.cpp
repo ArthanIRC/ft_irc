@@ -60,6 +60,13 @@ string ModeCommand::retrieveParam(vector<string>& param, size_t i) {
     }
 }
 
+void ModeCommand::iModeDispatcher(bool oper, size_t& p) {
+    if (_isChan)
+        inviteMode(oper, p);
+    else
+        invisibleMode(oper, p);
+}
+
 void ModeCommand::invisibleMode(bool oper, size_t& p) {
     _client->setInvisible(oper);
     (void)p;
