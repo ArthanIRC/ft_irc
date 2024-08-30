@@ -24,6 +24,8 @@ void CapCommand::run() {
     } else if (_params[0] == "END") {
         if (_client->getState() != USER_DONE) {
             _client->sendMessage(Replies::ERR_REGFAILED());
+            Server::getInstance().removeClient(_client);
+            return;
         } else
             _client->setState(REGISTERED);
         _client->sendMessage(
