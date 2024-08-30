@@ -43,9 +43,9 @@ bool Channel::isKeyed() const { return !this->_key.empty(); }
 
 std::string Channel::getTopic() const { return this->_topic; }
 
-void Channel::setTopic(std::string newTopic, std::string author) {
+void Channel::setTopic(std::string newTopic, Client* author) {
     this->_topic = newTopic;
-    this->_lastTopicAuthor = author;
+    this->_lastTopicAuthor = author->getNickname();
     this->_topicSetTime = time(NULL);
 }
 

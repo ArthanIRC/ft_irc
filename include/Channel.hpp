@@ -74,7 +74,7 @@ class Channel {
     bool isKeyed() const;
 
     std::string getTopic() const;
-    void setTopic(std::string newTopic, std::string author);
+    void setTopic(std::string newTopic, Client* author);
     bool isProtectedTopic() const;
     void setProtectedTopic(bool lock);
 

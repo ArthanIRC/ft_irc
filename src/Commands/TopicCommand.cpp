@@ -49,7 +49,7 @@ void TopicCommand::run() {
     } else {
         std::map<std::string, Client*> clientMap = _channel->getClients();
         std::map<std::string, Client*>::iterator it;
-        _channel->setTopic(_params[1], _client->getNickname());
+        _channel->setTopic(_params[1], _client);
 
         for (it = clientMap.begin(); it != clientMap.end(); ++it) {
             (*it).second->sendMessage(Replies::RPL_TOPIC(_client, _channel));
