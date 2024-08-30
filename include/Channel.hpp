@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctime>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -11,10 +12,13 @@ class Channel {
     std::string _name;
     std::string _key;
     std::string _topic;
+    std::string _lastTopicAuthor;
     bool _protectedTopic;
     bool _inviteOnly;
     bool _moderated;
     size_t _maxClients;
+    time_t _creationTime;
+    time_t _topicSetTime;
     std::map<std::string, Client*> _clients;
     std::map<std::string, Client*> _inviteList;
     std::map<std::string, Client*> _banList;
@@ -70,7 +74,7 @@ class Channel {
     bool isKeyed() const;
 
     std::string getTopic() const;
-    void setTopic(std::string newTopic);
+    void setTopic(std::string newTopic, std::string author);
     bool isProtectedTopic() const;
     void setProtectedTopic(bool lock);
 
@@ -112,6 +116,9 @@ class Channel {
 
     std::string getModes() const;
     std::string getPrefix(Client* client);
+    std::string getLastTopicAuthor() const;
+    time_t getCreationTime() const;
+    time_t getTopicSetTime() const;
 
     class userNotInvited : public std::exception {
       public:

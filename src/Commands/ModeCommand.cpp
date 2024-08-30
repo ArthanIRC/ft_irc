@@ -215,6 +215,7 @@ void ModeCommand::run() {
     if (_isChan) {
         if (_mode.empty()) {
             _client->sendMessage(Replies::RPL_CHANNELMODEIS(_client, _channel));
+            _client->sendMessage(Replies::RPL_CREATIONTIME(_client, _channel));
             return;
         }
 

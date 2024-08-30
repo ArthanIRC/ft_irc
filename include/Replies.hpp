@@ -59,11 +59,11 @@ class Replies : public Message {
     static std::string RPL_LIST();
     static std::string RPL_LISTEND();
     static std::string RPL_CHANNELMODEIS(Client* client, Channel* channel);
-    static std::string RPL_CREATIONTIME();
+    static std::string RPL_CREATIONTIME(Client* client, Channel* channel);
     static std::string RPL_WHOISACCOUNT();
-    static std::string RPL_NOTOPIC();
+    static std::string RPL_NOTOPIC(Client* client, Channel* channel);
     static std::string RPL_TOPIC(Client* client, Channel* channel);
-    static std::string RPL_TOPICWHOTIME();
+    static std::string RPL_TOPICWHOTIME(Client* client, Channel* channel);
     static std::string RPL_INVITELIST();
     static std::string RPL_ENDOFINVITELIST();
     static std::string RPL_WHOISACTUALLY();

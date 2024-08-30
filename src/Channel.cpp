@@ -6,6 +6,7 @@ Channel::Channel(Client* newClient, std::string name)
     checkNameSyntaxChan(name);
     this->_clients[newClient->getNickname()] = newClient;
     this->_operatorsList[newClient->getNickname()] = newClient;
+    this->_creationTime = time(NULL);
 }
 
 Channel::Channel(Client* newClient, std::string name, std::string key)
@@ -14,6 +15,7 @@ Channel::Channel(Client* newClient, std::string name, std::string key)
     checkNameSyntaxChan(name);
     this->_clients[newClient->getNickname()] = newClient;
     this->_operatorsList[newClient->getNickname()] = newClient;
+    this->_creationTime = time(NULL);
 }
 
 Channel::~Channel() {}
@@ -41,7 +43,11 @@ bool Channel::isKeyed() const { return !this->_key.empty(); }
 
 std::string Channel::getTopic() const { return this->_topic; }
 
-void Channel::setTopic(std::string newTopic) { this->_topic = newTopic; }
+void Channel::setTopic(std::string newTopic, std::string author) {
+    this->_topic = newTopic;
+    this->_lastTopicAuthor = author;
+    this->_topicSetTime = time(NULL);
+}
 
 bool Channel::isProtectedTopic() const { return this->_protectedTopic; }
 
@@ -176,3 +182,11 @@ std::string Channel::getPrefix(Client* client) {
         prefix = "";
     return prefix;
 }
+
+std::string Channel::getLastTopicAuthor() const {
+    return this->_lastTopicAuthor;
+}
+
+time_t Channel::getCreationTime() const { return this->_creationTime; }
+
+time_t Channel::getTopicSetTime() const { return this->_topicSetTime; }
