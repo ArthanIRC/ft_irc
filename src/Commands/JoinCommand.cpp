@@ -25,20 +25,22 @@ void JoinCommand::checkParams(Client* client, std::vector<std::string> params) {
 }
 
 void JoinCommand::parseParams() {
-    std::istringstream iss(_params[1]);
-    std::istringstream iss2(_params[0]);
-    std::string chanName;
     size_t i = 0;
     size_t j = 0;
+    if (_params.size() > 1) {
+        std::istringstream iss(_params[1]);
+        while (std::getline(iss, _keys[i], ','))
+            i++;
+    }
+    std::istringstream iss2(_params[0]);
+    std::string chanName;
 
-    while (std::getline(iss, _keys[i], ','))
-        j++;
     while (std::getline(iss2, chanName, ',')) {
         try {
             _channels[j] = Server::getInstance().findChannel(chanName);
         } catch (const Server::ChannelNotFoundException()) {
             try {
-                if (i < _keys.size())
+                if (i != 0 && j < _keys.size())
                     _channels[j] = new Channel(_client, chanName, _keys[j]);
                 else
                     _channels[j] = new Channel(_client, chanName);
@@ -47,7 +49,7 @@ void JoinCommand::parseParams() {
                 break;
             }
         }
-        i++;
+        j++;
     }
 }
 
