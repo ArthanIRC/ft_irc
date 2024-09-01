@@ -9,6 +9,7 @@ SOURCES += ./src/Replies.cpp
 SOURCES += ./src/Server.cpp
 SOURCES += ./src/ServerSocket.cpp
 SOURCES += ./src/Socket.cpp
+SOURCES += ./src/Commands/CapCommand.cpp
 SOURCES += ./src/Commands/InviteCommand.cpp
 SOURCES += ./src/Commands/JoinCommand.cpp
 SOURCES += ./src/Commands/KickCommand.cpp

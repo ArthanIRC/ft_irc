@@ -3,6 +3,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Message.hpp"
+#include "Server.hpp"
 #include <sstream>
 
 class Replies : public Message {
@@ -15,11 +16,12 @@ class Replies : public Message {
 
   public:
     virtual ~Replies(){};
-    static std::string RPL_WELCOME();
-    static std::string RPL_YOURHOST();
-    static std::string RPL_CREATED();
-    static std::string RPL_MYINFO();
-    static std::string RPL_ISUPPORT();
+    static std::string RPL_WELCOME(Client* client, Server& server);
+    static std::string RPL_YOURHOST(Client* client, Server& server);
+    static std::string RPL_CREATED(Client* client, Server& server);
+    static std::string RPL_MYINFO(Client* client, Server& server);
+    static std::string RPL_ISUPPORT1(Client* client, Server& server);
+    static std::string RPL_ISUPPORT2(Client* client, Server& server);
     static std::string RPL_BOUNCE();
     static std::string RPL_STATSCOMMANDS();
     static std::string RPL_ENDOFSTATS();
@@ -151,4 +153,5 @@ class Replies : public Message {
     static std::string ERR_SASLABORTED();
     static std::string ERR_SASLALREADY();
     static std::string RPL_SASLMECHS();
+    static std::string ERR_REGFAILED();
 };

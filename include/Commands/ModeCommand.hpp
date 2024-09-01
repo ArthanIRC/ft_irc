@@ -19,13 +19,12 @@ class ModeCommand : public Command {
         modeMap m;
         m['b'] = &ModeCommand::banMode;
         m['l'] = &ModeCommand::limitMode;
-        m['i'] = &ModeCommand::inviteMode;
+        m['i'] = &ModeCommand::iModeDispatcher;
         m['k'] = &ModeCommand::keyMode;
         m['m'] = &ModeCommand::moderatedMode;
         m['t'] = &ModeCommand::protectedTopicMode;
         m['o'] = &ModeCommand::operatorMode;
         m['v'] = &ModeCommand::voiceMode;
-        m['i'] = &ModeCommand::invisibleMode;
         return m;
     }
 
@@ -41,6 +40,7 @@ class ModeCommand : public Command {
     void protectedTopicMode(bool oper, size_t& p);
     void operatorMode(bool oper, size_t& p);
     void voiceMode(bool oper, size_t& p);
+    void iModeDispatcher(bool oper, size_t& p);
 
   public:
     ModeCommand(std::string source, std::vector<std::string> params,

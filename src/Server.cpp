@@ -16,6 +16,18 @@ using std::vector;
 static const string defaultPort = "6667";
 static const string motd =
     "In effect, we conjure the spirits of the computer with our spells.";
+static const string networkName = "ArThAn";
+static const string serverName = "JUSTICE";
+static const string userModes = "ior";
+static const string channelModes = "blikmtov";
+static const string version = "1.0.0";
+static const string creationDate = "27/07/2024";
+static const string rplSupport1 =
+    "AWAYLEN=255 CASEMAPPING=ascii CHANLIMIT=#: CHANMODES=b,k,l,imt "
+    "CHANNELLEN=30 CHANTYPES=# "
+    "ELIST= HOSTLEN=64 KICKLEN=255 MAXLIST=b:20 NICKLEN=30 PREFIX=(ov)@+ "
+    "STATUSMSG=";
+static const string rplSupport2 = "TOPICLEN=307 USERLEN=18";
 
 Server::Server() {}
 
@@ -172,6 +184,22 @@ Epoll& Server::getEpoll() { return this->_epoll; }
 string Server::getPassword() const { return this->_password; }
 
 string Server::getMotd() const { return motd; }
+
+string Server::getNetworkName() const { return networkName; }
+
+string Server::getServerName() const { return serverName; }
+
+string Server::getVersion() const { return version; }
+
+string Server::getCreationDate() const { return creationDate; }
+
+string Server::getUserModes() const { return userModes; }
+
+string Server::getChannelModes() const { return channelModes; }
+
+string Server::getRplSupport1() const { return rplSupport1; }
+
+string Server::getRplSupport2() const { return rplSupport2; }
 
 bool Server::isRunning() const { return this->_running; }
 
