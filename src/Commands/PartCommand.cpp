@@ -29,7 +29,7 @@ void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
     while (std::getline(iss, chanName, ',')) {
         try {
             _channels[i] = Server::getInstance().findChannel(chanName);
-        } catch (const Server::ChannelNotFoundException()) {
+        } catch (const Server::ChannelNotFoundException&) {
             client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, chanName));
             continue;
         }

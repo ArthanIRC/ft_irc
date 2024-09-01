@@ -21,7 +21,7 @@ void TopicCommand::checkParams(Client* client,
     Channel* chan;
     try {
         chan = Server::getInstance().findChannel(params[0]);
-    } catch (const Server::ChannelNotFoundException()) {
+    } catch (const Server::ChannelNotFoundException&) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, params[0]));
         throw ClientException();
     }

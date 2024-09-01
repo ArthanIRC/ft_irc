@@ -38,14 +38,15 @@ void JoinCommand::parseParams() {
     while (std::getline(iss2, chanName, ',')) {
         try {
             _channels[j] = Server::getInstance().findChannel(chanName);
-        } catch (const Server::ChannelNotFoundException()) {
+        } catch (const Server::ChannelNotFoundException&) {
             try {
                 if (i != 0 && j < _keys.size())
-                    _channels[j] = new Channel(_client, chanName, _keys[j]);
+                    _channels.push_back(
+                        new Channel(_client, chanName, _keys[j]));
                 else
-                    _channels[j] = new Channel(_client, chanName);
+                    _channels.push_back(new Channel(_client, chanName));
                 Server::getInstance().addChannel(_channels[j]);
-            } catch (Channel::wrongSyntaxChannelName()) {
+            } catch (Channel::wrongSyntaxChannelName&) {
                 break;
             }
         }
@@ -56,7 +57,7 @@ void JoinCommand::parseParams() {
 void JoinCommand::joinAndReplies(Channel* channel) {
     try {
         channel->addClient(_client);
-    } catch (const Channel::userAlreadyExists()) {
+    } catch (const Channel::userAlreadyExists&) {
         return;
     }
 

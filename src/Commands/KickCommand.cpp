@@ -21,7 +21,7 @@ void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
     Channel* chan;
     try {
         chan = Server::getInstance().findChannel(params[0]);
-    } catch (const Server::ChannelNotFoundException()) {
+    } catch (const Server::ChannelNotFoundException&) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, params[0]));
         throw ClientException();
     }
@@ -55,7 +55,7 @@ void KickCommand::run() {
     Client* target;
     try {
         target = Server::getInstance().findClient(_targetNickname);
-    } catch (Server::ClientNotFoundException()) {
+    } catch (Server::ClientNotFoundException&) {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }

@@ -13,7 +13,7 @@ InviteCommand::InviteCommand(std::string source,
     }
     try {
         chan = Server::getInstance().findChannel(params[1]);
-    } catch (Server::ChannelNotFoundException()) {
+    } catch (Server::ChannelNotFoundException&) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
         throw ClientException();
     }
@@ -48,7 +48,7 @@ void InviteCommand::run() {
     Client* target;
     try {
         target = Server::getInstance().findClient(_targetNickname);
-    } catch (Server::ClientNotFoundException()) {
+    } catch (Server::ClientNotFoundException&) {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }

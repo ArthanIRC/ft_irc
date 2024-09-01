@@ -56,7 +56,7 @@ void ClientSocket::onPoll(uint32_t events) {
     Command* c;
     try {
         c = Command::create(data, client);
-    } catch (RegFailedException& e) {
+    } catch (RegFailedException&) {
         sendMessage(Replies::ERR_REGFAILED());
         removeSelf();
         return;
