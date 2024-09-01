@@ -40,11 +40,9 @@ void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
 
 std::string PartCommand::createReply(Channel* channel) {
     std::string reply;
-
     reply = ":" + _client->getNickname() + " PART " + channel->getName() + " " +
             _reason;
-
-    return reply;
+    return Message::create(reply);
 }
 
 void PartCommand::run() {
@@ -54,8 +52,8 @@ void PartCommand::run() {
                 _channels[i]->eraseOperator(_client);
             _channels[i]->eraseClient(_client);
             std::string reply = createReply(_channels[i]);
-            Message::create(reply);
             Server::getInstance().sendMessage(_channels[i], reply);
+            _client->sendMessage(reply);
         } else {
             _client->sendMessage(
                 Replies::ERR_NOTONCHANNEL(_client, _channels[i]));
