@@ -40,15 +40,21 @@ void TopicCommand::checkParams(Client* client,
 
 void TopicCommand::run() {
     if (_params.size() < 2) {
-        _client->sendMessage(Replies::RPL_TOPIC(_client, _channel));
+        if (_channel->getTopic().empty())
+            _client->sendMessage(Replies::RPL_NOTOPIC(_client, _channel));
+        else {
+            _client->sendMessage(Replies::RPL_TOPIC(_client, _channel));
+            _client->sendMessage(Replies::RPL_TOPICWHOTIME(_client, _channel));
+        }
     } else {
         std::map<std::string, Client*> clientMap = _channel->getClients();
         std::map<std::string, Client*>::iterator it;
-        _channel->setTopic(_params[1]);
+        _channel->setTopic(_params[1], _client);
 
         for (it = clientMap.begin(); it != clientMap.end(); ++it) {
             (*it).second->sendMessage(Replies::RPL_TOPIC(_client, _channel));
-            (*it).second->sendMessage(Replies::RPL_TOPICWHOTIME());
+            (*it).second->sendMessage(
+                Replies::RPL_TOPICWHOTIME(_client, _channel));
         }
     }
 }

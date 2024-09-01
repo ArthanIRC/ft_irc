@@ -65,7 +65,7 @@ void JoinCommand::joinAndReplies(Channel* channel) {
 
     if (!channel->getTopic().empty()) {
         _client->sendMessage(Replies::RPL_TOPIC(_client, channel));
-        _client->sendMessage(Replies::RPL_TOPICWHOTIME());
+        _client->sendMessage(Replies::RPL_TOPICWHOTIME(_client, channel));
     }
 
     _client->sendMessage(Replies::RPL_NAMREPLY(_client, channel));

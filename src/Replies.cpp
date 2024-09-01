@@ -280,8 +280,10 @@ std::string Replies::RPL_CHANNELMODEIS(Client* client, Channel* channel) {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_CREATIONTIME() {
+std::string Replies::RPL_CREATIONTIME(Client* client, Channel* channel) {
     std::string reply;
+    reply = "329 " + client->getNickname() + " " + channel->getName() + " " +
+            toString(channel->getCreationTime());
     return Message::create(reply);
 }
 
@@ -290,8 +292,10 @@ std::string Replies::RPL_WHOISACCOUNT() {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_NOTOPIC() {
+std::string Replies::RPL_NOTOPIC(Client* client, Channel* channel) {
     std::string reply;
+    reply = "331 " + client->getNickname() + " " + channel->getName() +
+            " :No topic is set";
     return Message::create(reply);
 }
 
@@ -302,8 +306,11 @@ std::string Replies::RPL_TOPIC(Client* client, Channel* channel) {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_TOPICWHOTIME() {
+std::string Replies::RPL_TOPICWHOTIME(Client* client, Channel* channel) {
     std::string reply;
+    reply = "333 " + client->getNickname() + " " + channel->getName() + " " +
+            channel->getLastTopicAuthor() + " " +
+            toString(channel->getTopicSetTime());
     return Message::create(reply);
 }
 
