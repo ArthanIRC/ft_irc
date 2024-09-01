@@ -20,7 +20,7 @@ JoinCommand::~JoinCommand() {}
 void JoinCommand::checkParams(Client* client, std::vector<std::string> params) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "JOIN"));
-        throw;
+        throw ClientException();
     }
 }
 

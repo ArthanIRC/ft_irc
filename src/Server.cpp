@@ -73,6 +73,7 @@ void Server::init(int ac, char** data) {
     _operators["arluc"] = "crepuscule";
     this->_port = port;
     this->_password = password;
+    this->_maxClients = 0;
     this->_socket.init(_port.c_str());
     this->_running = true;
 }
@@ -120,6 +121,8 @@ void Server::stop() {
 
 void Server::addClient(Client* c) {
     _clients.push_back(c);
+    if (_clients.size() > _maxClients)
+        _maxClients = _clients.size();
     _epoll.subscribe(c->getSocket().getFd(), c->getSocket());
 }
 
@@ -200,6 +203,8 @@ string Server::getChannelModes() const { return channelModes; }
 string Server::getRplSupport1() const { return rplSupport1; }
 
 string Server::getRplSupport2() const { return rplSupport2; }
+
+size_t Server::getMaxClients() const { return _maxClients; }
 
 bool Server::isRunning() const { return this->_running; }
 

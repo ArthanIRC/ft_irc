@@ -65,7 +65,7 @@ std::string Replies::RPL_ENDOFSTATS() {
 
 std::string Replies::RPL_UMODEIS(Client* _client) {
     std::string reply;
-    reply = "221 " + _client->getNickname() + _client->getModes();
+    reply = "221 " + _client->getNickname() + " " + _client->getModes();
     return Message::create(reply);
 }
 
@@ -156,25 +156,21 @@ std::string Replies::RPL_TRYAGAIN() {
 
 std::string Replies::RPL_LOCALUSERS(Client* client) {
     std::string reply;
-    (void)client;
     size_t u = Server::getInstance().getClients().size();
-    (void)u;
-    // size_t m = Server::getInstance().getMaxClients();
-    // reply = "265 " + client->getNickname() + " " + toString(u) + " " +
-    //         tostring(m) + " :Current local users " + toString(u) + ", max " +
-    //         toString(m);
+    size_t m = Server::getInstance().getMaxClients();
+    reply = "265 " + client->getNickname() + " " + toString(u) + " " +
+            toString(m) + " :Current local users " + toString(u) + ", max " +
+            toString(m);
     return Message::create(reply);
 }
 
 std::string Replies::RPL_GLOBALUSERS(Client* client) {
     std::string reply;
-    (void)client;
     size_t u = Server::getInstance().getClients().size();
-    (void)u;
-    // size_t m = Server::getInstance().getMaxClients();
-    // reply = "265 " + client->getNickname() + " " + toString(u) + " " +
-    //         tostring(m) + " :Current local users " + toString(u) + ", max " +
-    //         toString(m);
+    size_t m = Server::getInstance().getMaxClients();
+    reply = "266 " + client->getNickname() + " " + toString(u) + " " +
+            toString(m) + " :Current global users " + toString(u) + ", max " +
+            toString(m);
     return Message::create(reply);
 }
 

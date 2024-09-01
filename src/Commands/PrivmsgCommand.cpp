@@ -8,11 +8,11 @@ PrivmsgCommand::PrivmsgCommand(string source, vector<string> params,
                                Client* client) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NORECIPIENT(client));
-        throw;
+        throw ClientException();
     }
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NOTEXTTOSEND(client));
-        throw;
+        throw ClientException();
     }
 
     this->_targets = split(params[0], ',');

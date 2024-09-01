@@ -8,7 +8,7 @@ OperCommand::OperCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "OPER"));
-        throw;
+        throw ClientException();
     }
     this->_name = params[0];
     this->_password = params[1];

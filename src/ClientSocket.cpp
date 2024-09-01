@@ -16,6 +16,7 @@ ClientSocket::~ClientSocket() {}
 
 void ClientSocket::removeSelf() {
     try {
+        std::cout << "Client removed\n";
         Server::getInstance().removeClient(_fd);
     } catch (Server::ClientNotFoundException& e) {
         std::cerr << e.what() << "\n";
@@ -56,10 +57,11 @@ void ClientSocket::onPoll(uint32_t events) {
 
     try {
         c->run();
-    } catch (ClientException&) {
-        return;
-    } catch (ServerException& e) {
+    } catch (ClientException& e) {
         std::cerr << e.what() << "\n";
+    } catch (SendException& e) {
+        std::cerr << e.what() << "\n";
+        removeSelf();
     }
 }
 

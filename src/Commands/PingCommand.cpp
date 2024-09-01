@@ -15,7 +15,7 @@ PingCommand::~PingCommand() {}
 void PingCommand::checkParams(Client* client, std::vector<std::string> params) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PING"));
-        throw;
+        throw ClientException();
     }
 }
 

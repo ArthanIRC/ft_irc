@@ -14,7 +14,7 @@ using std::vector;
 ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "MODE"));
-        throw;
+        throw ClientException();
     }
 
     this->_target = params[0];
@@ -26,7 +26,7 @@ ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
             channel = Server::getInstance().findChannel(_target);
         } catch (Server::ChannelNotFoundException&) {
             client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, _target));
-            throw;
+            throw ClientException();
         }
         this->_channel = channel;
     } else {
@@ -35,11 +35,11 @@ ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
             ctarget = Server::getInstance().findClient(_target);
         } catch (Server::ClientNotFoundException&) {
             client->sendMessage(Replies::ERR_NOSUCHNICK(client, _target));
-            throw;
+            throw ClientException();
         }
         if (ctarget != client) {
             client->sendMessage(Replies::ERR_USERSDONTMATCH(client));
-            throw;
+            throw ClientException();
         }
     }
 

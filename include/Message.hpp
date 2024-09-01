@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Exception.hpp"
 #include <string>
 #include <vector>
 
@@ -32,31 +33,31 @@ class Message {
 
     virtual void run() = 0;
 
-    class MissingCommandException : public std::exception {
+    class MissingCommandException : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: Missing command in message.");
         }
     };
-    class WrongTrailingException : public std::exception {
+    class WrongTrailingException : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: End of the message badly formatted.");
         }
     };
-    class InvalidFormatException : public std::exception {
+    class InvalidFormatException : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: Message format is invalid.");
         }
     };
-    class NewlineException : public std::exception {
+    class NewlineException : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: Message contains a newline.");
         }
     };
-    class UnknownErrorException : public std::exception {
+    class UnknownErrorException : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: Unknown parsing error.");

@@ -5,7 +5,7 @@ UserCommand::UserCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
     if (params.size() < 4) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "USER"));
-        throw;
+        throw ClientException();
     }
 
     this->_source = source;

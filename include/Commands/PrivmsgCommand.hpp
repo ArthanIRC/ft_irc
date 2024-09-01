@@ -1,6 +1,6 @@
 #include "Command.hpp"
 
-class PrivmsgCommand : Command {
+class PrivmsgCommand : public Command {
   private:
     std::vector<std::string> _targets;
     std::string _message;

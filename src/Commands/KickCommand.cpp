@@ -13,7 +13,7 @@ KickCommand::~KickCommand() {}
 void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "KICK"));
-        throw;
+        throw ClientException();
     }
     if (params[1][params[1].size() - 1] == ',') {
         params[1] = params[1].substr(0, params[1].size() - 1);
@@ -23,21 +23,21 @@ void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
         chan = Server::getInstance().findChannel(params[0]);
     } catch (const Server::ChannelNotFoundException()) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, params[0]));
-        throw;
+        throw ClientException();
     }
     this->_channel = chan;
     if (!chan->isInChannel(client)) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(client, chan));
-        throw;
+        throw ClientException();
     }
     if (!chan->isOperator(client)) {
         client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(client, chan));
-        throw;
+        throw ClientException();
     }
     if (!chan->isInChannel(params[1])) {
         client->sendMessage(
             Replies::ERR_USERNOTINCHANNEL(_client, params[1], _channel));
-        throw;
+        throw ClientException();
     }
     this->_targetNickname = params[1];
     if (params[params.size() - 2].find(',') == std::string::npos) {

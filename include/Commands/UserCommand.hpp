@@ -2,7 +2,7 @@
 
 #include "Command.hpp"
 
-class UserCommand : Command {
+class UserCommand : public Command {
   private:
     std::string _username;
     std::string _realname;

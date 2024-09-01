@@ -7,10 +7,10 @@ PassCommand::PassCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PASS"));
-        throw;
+        throw ClientException();
     }
     if (!source.empty()) {
-        throw;
+        throw ClientException();
     }
     this->_client = client;
     this->_password = params[0];
