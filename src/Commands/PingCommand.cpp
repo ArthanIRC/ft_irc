@@ -21,7 +21,7 @@ void PingCommand::checkParams(Client* client, std::vector<std::string> params) {
 
 void PingCommand::run() {
     std::string reply =
-        "PONG " + Server::getInstance().getPrefix() + " " + _params[0];
+        "PONG " + Server::getInstance().getSource() + " " + _params[0];
     reply = Message::create(reply);
     _client->sendMessage(reply);
 }

@@ -18,6 +18,7 @@ static const string motd =
     "In effect, we conjure the spirits of the computer with our spells.";
 static const string networkName = "ArThAn";
 static const string serverName = "JUSTICE";
+static const string source = "arthan@justice.42.fr";
 static const string userModes = "ior";
 static const string channelModes = "blikmtov";
 static const string version = "1.0.0";
@@ -172,7 +173,7 @@ void Server::removeClient(Client* client) {
 
 void Server::removeClient(int fd) { removeClient(findClient(fd)); }
 
-std::string Server::getPrefix() { return this->_prefix; }
+std::string Server::getSource() { return source; }
 
 vector<Client*> Server::getClients() { return this->_clients; }
 

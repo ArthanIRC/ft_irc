@@ -34,7 +34,7 @@ void OperCommand::run() {
     }
     _client->setState(OPERATOR);
     _client->sendMessage(Replies::RPL_YOUREOPER());
-    std::string reply = ":" + Server::getInstance().getPrefix() + " MODE " +
+    std::string reply = ":" + Server::getInstance().getSource() + " MODE " +
                         _client->getNickname() + " +o";
     _client->sendMessage(Message::create(reply));
 }

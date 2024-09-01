@@ -18,7 +18,6 @@
 class Server {
   private:
     bool _running;
-    std::string _prefix;
     std::string _port;
     std::string _password;
     size_t _maxClients;
@@ -46,7 +45,7 @@ class Server {
     Client* findClient(int fd);
     Client* findClient(std::string nickname);
     Channel* findChannel(std::string name);
-    std::string getPrefix();
+    std::string getSource();
     std::vector<Client*> getClients();
     std::map<std::string, Channel*> getChannels();
     std::map<std::string, std::string> getOperators();
