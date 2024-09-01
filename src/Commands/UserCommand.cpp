@@ -1,5 +1,6 @@
 #include "UserCommand.hpp"
 #include "Client.hpp"
+#include "Exception.hpp"
 
 UserCommand::UserCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
@@ -7,6 +8,9 @@ UserCommand::UserCommand(std::string source, std::vector<std::string> params,
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "USER"));
         throw ClientException();
     }
+
+    if (client->getState() < NICK_DONE)
+        throw RegFailedException();
 
     this->_source = source;
     this->_params = params;

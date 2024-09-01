@@ -53,7 +53,17 @@ void ClientSocket::onPoll(uint32_t events) {
         return;
     }
 
-    Command* c = Command::create(data, client);
+    Command* c;
+    try {
+        c = Command::create(data, client);
+    } catch (RegFailedException& e) {
+        sendMessage(Replies::ERR_REGFAILED());
+        removeSelf();
+        return;
+    } catch (ClientException& e) {
+        std::cerr << e.what() << "\n";
+        return;
+    }
 
     try {
         c->run();
@@ -61,6 +71,9 @@ void ClientSocket::onPoll(uint32_t events) {
         std::cerr << e.what() << "\n";
     } catch (SendException& e) {
         std::cerr << e.what() << "\n";
+        removeSelf();
+    } catch (RegFailedException&) {
+        sendMessage(Replies::ERR_REGFAILED());
         removeSelf();
     }
 }

@@ -19,6 +19,11 @@ NickCommand::NickCommand(string source, vector<string> params, Client* client) {
         throw ClientException();
     }
 
+    if (!Server::getInstance().getPassword().empty() &&
+        client->getState() < PASS_DONE) {
+        throw RegFailedException();
+    }
+
     string nick = params[0];
 
     if (find_if(nick.begin(), nick.end(), isInvalidNick) != nick.end()) {

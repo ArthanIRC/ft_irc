@@ -27,11 +27,11 @@ void PassCommand::run() {
     }
     if (_client->getState() != UNKNOWN) {
         client->sendMessage(Replies::ERR_ALREADYREGISTERED(_client));
-        throw;
+        return;
     }
     if (_password != serverPass) {
         client->sendMessage(Replies::ERR_PASSWDMISMATCH(_client));
-        throw;
+        throw RegFailedException();
     }
     _client->setState(PASS_DONE);
     return;
