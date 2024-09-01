@@ -9,7 +9,7 @@ NamesCommand::NamesCommand(std::string source, std::vector<std::string> params,
     if (params.size() > 0) {
         this->_params[0] = params[0];
     } else {
-        this->_params[0] = "";
+        this->_params.push_back("");
     }
     this->_source = source;
     this->_client = client;

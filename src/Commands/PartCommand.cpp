@@ -23,17 +23,15 @@ void PartCommand::checkParams(Client* client, std::vector<std::string> params) {
 void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
     std::istringstream iss(params[0]);
     std::string chanName;
-    size_t i = 0;
     this->_reason = "";
 
     while (std::getline(iss, chanName, ',')) {
         try {
-            _channels[i] = Server::getInstance().findChannel(chanName);
+            _channels.push_back(Server::getInstance().findChannel(chanName));
         } catch (const Server::ChannelNotFoundException&) {
             client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, chanName));
             continue;
         }
-        i++;
     }
     if (params.size() > 1) {
         _reason = params[1];
