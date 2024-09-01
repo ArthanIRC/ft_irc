@@ -92,7 +92,13 @@ std::string Replies::RPL_LUSERCLIENT(Client* client) {
 std::string Replies::RPL_LUSEROP(Client* client) {
     std::string reply;
 
-    size_t ops = Server::getInstance().getOperators().size();
+    size_t ops = 0;
+    std::vector<Client*> clients = Server::getInstance().getClients();
+    for (std::vector<Client*>::iterator it = clients.begin();
+         it != clients.end(); it++) {
+        if ((*it)->getState() == OPERATOR)
+            ops++;
+    }
 
     reply = "252 " + client->getNickname() + " " + toString(ops) +
             " :operator(s) online";
