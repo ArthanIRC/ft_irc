@@ -461,8 +461,9 @@ std::string Replies::RPL_WHOISMODES() {
     return Message::create(reply);
 }
 
-std::string Replies::RPL_YOUREOPER() {
+std::string Replies::RPL_YOUREOPER(Client* client) {
     std::string reply;
+    reply = "381 " + client->getNickname() + " :You are now an IRC operator";
     return Message::create(reply);
 }
 
