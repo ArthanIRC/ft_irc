@@ -1,4 +1,6 @@
 #include "Message.hpp"
+#include <algorithm>
+#include <cctype>
 #include <cstddef>
 #include <cstdio>
 #include <sstream>
@@ -73,6 +75,8 @@ int Message::parse(string& data, string& source, string& command,
         }
         params.push_back(word);
     }
+
+    std::transform(command.begin(), command.end(), command.begin(), ::toupper);
 
     return (0);
 }
