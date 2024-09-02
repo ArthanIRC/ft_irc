@@ -16,6 +16,7 @@ class Channel {
     bool _protectedTopic;
     bool _inviteOnly;
     bool _moderated;
+    bool _noExternal;
     size_t _maxClients;
     time_t _creationTime;
     time_t _topicSetTime;
@@ -89,6 +90,9 @@ class Channel {
 
     bool isModerated() const;
     void setModerated(bool flag);
+
+    bool isNoExternal() const;
+    void setNoExternal(bool flag);
 
     size_t getMaxClients(void) const;
     void setMaxClients(size_t nbMaxClients);

@@ -36,7 +36,13 @@ void PrivmsgCommand::sendToChannel(string& target) {
     if (chan->isBanned(_client))
         return;
 
-    if ((chan->isInviteOnly() && !chan->isInvited(_client)) ||
+    if (chan->isNoExternal() && !chan->isInChannel(_client)) {
+        _client->sendMessage(Replies::ERR_CANNOTSENDTOCHAN(_client, target));
+        return;
+    }
+
+    if ((chan->isInviteOnly() && !chan->isInvited(_client) &&
+         !chan->isNoExternal()) ||
         (chan->isModerated() && !chan->isVoiced(_client))) {
         _client->sendMessage(Replies::ERR_CANNOTSENDTOCHAN(_client, target));
         return;

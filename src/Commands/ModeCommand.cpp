@@ -149,6 +149,12 @@ void ModeCommand::moderatedMode(bool oper, size_t& p) {
     addResult(oper, "m", "");
 }
 
+void ModeCommand::noExternalMode(bool oper, size_t& p) {
+    _channel->setNoExternal(oper);
+    (void)p;
+    addResult(oper, "n", "");
+}
+
 void ModeCommand::protectedTopicMode(bool oper, size_t& p) {
     _channel->setProtectedTopic(oper);
     (void)p;

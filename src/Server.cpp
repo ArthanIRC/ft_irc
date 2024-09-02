@@ -20,11 +20,11 @@ static const string networkName = "ArThAn";
 static const string serverName = "JUSTICE";
 static const string source = "arthan@justice.42.fr";
 static const string userModes = "ior";
-static const string channelModes = "blikmtov";
+static const string channelModes = "biklmntov";
 static const string version = "1.0.0";
 static const string creationDate = "27/07/2024";
 static const string rplSupport1 =
-    "AWAYLEN=255 CASEMAPPING=ascii CHANLIMIT=#: CHANMODES=b,k,l,imt "
+    "AWAYLEN=255 CASEMAPPING=ascii CHANLIMIT=#: CHANMODES=b,k,l,imnt "
     "CHANNELLEN=30 CHANTYPES=# "
     "ELIST= HOSTLEN=64 KICKLEN=255 MAXLIST=b:20 NICKLEN=30 PREFIX=(ov)@+ "
     "STATUSMSG=";
