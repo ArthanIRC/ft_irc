@@ -69,7 +69,9 @@ void ClientSocket::executeCommand(string data, Client* client) {
         removeSelf();
         return;
     } catch (ClientException& e) {
-        std::cerr << e.what() << "\n";
+        string err = e.what();
+        if (err != "std::exception")
+            std::cout << e.what() << "\n";
         return;
     }
 
