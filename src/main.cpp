@@ -1,4 +1,3 @@
-#include <bits/types/sigset_t.h>
 #include <csignal>
 #include <cstdlib>
 #include <exception>
