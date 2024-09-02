@@ -2,7 +2,10 @@
 #include "Replies.hpp"
 #include "Server.hpp"
 
-TopicCommand::TopicCommand(std::string source, std::vector<std::string> params,
+using std::string;
+using std::vector;
+
+TopicCommand::TopicCommand(string source, vector<string> params,
                            Client* client) {
     checkParams(client, params);
     this->_source = source;
@@ -12,12 +15,12 @@ TopicCommand::TopicCommand(std::string source, std::vector<std::string> params,
 
 TopicCommand::~TopicCommand() {}
 
-void TopicCommand::checkParams(Client* client,
-                               std::vector<std::string> params) {
+void TopicCommand::checkParams(Client* client, vector<string> params) {
     if (params.size() == 0) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "TOPIC"));
         throw ClientException();
     }
+
     Channel* chan;
     try {
         chan = Server::getInstance().findChannel(params[0]);
@@ -25,11 +28,13 @@ void TopicCommand::checkParams(Client* client,
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, params[0]));
         throw ClientException();
     }
+
     this->_channel = chan;
     if (!(chan->isInChannel(client))) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(client, chan));
         throw ClientException();
     }
+
     if (params.size() > 1 && chan->isProtectedTopic()) {
         if (!chan->isOperator(client)) {
             client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(client, chan));
@@ -47,14 +52,10 @@ void TopicCommand::run() {
             _client->sendMessage(Replies::RPL_TOPICWHOTIME(_client, _channel));
         }
     } else {
-        std::map<std::string, Client*> clientMap = _channel->getClients();
-        std::map<std::string, Client*>::iterator it;
         _channel->setTopic(_params[1], _client);
-
-        for (it = clientMap.begin(); it != clientMap.end(); ++it) {
-            (*it).second->sendMessage(Replies::RPL_TOPIC(_client, _channel));
-            (*it).second->sendMessage(
-                Replies::RPL_TOPICWHOTIME(_client, _channel));
-        }
+        string message = ":" + _client->getSource() + " TOPIC " +
+                         _channel->getName() + " :" + _params[1];
+        Server::getInstance().sendMessage(_channel, Message::create(message),
+                                          NULL);
     }
 }

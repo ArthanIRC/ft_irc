@@ -213,7 +213,7 @@ void Server::sendMessage(Channel* channel, string message, Client* sender) {
     map<string, Client*> clients = channel->getClients();
     for (map<string, Client*>::iterator it = clients.begin();
          it != clients.end(); it++) {
-        if (sender && it->second != sender)
+        if (!sender || it->second != sender)
             it->second->sendMessage(message);
     }
 }
