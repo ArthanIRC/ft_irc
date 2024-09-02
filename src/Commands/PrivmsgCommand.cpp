@@ -43,8 +43,8 @@ void PrivmsgCommand::sendToChannel(string& target) {
     }
 
     string message =
-        ":" + _client->getNickname() + " PRIVMSG " + target + " " + _message;
-    Server::getInstance().sendMessage(chan, Message::create(message));
+        ":" + _client->getSource() + " PRIVMSG " + target + " " + _message;
+    Server::getInstance().sendMessage(chan, Message::create(message), _client);
 }
 
 void PrivmsgCommand::sendToClient(string& target) {
@@ -58,7 +58,7 @@ void PrivmsgCommand::sendToClient(string& target) {
     }
 
     string message =
-        ":" + _client->getNickname() + " PRIVMSG " + target + " " + _message;
+        ":" + _client->getSource() + " PRIVMSG " + target + " " + _message;
     cli->sendMessage(Message::create(message));
 }
 

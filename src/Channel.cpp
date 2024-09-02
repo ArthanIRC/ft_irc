@@ -173,13 +173,11 @@ std::string Channel::getModes() const {
 }
 
 std::string Channel::getPrefix(Client* client) {
-    std::string prefix = "+";
+    std::string prefix = "";
     if (this->isOperator(client))
-        prefix += "o";
-    if (this->isVoiced(client))
-        prefix += "v";
-    if (prefix == "+")
-        prefix = "";
+        prefix += "@";
+    else if (this->isVoiced(client))
+        prefix += "+";
     return prefix;
 }
 
