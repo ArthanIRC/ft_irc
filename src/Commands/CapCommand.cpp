@@ -19,7 +19,7 @@ void CapCommand::run() {
         return;
 
     if (_params[0] == "LS") {
-        string message = ":" + Server::getInstance().getSource() + " CAP LS *";
+        string message = ":" + Server::getInstance().getSource() + " CAP * LS";
         _client->sendMessage(Message::create(message));
     } else if (_params[0] == "END") {
         if (_client->getState() != USER_DONE) {

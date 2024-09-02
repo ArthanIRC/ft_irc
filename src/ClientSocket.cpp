@@ -10,18 +10,11 @@
 #include "Exception.hpp"
 #include "Server.hpp"
 
+using std::string;
+
 ClientSocket::ClientSocket(int fd) : Socket() { this->_fd = fd; }
 
 ClientSocket::~ClientSocket() {}
-
-void ClientSocket::removeSelf() {
-    try {
-        std::cout << "Client removed\n";
-        Server::getInstance().removeClient(_fd);
-    } catch (Server::ClientNotFoundException& e) {
-        std::cerr << e.what() << "\n";
-    }
-}
 
 void ClientSocket::onPoll(uint32_t events) {
     if ((events & EPOLLERR) || (events & EPOLLHUP) || (events & EPOLLRDHUP)) {
@@ -30,7 +23,7 @@ void ClientSocket::onPoll(uint32_t events) {
     }
 
     char buf[MAX_LIMIT];
-    std::string data;
+    string data;
     ssize_t size;
     memset(buf, 0, MAX_LIMIT);
 
@@ -53,7 +46,22 @@ void ClientSocket::onPoll(uint32_t events) {
         return;
     }
 
+    size_t i;
+    do {
+        i = data.find("\n");
+        i = i == string::npos ? string::npos : i + 1;
+
+        string line = data.substr(0, i);
+        data = data.erase(0, i);
+
+        if (!line.empty())
+            executeCommand(line, client);
+    } while (i != string::npos);
+}
+
+void ClientSocket::executeCommand(string data, Client* client) {
     Command* c;
+    std::cout << data;
     try {
         c = Command::create(data, client);
     } catch (RegFailedException&) {
@@ -78,9 +86,18 @@ void ClientSocket::onPoll(uint32_t events) {
     }
 }
 
-void ClientSocket::sendMessage(std::string message) {
+void ClientSocket::sendMessage(string message) {
     if (send(_fd, message.c_str(), message.size(), 0) == -1)
         throw SendException();
+}
+
+void ClientSocket::removeSelf() {
+    try {
+        std::cout << "Client removed\n";
+        Server::getInstance().removeClient(_fd);
+    } catch (Server::ClientNotFoundException& e) {
+        std::cerr << e.what() << "\n";
+    }
 }
 
 const char* ClientSocket::SendException::what() const throw() {
