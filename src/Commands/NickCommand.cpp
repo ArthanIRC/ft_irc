@@ -61,7 +61,7 @@ void NickCommand::run() {
                                           Message::create(message));
     }
 
-    if (_client->getState() == UNKNOWN || _client->getState() == PASS_DONE) {
+    if (_client->getState() <= PASS_DONE) {
         _client->setNickname(_nick);
         _client->setState(NICK_DONE);
     }

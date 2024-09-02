@@ -7,7 +7,15 @@
 
 class Channel;
 
-enum State { UNKNOWN, PASS_DONE, NICK_DONE, USER_DONE, REGISTERED, OPERATOR };
+enum State {
+    UNKNOWN,
+    CAP_STARTED,
+    PASS_DONE,
+    NICK_DONE,
+    USER_DONE,
+    REGISTERED,
+    OPERATOR
+};
 
 class Client {
   private:
@@ -17,7 +25,9 @@ class Client {
     std::string _modes;
     ClientSocket _socket;
     State _state;
+    bool _capEndedEarly;
     bool _invisible;
+    bool _away;
 
   public:
     Client(int fd);
@@ -31,10 +41,14 @@ class Client {
     std::map<std::string, Channel*> getChannels();
     bool isRegistered();
     bool isServerOperator();
+    bool isAway();
     bool isInvisible();
+    bool hasCapEndedEarly();
     State getState() const;
     void setState(State newState);
     void setInvisible(bool state);
+    void setAway(bool state);
+    void setCapEndedEarly();
     void setNickname(std::string& nick);
     void setUsername(std::string& username);
     void setRealname(std::string& realname);

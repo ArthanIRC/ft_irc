@@ -21,10 +21,15 @@ void CapCommand::run() {
     if (_params[0] == "LS") {
         string message = ":" + Server::getInstance().getSource() + " CAP * LS";
         _client->sendMessage(Message::create(message));
+        _client->setState(CAP_STARTED);
     } else if (_params[0] == "END") {
         if (_client->getState() != USER_DONE) {
-            _client->sendMessage(Replies::ERR_REGFAILED());
-            Server::getInstance().removeClient(_client);
+            if (_client->getState() == CAP_STARTED)
+                _client->setCapEndedEarly();
+            else {
+                _client->sendMessage(Replies::ERR_REGFAILED());
+                Server::getInstance().removeClient(_client);
+            }
             return;
         } else
             _client->setState(REGISTERED);

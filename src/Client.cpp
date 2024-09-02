@@ -26,11 +26,19 @@ ClientSocket& Client::getSocket() { return this->_socket; }
 
 void Client::setState(State newState) { this->_state = newState; }
 
+bool Client::hasCapEndedEarly() { return this->_capEndedEarly; }
+
 bool Client::isRegistered() { return this->_state >= REGISTERED; }
 
 bool Client::isServerOperator() { return this->_state == OPERATOR; }
 
+bool Client::isAway() { return this->_away; }
+
 bool Client::isInvisible() { return this->_invisible; }
+
+void Client::setCapEndedEarly() { this->_capEndedEarly = true; }
+
+void Client::setAway(bool state) { this->_away = state; }
 
 void Client::setInvisible(bool state) { this->_invisible = state; }
 

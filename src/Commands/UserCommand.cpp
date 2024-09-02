@@ -1,6 +1,8 @@
 #include "UserCommand.hpp"
+#include "CapCommand.hpp"
 #include "Client.hpp"
 #include "Exception.hpp"
+#include <vector>
 
 UserCommand::UserCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
@@ -30,4 +32,11 @@ void UserCommand::run() {
     _client->setUsername(_username);
     _client->setRealname(_realname);
     _client->setState(USER_DONE);
+
+    if (_client->hasCapEndedEarly()) {
+        std::vector<std::string> paraOut;
+        paraOut.push_back("END");
+        CapCommand cap("", paraOut, _client);
+        cap.run();
+    }
 }

@@ -25,7 +25,7 @@ void PassCommand::run() {
         _client->setState(PASS_DONE);
         return;
     }
-    if (_client->getState() != UNKNOWN) {
+    if (_client->getState() >= PASS_DONE) {
         client->sendMessage(Replies::ERR_ALREADYREGISTERED(_client));
         return;
     }
