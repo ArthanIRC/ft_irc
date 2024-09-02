@@ -246,7 +246,7 @@ void ModeCommand::executeMode() {
     size_t p = 2;
     for (string::iterator it = _mode.begin(); it != _mode.end(); it++) {
         if (*it == '+' || *it == '-') {
-            oper = !oper;
+            oper = *it == '+';
             continue;
         }
         if (_modeExec.find(*it) == _modeExec.end())
@@ -259,7 +259,7 @@ void ModeCommand::executeMode() {
         _client->sendMessage(Replies::ERR_UMODEUNKNOWNFLAG(_client));
 
     string message = ":" + _client->getNickname() + " MODE " + _params[0];
-    message += _modeResult + _paramResult;
+    message += " " + _modeResult + _paramResult;
     if (_isChan)
         Server::getInstance().sendMessage(_channel, Message::create(message));
     else
