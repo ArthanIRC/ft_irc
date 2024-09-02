@@ -90,7 +90,7 @@ class Replies : public Message {
     static std::string RPL_ENDOFMOTD(Client* client);
     static std::string RPL_WHOISHOST();
     static std::string RPL_WHOISMODES();
-    static std::string RPL_YOUREOPER();
+    static std::string RPL_YOUREOPER(Client* client);
     static std::string RPL_REHASHING();
     static std::string RPL_TIME();
     static std::string ERR_UNKNOWNERROR();

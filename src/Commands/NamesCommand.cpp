@@ -9,7 +9,7 @@ NamesCommand::NamesCommand(std::string source, std::vector<std::string> params,
     if (params.size() > 0) {
         this->_params[0] = params[0];
     } else {
-        this->_params[0] = "";
+        this->_params.push_back("");
     }
     this->_source = source;
     this->_client = client;
@@ -36,7 +36,7 @@ void NamesCommand::run() {
                 currChannel = Server::getInstance().findChannel(*it);
                 _client->sendMessage(
                     Replies::RPL_NAMREPLY(_client, currChannel));
-            } catch (Server::ChannelNotFoundException()) {
+            } catch (Server::ChannelNotFoundException&) {
                 _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, *it));
                 continue;
             }

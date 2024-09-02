@@ -16,24 +16,24 @@ void TopicCommand::checkParams(Client* client,
                                std::vector<std::string> params) {
     if (params.size() == 0) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "TOPIC"));
-        throw;
+        throw ClientException();
     }
     Channel* chan;
     try {
         chan = Server::getInstance().findChannel(params[0]);
-    } catch (const Server::ChannelNotFoundException()) {
+    } catch (const Server::ChannelNotFoundException&) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, params[0]));
-        throw;
+        throw ClientException();
     }
     this->_channel = chan;
     if (!(chan->isInChannel(client))) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(client, chan));
-        throw;
+        throw ClientException();
     }
     if (params.size() > 1 && chan->isProtectedTopic()) {
         if (!chan->isOperator(client)) {
             client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(client, chan));
-            throw;
+            throw ClientException();
         }
     }
 }

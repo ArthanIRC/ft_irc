@@ -2,7 +2,7 @@
 
 #include "Command.hpp"
 
-class CapCommand : Command {
+class CapCommand : public Command {
   public:
     CapCommand(std::string source, std::vector<std::string> params,
                Client* client);

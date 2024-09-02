@@ -10,24 +10,29 @@ using std::vector;
 const static std::string ALLOWED_CHARS = "{}[]\\|";
 
 static inline bool isInvalidNick(char c) {
-    return !std::isalnum(c) || ALLOWED_CHARS.find(c) == string::npos;
+    return !std::isalnum(c) && ALLOWED_CHARS.find(c) == string::npos;
 }
 
 NickCommand::NickCommand(string source, vector<string> params, Client* client) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NONICKNAMEGIVEN(client));
-        throw;
+        throw ClientException();
+    }
+
+    if (!Server::getInstance().getPassword().empty() &&
+        client->getState() < PASS_DONE) {
+        throw RegFailedException();
     }
 
     string nick = params[0];
 
     if (find_if(nick.begin(), nick.end(), isInvalidNick) != nick.end()) {
         client->sendMessage(Replies::ERR_ERRONEUSNICKNAME(client, nick));
-        throw;
+        throw ClientException();
     }
     if (isNicknameUsed(nick)) {
         client->sendMessage(Replies::ERR_NICKNAMEINUSE(client, nick));
-        throw;
+        throw ClientException();
     }
 
     this->_nick = nick;

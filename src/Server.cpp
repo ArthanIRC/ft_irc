@@ -18,6 +18,7 @@ static const string motd =
     "In effect, we conjure the spirits of the computer with our spells.";
 static const string networkName = "ArThAn";
 static const string serverName = "JUSTICE";
+static const string source = "arthan@justice.42.fr";
 static const string userModes = "ior";
 static const string channelModes = "blikmtov";
 static const string version = "1.0.0";
@@ -73,6 +74,7 @@ void Server::init(int ac, char** data) {
     _operators["arluc"] = "crepuscule";
     this->_port = port;
     this->_password = password;
+    this->_maxClients = 0;
     this->_socket.init(_port.c_str());
     this->_running = true;
 }
@@ -120,6 +122,8 @@ void Server::stop() {
 
 void Server::addClient(Client* c) {
     _clients.push_back(c);
+    if (_clients.size() > _maxClients)
+        _maxClients = _clients.size();
     _epoll.subscribe(c->getSocket().getFd(), c->getSocket());
 }
 
@@ -169,7 +173,7 @@ void Server::removeClient(Client* client) {
 
 void Server::removeClient(int fd) { removeClient(findClient(fd)); }
 
-std::string Server::getPrefix() { return this->_prefix; }
+std::string Server::getSource() { return source; }
 
 vector<Client*> Server::getClients() { return this->_clients; }
 
@@ -200,6 +204,8 @@ string Server::getChannelModes() const { return channelModes; }
 string Server::getRplSupport1() const { return rplSupport1; }
 
 string Server::getRplSupport2() const { return rplSupport2; }
+
+size_t Server::getMaxClients() const { return _maxClients; }
 
 bool Server::isRunning() const { return this->_running; }
 

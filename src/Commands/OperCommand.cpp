@@ -8,7 +8,7 @@ OperCommand::OperCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "OPER"));
-        throw;
+        throw ClientException();
     }
     this->_name = params[0];
     this->_password = params[1];
@@ -33,8 +33,8 @@ void OperCommand::run() {
         }
     }
     _client->setState(OPERATOR);
-    _client->sendMessage(Replies::RPL_YOUREOPER());
-    std::string reply = ":" + Server::getInstance().getPrefix() + " MODE " +
+    _client->sendMessage(Replies::RPL_YOUREOPER(_client));
+    std::string reply = ":" + Server::getInstance().getSource() + " MODE " +
                         _client->getNickname() + " +o";
     _client->sendMessage(Message::create(reply));
 }

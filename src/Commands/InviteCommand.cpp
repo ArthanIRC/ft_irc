@@ -1,6 +1,7 @@
 #include "InviteCommand.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Exception.hpp"
 #include "Replies.hpp"
 
 InviteCommand::InviteCommand(std::string source,
@@ -8,26 +9,26 @@ InviteCommand::InviteCommand(std::string source,
     Channel* chan;
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "INVITE"));
-        throw;
+        throw ClientException();
     }
     try {
         chan = Server::getInstance().findChannel(params[1]);
-    } catch (Server::ChannelNotFoundException()) {
+    } catch (Server::ChannelNotFoundException&) {
         client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
-        throw;
+        throw ClientException();
     }
     if (!chan->isInChannel(client)) {
         client->sendMessage(Replies::ERR_NOTONCHANNEL(_client, chan));
-        throw;
+        throw ClientException();
     }
     if (chan->isInviteOnly() && !chan->isOperator(client)) {
         client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(_client, chan));
-        throw;
+        throw ClientException();
     }
     if (chan->isInChannel(params[0])) {
         client->sendMessage(
             Replies::ERR_USERONCHANNEL(client, params[0], chan));
-        throw;
+        throw ClientException();
     }
     this->_source = source;
     this->_params = params;
@@ -47,7 +48,7 @@ void InviteCommand::run() {
     Client* target;
     try {
         target = Server::getInstance().findClient(_targetNickname);
-    } catch (Server::ClientNotFoundException()) {
+    } catch (Server::ClientNotFoundException&) {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }

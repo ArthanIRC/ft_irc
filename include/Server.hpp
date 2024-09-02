@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdlib>
 #include <ctime>
 #include <exception>
@@ -17,9 +18,9 @@
 class Server {
   private:
     bool _running;
-    std::string _prefix;
     std::string _port;
     std::string _password;
+    size_t _maxClients;
     ServerSocket _socket;
     Epoll _epoll;
     std::vector<Client*> _clients;
@@ -44,7 +45,7 @@ class Server {
     Client* findClient(int fd);
     Client* findClient(std::string nickname);
     Channel* findChannel(std::string name);
-    std::string getPrefix();
+    std::string getSource();
     std::vector<Client*> getClients();
     std::map<std::string, Channel*> getChannels();
     std::map<std::string, std::string> getOperators();
@@ -62,6 +63,7 @@ class Server {
     std::string getChannelModes() const;
     std::string getRplSupport1() const;
     std::string getRplSupport2() const;
+    size_t getMaxClients() const;
     void sendMessage(Channel* channel, std::string message);
     void sendMessage(std::map<std::string, Channel*> channels,
                      std::string message);

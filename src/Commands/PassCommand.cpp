@@ -7,10 +7,10 @@ PassCommand::PassCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PASS"));
-        throw;
+        throw ClientException();
     }
     if (!source.empty()) {
-        throw;
+        throw ClientException();
     }
     this->_client = client;
     this->_password = params[0];
@@ -27,11 +27,11 @@ void PassCommand::run() {
     }
     if (_client->getState() != UNKNOWN) {
         client->sendMessage(Replies::ERR_ALREADYREGISTERED(_client));
-        throw;
+        return;
     }
     if (_password != serverPass) {
         client->sendMessage(Replies::ERR_PASSWDMISMATCH(_client));
-        throw;
+        throw RegFailedException();
     }
     _client->setState(PASS_DONE);
     return;

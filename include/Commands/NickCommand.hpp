@@ -2,7 +2,7 @@
 
 #include "Command.hpp"
 
-class NickCommand : Command {
+class NickCommand : public Command {
   private:
     std::string _nick;
 

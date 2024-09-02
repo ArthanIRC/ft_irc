@@ -5,9 +5,12 @@
 #include "Exception.hpp"
 #include "Socket.hpp"
 
+class Client;
+
 class ClientSocket : public Socket {
   private:
     void removeSelf();
+    void executeCommand(std::string data, Client* client);
 
     const static int MAX_LIMIT = 4096;
 
