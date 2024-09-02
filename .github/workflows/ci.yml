@@ -48,6 +48,12 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+
+      - name: Notify Watchtower
+        env:
+          WATCHTOWER_TOKEN: ${{ secrets.WATCHTOWER_TOKEN }}
+        run: |
+          curl -H "Authorization: Bearer $WATCHTOWER_TOKEN" https://watchtower.mortebrume.eu/v1/update
