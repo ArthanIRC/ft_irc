@@ -209,11 +209,13 @@ size_t Server::getMaxClients() const { return _maxClients; }
 
 bool Server::isRunning() const { return this->_running; }
 
-void Server::sendMessage(Channel* channel, string message) {
+void Server::sendMessage(Channel* channel, string message, Client* sender) {
     map<string, Client*> clients = channel->getClients();
     for (map<string, Client*>::iterator it = clients.begin();
-         it != clients.end(); it++)
-        it->second->sendMessage(message);
+         it != clients.end(); it++) {
+        if (sender && it->second != sender)
+            it->second->sendMessage(message);
+    }
 }
 
 void Server::sendMessage(map<string, Channel*> channels, string message) {

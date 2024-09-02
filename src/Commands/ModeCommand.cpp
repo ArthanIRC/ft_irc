@@ -261,7 +261,8 @@ void ModeCommand::executeMode() {
     string message = ":" + _client->getNickname() + " MODE " + _params[0];
     message += " " + _modeResult + _paramResult;
     if (_isChan)
-        Server::getInstance().sendMessage(_channel, Message::create(message));
+        Server::getInstance().sendMessage(_channel, Message::create(message),
+                                          NULL);
     else
         _client->sendMessage(Message::create(message));
 }

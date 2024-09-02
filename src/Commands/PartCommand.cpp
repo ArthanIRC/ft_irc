@@ -52,7 +52,7 @@ void PartCommand::run() {
                 _channels[i]->eraseOperator(_client);
             _channels[i]->eraseClient(_client);
             std::string reply = createReply(_channels[i]);
-            Server::getInstance().sendMessage(_channels[i], reply);
+            Server::getInstance().sendMessage(_channels[i], reply, _client);
             _client->sendMessage(reply);
         } else {
             _client->sendMessage(

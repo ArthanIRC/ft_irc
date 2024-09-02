@@ -64,7 +64,7 @@ class Server {
     std::string getRplSupport1() const;
     std::string getRplSupport2() const;
     size_t getMaxClients() const;
-    void sendMessage(Channel* channel, std::string message);
+    void sendMessage(Channel* channel, std::string message, Client* sender);
     void sendMessage(std::map<std::string, Channel*> channels,
                      std::string message);
 
