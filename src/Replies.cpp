@@ -690,7 +690,7 @@ std::string Replies::ERR_NOOPERHOST() {
 
 std::string Replies::ERR_UMODEUNKNOWNFLAG(Client* client) {
     std::string reply;
-    reply = "501 " + client->getNickname() + ":Unknown MODE flag";
+    reply = "501 " + client->getNickname() + " :Unknown MODE flag";
     return Message::create(reply);
 }
 
@@ -709,7 +709,7 @@ std::string Replies::ERR_HELPNOTFOUND() {
 std::string Replies::ERR_INVALIDKEY(Client* client, Channel* chan) {
     std::string reply;
     reply = "525 " + client->getNickname() + " " + chan->getName() +
-            ":Key is not well-formed";
+            " :Key is not well-formed";
     return Message::create(reply);
 }
 
