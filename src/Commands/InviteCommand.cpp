@@ -4,25 +4,29 @@
 #include "Exception.hpp"
 #include "Replies.hpp"
 
-InviteCommand::InviteCommand(std::string source,
-                             std::vector<std::string> params, Client* client) {
+using std::string;
+using std::vector;
+
+InviteCommand::InviteCommand(string source, vector<string> params,
+                             Client* client) {
     Channel* chan;
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "INVITE"));
         throw ClientException();
     }
+
     try {
         chan = Server::getInstance().findChannel(params[1]);
     } catch (Server::ChannelNotFoundException&) {
-        client->sendMessage(Replies::ERR_NOSUCHCHANNEL(_client, params[1]));
+        client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, params[1]));
         throw ClientException();
     }
     if (!chan->isInChannel(client)) {
-        client->sendMessage(Replies::ERR_NOTONCHANNEL(_client, chan));
+        client->sendMessage(Replies::ERR_NOTONCHANNEL(client, chan));
         throw ClientException();
     }
     if (chan->isInviteOnly() && !chan->isOperator(client)) {
-        client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(_client, chan));
+        client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(client, chan));
         throw ClientException();
     }
     if (chan->isInChannel(params[0])) {
@@ -40,7 +44,7 @@ InviteCommand::InviteCommand(std::string source,
 InviteCommand::~InviteCommand(){};
 
 void InviteCommand::run() {
-    std::string reply;
+    string reply;
 
     reply = ":" + _client->getNickname() + " INVITE " + _targetNickname + " " +
             _channel->getName();
