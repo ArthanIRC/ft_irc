@@ -7,7 +7,7 @@ using std::string;
 
 Client::Client(int fd)
     : _realname(""), _nickname(""), _username(""), _socket(fd), _state(UNKNOWN),
-      _invisible(false) {}
+      _capEndedEarly(false), _invisible(false) {}
 
 Client::~Client() {}
 
