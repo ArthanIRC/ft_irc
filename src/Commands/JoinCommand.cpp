@@ -22,6 +22,8 @@ void JoinCommand::checkParams(Client* client, std::vector<std::string> params) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "JOIN"));
         throw ClientException();
     }
+    if (client->getState() < REGISTERED)
+        throw ClientException();
 }
 
 void JoinCommand::parseParams() {
