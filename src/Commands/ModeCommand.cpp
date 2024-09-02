@@ -242,7 +242,7 @@ void ModeCommand::executeMode() {
     }
 
     bool oper = true;
-    bool unknownFlag;
+    bool unknownFlag = false;
     size_t p = 2;
     for (string::iterator it = _mode.begin(); it != _mode.end(); it++) {
         if (*it == '+' || *it == '-') {
