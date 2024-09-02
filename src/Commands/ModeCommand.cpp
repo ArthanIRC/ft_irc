@@ -76,8 +76,6 @@ void ModeCommand::invisibleMode(bool oper, size_t& p) {
 void ModeCommand::banMode(bool oper, size_t& p) {
     string param = retrieveParam(_params, p);
     if (param.empty()) {
-        if (!oper)
-            return;
         map<string, Client*> banlist = _channel->getBanList();
         for (map<string, Client*>::iterator it = banlist.begin();
              it != banlist.end(); it++)
@@ -204,7 +202,7 @@ void ModeCommand::voiceMode(bool oper, size_t& p) {
         _channel->addVoiced(target);
     else
         _channel->eraseVoiced(target);
-    addResult(oper, "v", "");
+    addResult(oper, "v", param);
 }
 
 void ModeCommand::addResult(bool oper, string mode, string param) {
@@ -242,7 +240,8 @@ void ModeCommand::run() {
 }
 
 void ModeCommand::executeMode() {
-    if (_mode[0] != '-' && _mode[0] != '+') {
+    if (_mode[0] != '-' && _mode[0] != '+' && _mode.size() > 1 &&
+        _mode[1] != 'b') {
         _client->sendMessage(Replies::ERR_UMODEUNKNOWNFLAG(_client));
         return;
     }

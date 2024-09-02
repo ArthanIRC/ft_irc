@@ -126,28 +126,28 @@ void Channel::unbanClient(Client* client) {
 }
 
 bool Channel::isInChannel(Client* client) const {
-    return (verifClientOnMap(_clients, client));
+    return verifClientOnMap(_clients, client);
 }
 
 bool Channel::isInvited(Client* client) const {
-    return (verifClientOnMap(_inviteList, client));
+    return verifClientOnMap(_inviteList, client);
 }
 
 bool Channel::isBanned(Client* client) const {
-    return (verifClientOnMap(_banList, client));
+    return verifClientOnMap(_banList, client);
 }
 
 bool Channel::isOperator(Client* client) const {
-    return (verifClientOnMap(_operatorsList, client)) ||
+    return verifClientOnMap(_operatorsList, client) ||
            client->isServerOperator();
 }
 
 bool Channel::isVoiced(Client* client) const {
-    return (verifClientOnMap(_voicedList, client));
+    return isOperator(client) || verifClientOnMap(_voicedList, client);
 }
 
 bool Channel::isInChannel(std::string nickname) const {
-    return (verifClientOnMap(_clients, nickname));
+    return verifClientOnMap(_clients, nickname);
 }
 
 bool Channel::isInvited(std::string nickname) const {
@@ -155,11 +155,11 @@ bool Channel::isInvited(std::string nickname) const {
 }
 
 bool Channel::isBanned(std::string nickname) const {
-    return (verifClientOnMap(_banList, nickname));
+    return verifClientOnMap(_banList, nickname);
 }
 
 bool Channel::isOperator(std::string nickname) const {
-    return (verifClientOnMap(_operatorsList, nickname));
+    return verifClientOnMap(_operatorsList, nickname);
 }
 
 std::string Channel::getModes() const {
