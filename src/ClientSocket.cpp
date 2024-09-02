@@ -61,7 +61,7 @@ void ClientSocket::onPoll(uint32_t events) {
 
 void ClientSocket::executeCommand(string data, Client* client) {
     Command* c;
-    std::cout << data;
+    std::cerr << data;
     try {
         c = Command::create(data, client);
     } catch (RegFailedException&) {
