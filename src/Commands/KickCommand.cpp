@@ -49,7 +49,7 @@ void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
 void KickCommand::run() {
     std::string reply;
 
-    reply = ":" + _client->getNickname() + " KICK " + _channel->getName() +
+    reply = ":" + _client->getSource() + " KICK " + _channel->getName() +
             _targetNickname + " " + _comment;
     Message::create(reply);
     Client* target;
@@ -63,4 +63,5 @@ void KickCommand::run() {
     if (_channel->isOperator(target))
         _channel->eraseOperator(target);
     target->sendMessage(reply);
+    Server::getInstance().sendMessage(_channel, reply, NULL);
 }
