@@ -11,5 +11,7 @@ FROM alpine:3.20 AS runner
 RUN apk update && apk add --no-cache libstdc++
 RUN addgroup -S irc && adduser -S irc -G irc
 COPY --from=build /irc/ircserv /usr/local/bin/ircserv
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 USER irc
-CMD exec ircserv $PASSWORD
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["ircserv"]
