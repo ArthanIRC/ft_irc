@@ -372,7 +372,7 @@ std::string Replies::RPL_WHOREPLY() {
 std::string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
     std::string reply;
     reply = "353 " + client->getNickname() + " = " + channel->getName() + " :" +
-            client->getNickname();
+            channel->getPrefix(client) + client->getNickname();
     std::map<std::string, Client*> mapClients = channel->getClients();
     std::map<std::string, Client*>::const_iterator it = mapClients.begin();
     std::string prefix;

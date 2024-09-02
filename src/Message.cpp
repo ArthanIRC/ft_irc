@@ -1,4 +1,5 @@
 #include "Message.hpp"
+#include "Server.hpp"
 #include <algorithm>
 #include <cctype>
 #include <cstddef>
@@ -129,4 +130,10 @@ vector<string> Message::split(string& str, char delim) {
     return result;
 }
 
-string Message::create(string& data) { return data += "\r\n"; }
+string Message::create(string& data) {
+    if (data[0] != ':') {
+        data = ":" + Server::getInstance().getSource() + " " + data;
+    }
+
+    return data += "\r\n";
+}

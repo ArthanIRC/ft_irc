@@ -20,11 +20,11 @@ static const string networkName = "ArThAn";
 static const string serverName = "JUSTICE";
 static const string source = "arthan@justice.42.fr";
 static const string userModes = "ior";
-static const string channelModes = "blikmtov";
+static const string channelModes = "biklmntov";
 static const string version = "1.0.0";
 static const string creationDate = "27/07/2024";
 static const string rplSupport1 =
-    "AWAYLEN=255 CASEMAPPING=ascii CHANLIMIT=#: CHANMODES=b,k,l,imt "
+    "AWAYLEN=255 CASEMAPPING=ascii CHANLIMIT=#: CHANMODES=b,k,l,imnt "
     "CHANNELLEN=30 CHANTYPES=# "
     "ELIST= HOSTLEN=64 KICKLEN=255 MAXLIST=b:20 NICKLEN=30 PREFIX=(ov)@+ "
     "STATUSMSG=";
@@ -209,11 +209,13 @@ size_t Server::getMaxClients() const { return _maxClients; }
 
 bool Server::isRunning() const { return this->_running; }
 
-void Server::sendMessage(Channel* channel, string message) {
+void Server::sendMessage(Channel* channel, string message, Client* sender) {
     map<string, Client*> clients = channel->getClients();
     for (map<string, Client*>::iterator it = clients.begin();
-         it != clients.end(); it++)
-        it->second->sendMessage(message);
+         it != clients.end(); it++) {
+        if (!sender || it->second != sender)
+            it->second->sendMessage(message);
+    }
 }
 
 void Server::sendMessage(map<string, Channel*> channels, string message) {

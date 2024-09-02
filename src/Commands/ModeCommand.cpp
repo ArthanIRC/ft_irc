@@ -149,6 +149,12 @@ void ModeCommand::moderatedMode(bool oper, size_t& p) {
     addResult(oper, "m", "");
 }
 
+void ModeCommand::noExternalMode(bool oper, size_t& p) {
+    _channel->setNoExternal(oper);
+    (void)p;
+    addResult(oper, "n", "");
+}
+
 void ModeCommand::protectedTopicMode(bool oper, size_t& p) {
     _channel->setProtectedTopic(oper);
     (void)p;
@@ -261,7 +267,8 @@ void ModeCommand::executeMode() {
     string message = ":" + _client->getNickname() + " MODE " + _params[0];
     message += " " + _modeResult + _paramResult;
     if (_isChan)
-        Server::getInstance().sendMessage(_channel, Message::create(message));
+        Server::getInstance().sendMessage(_channel, Message::create(message),
+                                          NULL);
     else
         _client->sendMessage(Message::create(message));
 }

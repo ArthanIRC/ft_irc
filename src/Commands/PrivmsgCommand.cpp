@@ -36,15 +36,21 @@ void PrivmsgCommand::sendToChannel(string& target) {
     if (chan->isBanned(_client))
         return;
 
-    if ((chan->isInviteOnly() && !chan->isInvited(_client)) ||
+    if (chan->isNoExternal() && !chan->isInChannel(_client)) {
+        _client->sendMessage(Replies::ERR_CANNOTSENDTOCHAN(_client, target));
+        return;
+    }
+
+    if ((chan->isInviteOnly() && !chan->isInvited(_client) &&
+         !chan->isNoExternal()) ||
         (chan->isModerated() && !chan->isVoiced(_client))) {
         _client->sendMessage(Replies::ERR_CANNOTSENDTOCHAN(_client, target));
         return;
     }
 
     string message =
-        ":" + _client->getNickname() + " PRIVMSG " + target + " " + _message;
-    Server::getInstance().sendMessage(chan, Message::create(message));
+        ":" + _client->getSource() + " PRIVMSG " + target + " " + _message;
+    Server::getInstance().sendMessage(chan, Message::create(message), _client);
 }
 
 void PrivmsgCommand::sendToClient(string& target) {
@@ -58,7 +64,7 @@ void PrivmsgCommand::sendToClient(string& target) {
     }
 
     string message =
-        ":" + _client->getNickname() + " PRIVMSG " + target + " " + _message;
+        ":" + _client->getSource() + " PRIVMSG " + target + " " + _message;
     cli->sendMessage(Message::create(message));
 }
 

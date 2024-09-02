@@ -2,7 +2,7 @@
 
 Channel::Channel(Client* newClient, std::string name)
     : _name(name), _key(""), _protectedTopic(false), _inviteOnly(false),
-      _maxClients(0) {
+      _noExternal(true), _maxClients(0) {
     checkNameSyntaxChan(name);
     this->_clients[newClient->getNickname()] = newClient;
     this->_operatorsList[newClient->getNickname()] = newClient;
@@ -11,7 +11,7 @@ Channel::Channel(Client* newClient, std::string name)
 
 Channel::Channel(Client* newClient, std::string name, std::string key)
     : _name(name), _key(key), _protectedTopic(false), _inviteOnly(false),
-      _maxClients(0) {
+      _noExternal(true), _maxClients(0) {
     checkNameSyntaxChan(name);
     this->_clients[newClient->getNickname()] = newClient;
     this->_operatorsList[newClient->getNickname()] = newClient;
@@ -76,6 +76,10 @@ void Channel::setInviteOnly(bool inviteMode) { this->_inviteOnly = inviteMode; }
 bool Channel::isModerated() const { return this->_moderated; }
 
 void Channel::setModerated(bool flag) { this->_moderated = flag; }
+
+bool Channel::isNoExternal() const { return this->_noExternal; }
+
+void Channel::setNoExternal(bool flag) { this->_noExternal = flag; }
 
 size_t Channel::getMaxClients() const { return this->_maxClients; }
 
@@ -161,25 +165,30 @@ bool Channel::isOperator(std::string nickname) const {
 std::string Channel::getModes() const {
     std::string modes = "+";
 
+    if (!_banList.empty())
+        modes += "b";
     if (isInviteOnly())
         modes += "i";
-    if (isProtectedTopic())
-        modes += "t";
     if (isKeyed())
         modes += "k";
     if (getMaxClients() > 1)
         modes += "l";
+    if (isModerated())
+        modes += "m";
+    if (isNoExternal())
+        modes += "n";
+    if (isProtectedTopic())
+        modes += "t";
+
     return modes;
 }
 
 std::string Channel::getPrefix(Client* client) {
-    std::string prefix = "+";
+    std::string prefix = "";
     if (this->isOperator(client))
-        prefix += "o";
-    if (this->isVoiced(client))
-        prefix += "v";
-    if (prefix == "+")
-        prefix = "";
+        prefix += "@";
+    else if (this->isVoiced(client))
+        prefix += "+";
     return prefix;
 }
 
