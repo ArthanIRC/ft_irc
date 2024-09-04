@@ -210,11 +210,11 @@ size_t Server::getMaxClients() const { return _maxClients; }
 bool Server::isRunning() const { return this->_running; }
 
 void Server::sendMessage(Channel* channel, string message, Client* sender) {
-    map<string, Client*> clients = channel->getClients();
-    for (map<string, Client*>::iterator it = clients.begin();
-         it != clients.end(); it++) {
-        if (!sender || it->second != sender)
-            it->second->sendMessage(message);
+    vector<Client*> clients = channel->getClients();
+    for (vector<Client*>::iterator it = clients.begin(); it != clients.end();
+         it++) {
+        if (!sender || *it != sender)
+            (*it)->sendMessage(message);
     }
 }
 
@@ -223,11 +223,11 @@ void Server::sendMessage(map<string, Channel*> channels, string message,
     set<Client*> clients;
     for (map<string, Channel*>::iterator it = channels.begin();
          it != channels.end(); it++) {
-        map<string, Client*> clientsMap = it->second->getClients();
-        for (map<string, Client*>::iterator ut = clientsMap.begin();
-             ut != clientsMap.end(); ut++) {
-            if (!sender || ut->second != sender)
-                clients.insert(ut->second);
+        vector<Client*> clientsVec = it->second->getClients();
+        for (vector<Client*>::iterator ut = clientsVec.begin();
+             ut != clientsVec.end(); ut++) {
+            if (!sender || *ut != sender)
+                clients.insert(*ut);
         }
     }
 

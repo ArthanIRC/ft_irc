@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Command.hpp"
-#include <map>
 
 class TopicCommand : public Command {
   private:

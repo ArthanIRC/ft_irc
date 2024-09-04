@@ -59,9 +59,9 @@ void KickCommand::run() {
         _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
         return;
     }
-    _channel->eraseClient(target);
+    _channel->removeClient(target);
     if (_channel->isOperator(target))
-        _channel->eraseOperator(target);
+        _channel->removeOperator(target);
     target->sendMessage(reply);
     Server::getInstance().sendMessage(_channel, reply, NULL);
 }

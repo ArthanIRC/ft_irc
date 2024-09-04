@@ -1,6 +1,7 @@
+#include <string>
+
 #include "PartCommand.hpp"
 #include "Replies.hpp"
-#include <string>
 
 PartCommand::PartCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
@@ -49,8 +50,8 @@ void PartCommand::run() {
     for (size_t i = 0; i < _channels.size(); ++i) {
         if (_channels[i]->isInChannel(_client)) {
             if (_channels[i]->isOperator(_client))
-                _channels[i]->eraseOperator(_client);
-            _channels[i]->eraseClient(_client);
+                _channels[i]->removeOperator(_client);
+            _channels[i]->removeClient(_client);
             std::string reply = createReply(_channels[i]);
             Server::getInstance().sendMessage(_channels[i], reply, _client);
             _client->sendMessage(reply);
