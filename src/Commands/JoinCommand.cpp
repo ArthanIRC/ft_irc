@@ -52,7 +52,7 @@ void JoinCommand::parseParams() {
                 else
                     _channels.push_back(new Channel(_client, chanName));
                 Server::getInstance().addChannel(_channels[i]);
-            } catch (Channel::wrongSyntaxChannelName&) {
+            } catch (Channel::WrongSyntaxChannelName&) {
                 break;
             }
         }
@@ -63,7 +63,7 @@ void JoinCommand::parseParams() {
 void JoinCommand::joinAndReplies(Channel* channel) {
     try {
         channel->addClient(_client);
-    } catch (const Channel::userAlreadyExists&) {
+    } catch (const Channel::UserAlreadyExists&) {
     }
 
     string reply;

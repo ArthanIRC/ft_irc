@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Client.hpp"
+#include "Exception.hpp"
 
 class Channel {
   private:
@@ -25,7 +26,7 @@ class Channel {
     std::map<std::string, Client*> _banList;
     std::map<std::string, Client*> _operatorsList;
     std::map<std::string, Client*> _voicedList;
-    void checkNameSyntaxChan(std::string& name);
+    void checkNameSyntax(std::string& name);
 
     template <typename MapType>
     void addClientToMap(MapType& map, Client* client) {
@@ -124,21 +125,21 @@ class Channel {
     time_t getCreationTime() const;
     time_t getTopicSetTime() const;
 
-    class userNotInvited : public std::exception {
+    class UserNotInvited : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: The user is not invited.");
         }
     };
 
-    class userAlreadyExists : public std::exception {
+    class UserAlreadyExists : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: The user already exists.");
         }
     };
 
-    class wrongSyntaxChannelName : public std::exception {
+    class WrongSyntaxChannelName : public ClientException {
       public:
         virtual const char* what() const throw() {
             return ("Error: Wrong syntax for channel name");
