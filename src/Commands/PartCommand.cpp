@@ -1,10 +1,10 @@
-#include <string>
-
 #include "PartCommand.hpp"
 #include "Replies.hpp"
 
-PartCommand::PartCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::string;
+using std::vector;
+
+PartCommand::PartCommand(string source, vector<string> params, Client* client) {
     checkParams(client, params);
     parseParams(client, params);
     this->_source = source;
@@ -14,7 +14,7 @@ PartCommand::PartCommand(std::string source, std::vector<std::string> params,
 
 PartCommand::~PartCommand() {}
 
-void PartCommand::checkParams(Client* client, std::vector<std::string> params) {
+void PartCommand::checkParams(Client* client, vector<string> params) {
     if (!client->isRegistered()) {
         client->sendMessage(Replies::ERR_NOTREGISTERED());
         throw ClientException();
@@ -25,9 +25,9 @@ void PartCommand::checkParams(Client* client, std::vector<std::string> params) {
     }
 }
 
-void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
+void PartCommand::parseParams(Client* client, vector<string> params) {
     std::istringstream iss(params[0]);
-    std::string chanName;
+    string chanName;
     this->_reason = "";
 
     while (std::getline(iss, chanName, ',')) {
@@ -43,8 +43,8 @@ void PartCommand::parseParams(Client* client, std::vector<std::string> params) {
     }
 }
 
-std::string PartCommand::createReply(Channel* channel) {
-    std::string reply;
+string PartCommand::createReply(Channel* channel) {
+    string reply;
     reply = ":" + _client->getNickname() + " PART " + channel->getName() + " " +
             _reason;
     return Message::create(reply);
@@ -56,7 +56,7 @@ void PartCommand::run() {
             if (_channels[i]->isOperator(_client))
                 _channels[i]->removeOperator(_client);
             _channels[i]->removeClient(_client);
-            std::string reply = createReply(_channels[i]);
+            string reply = createReply(_channels[i]);
             Server::getInstance().sendMessage(_channels[i], reply, _client);
             _client->sendMessage(reply);
         } else {

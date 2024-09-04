@@ -1,11 +1,11 @@
-#include <cctype>
-
-#include "Client.hpp"
 #include "PassCommand.hpp"
+#include "Client.hpp"
 #include "Server.hpp"
 
-PassCommand::PassCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::string;
+using std::vector;
+
+PassCommand::PassCommand(string source, vector<string> params, Client* client) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PASS"));
         throw ClientException();
@@ -20,7 +20,7 @@ PassCommand::PassCommand(std::string source, std::vector<std::string> params,
 PassCommand::~PassCommand(){};
 
 void PassCommand::run() {
-    std::string serverPass = Server::getInstance().getPassword();
+    string serverPass = Server::getInstance().getPassword();
 
     if (serverPass.empty()) {
         _client->setState(PASS_DONE);
