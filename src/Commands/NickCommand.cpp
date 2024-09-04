@@ -7,7 +7,7 @@
 using std::string;
 using std::vector;
 
-const static std::string ALLOWED_CHARS = "{}[]\\|";
+const static string ALLOWED_CHARS = "{}[]\\|";
 
 static inline bool isInvalidNick(char c) {
     return !std::isalnum(c) && ALLOWED_CHARS.find(c) == string::npos;
@@ -55,10 +55,11 @@ bool NickCommand::isNicknameUsed(string& nick) {
 
 void NickCommand::run() {
     if (_client->isRegistered()) {
-        string message = _client->getSource() + " NICK " + _nick;
+        string message = ":" + _client->getSource() + " NICK " + _nick;
         _client->setNickname(_nick);
+        _client->sendMessage(Message::create(message));
         Server::getInstance().sendMessage(_client->getChannels(),
-                                          Message::create(message));
+                                          Message::create(message), _client);
     }
 
     if (_client->getState() <= PASS_DONE) {
