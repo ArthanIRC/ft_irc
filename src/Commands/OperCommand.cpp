@@ -2,14 +2,19 @@
 #include "Client.hpp"
 #include "Replies.hpp"
 #include "Server.hpp"
-#include <map>
 
 OperCommand::OperCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
+
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "OPER"));
         throw ClientException();
     }
+
     this->_name = params[0];
     this->_password = params[1];
     this->_source = source;

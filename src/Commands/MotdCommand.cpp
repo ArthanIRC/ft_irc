@@ -3,8 +3,14 @@
 #include "Replies.hpp"
 #include "Server.hpp"
 
-MotdCommand::MotdCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::string;
+using std::vector;
+
+MotdCommand::MotdCommand(string source, vector<string> params, Client* client) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     this->_params = params;
     this->_source = source;
     this->_client = client;
@@ -13,7 +19,7 @@ MotdCommand::MotdCommand(std::string source, std::vector<std::string> params,
 MotdCommand::~MotdCommand(){};
 
 void MotdCommand::run() {
-    std::string motd = Server::getInstance().getMotd();
+    string motd = Server::getInstance().getMotd();
     if (motd.empty()) {
         _client->sendMessage(Replies::ERR_NOMOTD(_client));
         return;

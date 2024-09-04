@@ -1,5 +1,7 @@
-#include "Command.hpp"
+#include <string>
+
 #include "CapCommand.hpp"
+#include "Command.hpp"
 #include "InviteCommand.hpp"
 #include "JoinCommand.hpp"
 #include "KickCommand.hpp"
@@ -16,12 +18,13 @@
 #include "TopicCommand.hpp"
 #include "UserCommand.hpp"
 
-#include <string>
+using std::string;
+using std::vector;
 
-Command* Command::create(std::string& data, Client* client) {
+Command* Command::create(string& data, Client* client) {
     Message::verify(data);
-    std::string source, command;
-    std::vector<std::string> params;
+    string source, command;
+    vector<string> params;
     data += "\r\n"; // ULTRA TMP MAIS POUR FAIRE MARCHER 2eme PARSING
     Message::parse(data, source, command, params);
 

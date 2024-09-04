@@ -15,6 +15,10 @@ PartCommand::PartCommand(std::string source, std::vector<std::string> params,
 PartCommand::~PartCommand() {}
 
 void PartCommand::checkParams(Client* client, std::vector<std::string> params) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PART"));
         throw ClientException();

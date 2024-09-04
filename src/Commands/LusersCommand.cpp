@@ -1,7 +1,15 @@
 #include "LusersCommand.hpp"
 
-LusersCommand::LusersCommand(std::string source,
-                             std::vector<std::string> params, Client* client) {
+using std::string;
+using std::vector;
+
+LusersCommand::LusersCommand(string source, vector<string> params,
+                             Client* client) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
+
     this->_source = source;
     this->_params = params;
     this->_client = client;

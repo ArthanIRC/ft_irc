@@ -600,6 +600,7 @@ string Replies::ERR_USERONCHANNEL(Client* client, string targetName,
 
 string Replies::ERR_NOTREGISTERED() {
     string reply;
+    reply = "451 * :You have not registered";
     return Message::create(reply);
 }
 

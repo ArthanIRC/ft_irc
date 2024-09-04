@@ -1,11 +1,12 @@
-#include "JoinCommand.hpp"
-#include "Channel.hpp"
-#include "Client.hpp"
-#include "PartCommand.hpp"
-#include "Replies.hpp"
 #include <map>
 #include <sstream>
 #include <vector>
+
+#include "Channel.hpp"
+#include "Client.hpp"
+#include "JoinCommand.hpp"
+#include "PartCommand.hpp"
+#include "Replies.hpp"
 
 using std::map;
 using std::string;
@@ -21,12 +22,14 @@ JoinCommand::JoinCommand(string source, vector<string> params, Client* client) {
 JoinCommand::~JoinCommand() {}
 
 void JoinCommand::checkParams(Client* client, vector<string> params) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "JOIN"));
         throw ClientException();
     }
-    if (client->getState() < REGISTERED)
-        throw ClientException();
 }
 
 void JoinCommand::parseParams() {

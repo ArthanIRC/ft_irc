@@ -1,7 +1,8 @@
-#include "PassCommand.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
 #include <cctype>
+
+#include "Client.hpp"
+#include "PassCommand.hpp"
+#include "Server.hpp"
 
 PassCommand::PassCommand(std::string source, std::vector<std::string> params,
                          Client* client) {

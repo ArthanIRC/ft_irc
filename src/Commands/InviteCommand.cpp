@@ -9,6 +9,11 @@ using std::vector;
 
 InviteCommand::InviteCommand(string source, vector<string> params,
                              Client* client) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
+
     Channel* chan;
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "INVITE"));

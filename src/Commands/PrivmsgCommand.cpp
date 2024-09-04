@@ -6,6 +6,10 @@ using std::vector;
 
 PrivmsgCommand::PrivmsgCommand(string source, vector<string> params,
                                Client* client) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NORECIPIENT(client));
         throw ClientException();
