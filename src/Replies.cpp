@@ -804,8 +804,8 @@ string Replies::ERR_REGFAILED() {
     return Message::create(reply);
 }
 
-std::string Replies::ERR_QUIT(Client* client) {
+std::string Replies::ERR_QUIT(std::string reason) {
     std::string reply;
-    reply = client->getName() + " quit";
+    reply = "ERROR :" + reason;
     return Message::create(reply);
 }

@@ -154,5 +154,5 @@ class Replies : public Message {
     static std::string ERR_SASLALREADY();
     static std::string RPL_SASLMECHS();
     static std::string ERR_REGFAILED();
-    static std::string ERR_QUIT(Client* client);
+    static std::string ERR_QUIT(std::string reason);
 };
