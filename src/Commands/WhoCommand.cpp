@@ -20,6 +20,8 @@ WhoCommand::WhoCommand(string source, vector<string> params, Client* client) {
     this->_client = client;
 }
 
+WhoCommand::~WhoCommand() {}
+
 void WhoCommand::run() {
     if (_params.size() < 1)
         return;
