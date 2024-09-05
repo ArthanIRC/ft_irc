@@ -64,13 +64,11 @@ string Client::getModes() {
 
 map<string, Channel*> Client::getChannels() {
     map<string, Channel*> servMap = Server::getInstance().getChannels();
-    map<string, Channel*> result = servMap;
+    map<string, Channel*> result;
     for (map<string, Channel*>::iterator it = servMap.begin();
-         it != servMap.end();) {
+         it != servMap.end(); it++) {
         if (it->second->isInChannel(this))
-            ++it;
-        else
-            result.erase(it++);
+            result[it->first] = it->second;
     }
 
     return result;

@@ -218,14 +218,16 @@ void Server::sendMessage(Channel* channel, string message, Client* sender) {
     }
 }
 
-void Server::sendMessage(map<string, Channel*> channels, string message) {
+void Server::sendMessage(map<string, Channel*> channels, string message,
+                         Client* sender) {
     set<Client*> clients;
     for (map<string, Channel*>::iterator it = channels.begin();
          it != channels.end(); it++) {
         map<string, Client*> clientsMap = it->second->getClients();
         for (map<string, Client*>::iterator ut = clientsMap.begin();
              ut != clientsMap.end(); ut++) {
-            clients.insert(ut->second);
+            if (!sender || ut->second != sender)
+                clients.insert(ut->second);
         }
     }
 
