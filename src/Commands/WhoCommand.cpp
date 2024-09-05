@@ -11,7 +11,10 @@ using std::string;
 using std::vector;
 
 WhoCommand::WhoCommand(string source, vector<string> params, Client* client) {
-
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     this->_source = source;
     this->_params = params;
     this->_client = client;
@@ -27,27 +30,41 @@ void WhoCommand::run() {
     } catch (const Server::ChannelNotFoundException&) {
         chan = NULL;
     }
+
     try {
         target = Server::getInstance().findClient(_params[0]);
     } catch (const Server::ClientNotFoundException&) {
         target = NULL;
     }
+
     if (chan == NULL && target == NULL)
         return;
+
     if (target != NULL) {
-        // comparer si le client et la target on un chan en commun
-        _client->sendMessage(Replies::RPL_WHOREPLY());
+        map<string, Channel*> chansClient = _client->getChannels();
+        map<string, Channel*> chansTarget = target->getChannels();
+        map<string, Channel*>::iterator it = chansClient.begin();
+        map<string, Channel*>::iterator itt;
+        while (it != chansClient.end()) {
+            itt = chansTarget.begin();
+            while (itt != chansTarget.end()) {
+                if ((*it) == (*itt) || !target->isInvisible()) {
+                    _client->sendMessage(Replies::RPL_WHOREPLY());
+                    _client->sendMessage(Replies::RPL_ENDOFWHO());
+                    return;
+                }
+                itt++;
+            }
+            it++;
+        }
+    } else {
+        vector<Client*> clients = chan->getClients();
+        for (vector<Client*>::iterator it = clients.begin();
+             it != clients.end(); it++) {
+            if (!chan->isInChannel(_client) && (*it)->isInvisible())
+                continue;
+            _client->sendMessage(Replies::RPL_WHOREPLY());
+        }
         _client->sendMessage(Replies::RPL_ENDOFWHO());
-        return;
     }
-    map<string, Client*> clients = chan->getClients();
-    for (map<string, Client*>::iterator it = clients.begin();
-         it != clients.end(); it++) {
-        if (!chan->isInChannel(_client) && (*it).second->isInvisible())
-            continue;
-        _client->sendMessage(Replies::RPL_WHOREPLY());
-    }
-    _client->sendMessage(Replies::RPL_ENDOFWHO());
 }
-// on va encoyer (*it).second dans la RPL_WHOREPLY en tant que target
-// trouver une solution pour host
