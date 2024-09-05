@@ -1,6 +1,6 @@
 #include "QuitCommand.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
-#include "Message.hpp"
 #include "Server.hpp"
 
 QuitCommand::QuitCommand(std::string source, std::vector<std::string> params,
@@ -16,14 +16,13 @@ QuitCommand::QuitCommand(std::string source, std::vector<std::string> params,
 QuitCommand::~QuitCommand() {}
 
 void QuitCommand::run() {
-    _client->getChannels();
-    // std::string reply = "ERROR: " + _reason;
-    // reply = Message::create(reply);
-    // _client->sendMessage(reply);
+    std::string message = "Quit: " + _reason;
+    std::map<std::string, Channel*> joinedChans = _client->getChannels();
+
+    for (std::map<std::string, Channel*>::iterator it = joinedChans.begin();
+         it != joinedChans.end(); ++it) {
+        it->second->removeClient(_client);
+        Server::getInstance().sendMessage(it->second, message, _client);
+    }
+    _client->sendMessage((Replies::ERR_QUIT(_client)));
 }
-
-/*
-avertir tous les channels ou je suis que je QUIT
-QUIT les channels ou je suis
-
-*/
