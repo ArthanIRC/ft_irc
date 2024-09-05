@@ -24,6 +24,6 @@ void QuitCommand::run() {
     ;
     std::map<std::string, Channel*> joinedChans = _client->getChannels();
     Server::getInstance().sendMessage(joinedChans, message, _client);
-    _client->sendMessage((Replies::ERR_QUIT(_reason)));
+    _client->sendMessage((Replies::ERR_QUIT()));
     Server::getInstance().removeClient(_client);
 }
