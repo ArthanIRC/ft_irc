@@ -10,11 +10,21 @@ Client::Client(int fd)
       _capEndedEarly(false), _invisible(false), _away(false),
       _awayNotify(false) {}
 
-Client::~Client() {}
+Client::~Client() {
+    map<string, Channel*> channels = getChannels();
+    if (channels.empty())
+        return;
 
-string const& Client::getName() const { return this->_realname; }
+    for (map<string, Channel*>::iterator it = channels.begin();
+         it != channels.end(); it++)
+        it->second->removeClient(this);
+}
 
 string const& Client::getNickname() const { return this->_nickname; }
+
+string const& Client::getUserName() const { return this->_username; }
+
+string const& Client::getRealName() const { return this->_realname; }
 
 string const Client::getSource() const {
     string source = _nickname + "!" + _username + "@localhost";

@@ -2,9 +2,6 @@
 #include "Channel.hpp"
 #include "Replies.hpp"
 #include "Server.hpp"
-#include <cstddef>
-#include <map>
-#include <vector>
 
 using std::map;
 using std::string;
@@ -15,6 +12,7 @@ WhoCommand::WhoCommand(string source, vector<string> params, Client* client) {
         client->sendMessage(Replies::ERR_NOTREGISTERED());
         throw ClientException();
     }
+
     this->_source = source;
     this->_params = params;
     this->_client = client;
@@ -25,8 +23,10 @@ WhoCommand::~WhoCommand() {}
 void WhoCommand::run() {
     if (_params.size() < 1)
         return;
+
     Channel* chan;
     Client* target;
+
     try {
         chan = Server::getInstance().findChannel(_params[0]);
     } catch (const Server::ChannelNotFoundException&) {
@@ -43,30 +43,28 @@ void WhoCommand::run() {
         return;
 
     if (target != NULL) {
-        map<string, Channel*> chansClient = _client->getChannels();
-        map<string, Channel*> chansTarget = target->getChannels();
-        map<string, Channel*>::iterator it = chansClient.begin();
-        map<string, Channel*>::iterator itt;
-        while (it != chansClient.end()) {
-            itt = chansTarget.begin();
-            while (itt != chansTarget.end()) {
-                if ((*it) == (*itt) || !target->isInvisible()) {
-                    _client->sendMessage(Replies::RPL_WHOREPLY());
-                    _client->sendMessage(Replies::RPL_ENDOFWHO());
-                    return;
-                }
-                itt++;
+        map<string, Channel*> channels = _client->getChannels();
+        for (map<string, Channel*>::iterator it = channels.begin();
+             it != channels.end(); it++) {
+            if (it->second->isInChannel(target)) {
+                _client->sendMessage(
+                    Replies::RPL_WHOREPLY(_client, target, it->second));
+                _client->sendMessage(
+                    Replies::RPL_ENDOFWHO(_client, _params[0]));
+                return;
             }
-            it++;
+        }
+        if (!target->isInvisible()) {
+            _client->sendMessage(Replies::RPL_WHOREPLY(_client, target, NULL));
+            _client->sendMessage(Replies::RPL_ENDOFWHO(_client, _params[0]));
         }
     } else {
         vector<Client*> clients = chan->getClients();
         for (vector<Client*>::iterator it = clients.begin();
              it != clients.end(); it++) {
-            if (!chan->isInChannel(_client) && (*it)->isInvisible())
-                continue;
-            _client->sendMessage(Replies::RPL_WHOREPLY());
+            if (chan->isInChannel(_client))
+                _client->sendMessage(Replies::RPL_WHOREPLY(_client, *it, chan));
         }
-        _client->sendMessage(Replies::RPL_ENDOFWHO());
+        _client->sendMessage(Replies::RPL_ENDOFWHO(_client, _params[0]));
     }
 }

@@ -243,8 +243,9 @@ string Replies::RPL_WHOWASUSER() {
     return Message::create(reply);
 }
 
-string Replies::RPL_ENDOFWHO() {
+string Replies::RPL_ENDOFWHO(Client* client, string& mask) {
     string reply;
+    reply = "315 " + client->getNickname() + " " + mask + " :End of WHO list";
     return Message::create(reply);
 }
 
@@ -372,8 +373,26 @@ string Replies::RPL_VERSION() {
     return Message::create(reply);
 }
 
-string Replies::RPL_WHOREPLY() {
+string Replies::RPL_WHOREPLY(Client* client, Client* target, Channel* channel) {
     string reply;
+    string flags = " ";
+    string chanName = "*";
+
+    if (target->isAway())
+        flags += "G";
+    else
+        flags += "H";
+    if (target->isServerOperator())
+        flags += "*";
+    if (channel) {
+        flags += channel->getPrefix(target);
+        chanName = channel->getName();
+    }
+
+    reply = "352 " + client->getNickname() + " " + chanName + " " +
+            target->getUserName() + " localhost " +
+            Server::getInstance().getSource() + " " + target->getNickname() +
+            flags + " :0 " + target->getRealName();
     return Message::create(reply);
 }
 

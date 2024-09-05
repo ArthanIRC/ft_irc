@@ -35,8 +35,9 @@ class Client {
     Client(int fd);
     ~Client();
 
-    std::string const& getName() const;
     std::string const& getNickname() const;
+    std::string const& getUserName() const;
+    std::string const& getRealName() const;
     std::string const getSource() const;
     std::string getModes();
     std::string const& getAwayMsg() const;
