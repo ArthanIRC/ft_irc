@@ -209,17 +209,8 @@ size_t Server::getMaxClients() const { return _maxClients; }
 
 bool Server::isRunning() const { return this->_running; }
 
-void Server::sendMessage(Channel* channel, string message, Client* sender) {
-    vector<Client*> clients = channel->getClients();
-    for (vector<Client*>::iterator it = clients.begin(); it != clients.end();
-         it++) {
-        if (!sender || *it != sender)
-            (*it)->sendMessage(message);
-    }
-}
-
-void Server::sendMessage(map<string, Channel*> channels, string message,
-                         Client* sender) {
+set<Client*> Server::getClientsSet(map<string, Channel*> channels,
+                                   Client* sender) {
     set<Client*> clients;
     for (map<string, Channel*>::iterator it = channels.begin();
          it != channels.end(); it++) {
@@ -231,8 +222,43 @@ void Server::sendMessage(map<string, Channel*> channels, string message,
         }
     }
 
+    return clients;
+}
+
+void Server::sendMessage(Channel* channel, string message, Client* sender) {
+    vector<Client*> clients = channel->getClients();
+    for (vector<Client*>::iterator it = clients.begin(); it != clients.end();
+         it++) {
+        if (!sender || *it != sender)
+            (*it)->sendMessage(message);
+    }
+}
+
+void Server::sendMessage(map<string, Channel*> channels, string message,
+                         Client* sender) {
+    set<Client*> clients = getClientsSet(channels, sender);
     for (set<Client*>::iterator it = clients.begin(); it != clients.end(); it++)
         (*it)->sendMessage(message);
+}
+
+void Server::sendMessageIfAway(Channel* channel, string message,
+                               Client* sender) {
+    vector<Client*> clients = channel->getClients();
+    for (vector<Client*>::iterator it = clients.begin(); it != clients.end();
+         it++) {
+        if ((!sender || *it != sender) && (*it)->isAwayNotify())
+            (*it)->sendMessage(message);
+    }
+}
+
+void Server::sendMessageIfAway(map<string, Channel*> channels, string message,
+                               Client* sender) {
+    set<Client*> clients = getClientsSet(channels, sender);
+    for (set<Client*>::iterator it = clients.begin(); it != clients.end();
+         it++) {
+        if ((*it)->isAwayNotify())
+            (*it)->sendMessage(message);
+    }
 }
 
 const char* Server::InvalidNumberOfParametersException::what() const throw() {

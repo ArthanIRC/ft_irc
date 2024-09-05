@@ -1,10 +1,11 @@
 #include "QuitCommand.hpp"
-#include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 
-QuitCommand::QuitCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::string;
+using std::vector;
+
+QuitCommand::QuitCommand(string source, vector<string> params, Client* client) {
     if (!client->isRegistered()) {
         client->sendMessage(Replies::ERR_NOTREGISTERED());
         throw ClientException();
@@ -19,11 +20,9 @@ QuitCommand::QuitCommand(std::string source, std::vector<std::string> params,
 QuitCommand::~QuitCommand() {}
 
 void QuitCommand::run() {
-    std::string message =
-        ":" + _client->getSource() + " QUIT :Quit: " + _reason;
-    ;
-    std::map<std::string, Channel*> joinedChans = _client->getChannels();
-    Server::getInstance().sendMessage(joinedChans, message, _client);
+    string message = ":" + _client->getSource() + " QUIT :Quit: " + _reason;
+    Server::getInstance().sendMessage(_client->getChannels(),
+                                      Message::create(message), _client);
     _client->sendMessage((Replies::ERR_QUIT()));
     Server::getInstance().removeClient(_client);
 }

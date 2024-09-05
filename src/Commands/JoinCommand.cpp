@@ -82,6 +82,13 @@ void JoinCommand::joinAndReplies(Channel* channel) {
     _client->sendMessage(Replies::RPL_NAMREPLY(_client, channel));
     _client->sendMessage(Replies::RPL_ENDOFNAMES(_client, channel->getName()));
     Server::getInstance().sendMessage(channel, reply, _client);
+
+    if (_client->isAway()) {
+        string message =
+            ":" + _client->getSource() + " AWAY " + _client->getAwayMsg();
+        Server::getInstance().sendMessageIfAway(
+            channel, Message::create(message), _client);
+    }
 }
 
 void JoinCommand::leaveChannels() {

@@ -19,9 +19,17 @@ void CapCommand::run() {
         return;
 
     if (_params[0] == "LS") {
-        string message = ":" + Server::getInstance().getSource() + " CAP * LS";
+        string message = "CAP * LS :away-notify";
         _client->sendMessage(Message::create(message));
         _client->setState(CAP_STARTED);
+    } else if (_params[0] == "REQ") {
+        if (_params.size() < 2)
+            return;
+        if (_params[1].find("away-notify") != string::npos) {
+            string message = "CAP * ACK away-notify";
+            _client->sendMessage(Message::create(message));
+            _client->setAwayNotify(true);
+        }
     } else if (_params[0] == "END") {
         if (_client->getState() != USER_DONE) {
             if (_client->getState() == CAP_STARTED)
@@ -33,6 +41,7 @@ void CapCommand::run() {
             return;
         } else
             _client->setState(REGISTERED);
+
         _client->sendMessage(
             Replies::RPL_WELCOME(_client, Server::getInstance()));
         _client->sendMessage(

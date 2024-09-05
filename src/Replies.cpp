@@ -192,8 +192,10 @@ string Replies::RPL_NONE() {
     return Message::create(reply);
 }
 
-string Replies::RPL_AWAY() {
+string Replies::RPL_AWAY(Client* sender, Client* recipient) {
     string reply;
+    reply = "301 " + sender->getNickname() + " " + recipient->getNickname() +
+            " :" + recipient->getAwayMsg();
     return Message::create(reply);
 }
 
@@ -202,13 +204,17 @@ string Replies::RPL_USERHOST() {
     return Message::create(reply);
 }
 
-string Replies::RPL_UNAWAY() {
+string Replies::RPL_UNAWAY(Client* client) {
     string reply;
+    reply = "305 " + client->getNickname() +
+            " :You are no longer marked as being away";
     return Message::create(reply);
 }
 
-string Replies::RPL_NOWAWAY() {
+string Replies::RPL_NOWAWAY(Client* client) {
     string reply;
+    reply =
+        "306 " + client->getNickname() + " :You have been marked as being away";
     return Message::create(reply);
 }
 

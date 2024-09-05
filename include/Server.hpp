@@ -5,6 +5,7 @@
 #include <ctime>
 #include <exception>
 #include <netinet/in.h>
+#include <set>
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -64,9 +65,15 @@ class Server {
     std::string getRplSupport1() const;
     std::string getRplSupport2() const;
     size_t getMaxClients() const;
+    std::set<Client*> getClientsSet(std::map<std::string, Channel*> channels,
+                                    Client* sender);
     void sendMessage(Channel* channel, std::string message, Client* sender);
     void sendMessage(std::map<std::string, Channel*> channels,
                      std::string message, Client* sender);
+    void sendMessageIfAway(Channel* channel, std::string message,
+                           Client* sender);
+    void sendMessageIfAway(std::map<std::string, Channel*> channels,
+                           std::string message, Client* sender);
 
     static Server& getInstance();
 
