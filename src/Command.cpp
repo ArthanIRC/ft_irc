@@ -1,5 +1,6 @@
 #include <string>
 
+#include "AwayCommand.hpp"
 #include "CapCommand.hpp"
 #include "Command.hpp"
 #include "InviteCommand.hpp"
@@ -28,7 +29,9 @@ Command* Command::create(string& data, Client* client) {
     data += "\r\n"; // ULTRA TMP MAIS POUR FAIRE MARCHER 2eme PARSING
     Message::parse(data, source, command, params);
 
-    if (command == "CAP")
+    if (command == "AWAY")
+        return new AwayCommand(source, params, client);
+    else if (command == "CAP")
         return new CapCommand(source, params, client);
     else if (command == "INVITE")
         return new InviteCommand(source, params, client);

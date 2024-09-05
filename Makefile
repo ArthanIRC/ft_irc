@@ -142,7 +142,7 @@ fclean: clean
 
 gmk:
 	if [ -d make ];then echo ok;else mkdir make;fi
-	@find -name '*.cpp' -printf "%d%p\n" | sort -n | sed 's/^[[:digit:]]/SOURCES += /' > make/sources.mk
+	@find ./src/ -name '*.cpp' -printf "%d%p\n" | sort -n | sed 's/^[[:digit:]]/SOURCES += /' > make/sources.mk
 
 # --------------------- #
 #      Recompile.       #

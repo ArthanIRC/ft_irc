@@ -7,7 +7,8 @@ using std::string;
 
 Client::Client(int fd)
     : _realname(""), _nickname(""), _username(""), _socket(fd), _state(UNKNOWN),
-      _capEndedEarly(false), _invisible(false) {}
+      _capEndedEarly(false), _invisible(false), _away(false),
+      _awayNotify(false) {}
 
 Client::~Client() {}
 
@@ -19,6 +20,8 @@ string const Client::getSource() const {
     string source = _nickname + "!" + _username + "@localhost";
     return source;
 }
+
+string const& Client::getAwayMsg() const { return this->_awayMsg; }
 
 State Client::getState() const { return this->_state; }
 
@@ -34,11 +37,18 @@ bool Client::isServerOperator() { return this->_state == OPERATOR; }
 
 bool Client::isAway() { return this->_away; }
 
+bool Client::isAwayNotify() { return this->_awayNotify; }
+
 bool Client::isInvisible() { return this->_invisible; }
 
 void Client::setCapEndedEarly() { this->_capEndedEarly = true; }
 
-void Client::setAway(bool state) { this->_away = state; }
+void Client::setAway(bool state, string message) {
+    this->_away = state;
+    this->_awayMsg = message;
+}
+
+void Client::setAwayNotify(bool state) { this->_awayNotify = state; }
 
 void Client::setInvisible(bool state) { this->_invisible = state; }
 

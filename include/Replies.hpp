@@ -41,10 +41,10 @@ class Replies : public Message {
     static std::string RPL_GLOBALUSERS(Client* client);
     static std::string RPL_WHOISCERTFP();
     static std::string RPL_NONE();
-    static std::string RPL_AWAY();
+    static std::string RPL_AWAY(Client* sender, Client* recipient);
     static std::string RPL_USERHOST();
-    static std::string RPL_UNAWAY();
-    static std::string RPL_NOWAWAY();
+    static std::string RPL_UNAWAY(Client* client);
+    static std::string RPL_NOWAWAY(Client* client);
     static std::string RPL_WHOISREGNICK();
     static std::string RPL_WHOISUSER();
     static std::string RPL_WHOISSERVER();
