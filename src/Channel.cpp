@@ -1,14 +1,16 @@
+#include <algorithm>
+
 #include "Channel.hpp"
 
-using std::map;
 using std::string;
+using std::vector;
 
 Channel::Channel(Client* newClient, string name)
     : _name(name), _key(""), _protectedTopic(false), _inviteOnly(false),
       _noExternal(true), _maxClients(0) {
     checkNameSyntax(name);
-    this->_clients[newClient->getNickname()] = newClient;
-    this->_operatorsList[newClient->getNickname()] = newClient;
+    this->_clients.push_back(newClient);
+    this->_operatorsList.push_back(newClient);
     this->_creationTime = time(NULL);
 }
 
@@ -16,8 +18,8 @@ Channel::Channel(Client* newClient, string name, string key)
     : _name(name), _key(key), _protectedTopic(false), _inviteOnly(false),
       _noExternal(true), _maxClients(0) {
     checkNameSyntax(name);
-    this->_clients[newClient->getNickname()] = newClient;
-    this->_operatorsList[newClient->getNickname()] = newClient;
+    this->_clients.push_back(newClient);
+    this->_operatorsList.push_back(newClient);
     this->_creationTime = time(NULL);
 }
 
@@ -32,6 +34,34 @@ void Channel::checkNameSyntax(string& name) {
         throw WrongSyntaxChannelName();
     if (name.find(',') != name.npos)
         throw WrongSyntaxChannelName();
+}
+
+void Channel::addClientToList(vector<Client*>& vec, Client* client) {
+    if (std::find(vec.begin(), vec.end(), client) != vec.end())
+        return;
+    vec.push_back(client);
+}
+
+void Channel::removeClientFromList(vector<Client*>& vec, Client* client) {
+    vector<Client*>::iterator it = std::find(vec.begin(), vec.end(), client);
+    if (it != vec.end())
+        vec.erase(it);
+}
+
+bool Channel::isOnList(const vector<Client*>& vec, const Client* client) const {
+    vector<Client*>::const_iterator it =
+        std::find(vec.begin(), vec.end(), client);
+    return it != vec.end();
+}
+
+bool Channel::isOnList(const vector<Client*>& vec,
+                       const string nickname) const {
+    for (vector<Client*>::const_iterator it = vec.begin(); it != vec.end();
+         it++) {
+        if ((*it)->getNickname() == nickname)
+            return true;
+    }
+    return false;
 }
 
 string const& Channel::getName() const { return this->_name; }
@@ -56,17 +86,15 @@ bool Channel::isProtectedTopic() const { return this->_protectedTopic; }
 
 void Channel::setProtectedTopic(bool lock) { this->_protectedTopic = lock; }
 
-map<string, Client*>& Channel::getClients() { return this->_clients; }
+vector<Client*>& Channel::getClients() { return this->_clients; }
 
-map<string, Client*>& Channel::getInvitelist() { return this->_inviteList; }
+vector<Client*>& Channel::getInvitelist() { return this->_inviteList; }
 
-map<string, Client*>& Channel::getBanList() { return this->_banList; }
+vector<Client*>& Channel::getBanList() { return this->_banList; }
 
-map<string, Client*>& Channel::getOperatorsList() {
-    return this->_operatorsList;
-}
+vector<Client*>& Channel::getOperatorsList() { return this->_operatorsList; }
 
-map<string, Client*>& Channel::getVoicedList() { return this->_voicedList; }
+vector<Client*>& Channel::getVoicedList() { return this->_voicedList; }
 
 bool Channel::isInviteOnly() const { return this->_inviteOnly; }
 
@@ -89,76 +117,73 @@ void Channel::setMaxClients(size_t nbMaxClients) {
 void Channel::addClient(Client* client) {
     if (this->_inviteOnly == true && !isInvited(client))
         throw UserNotInvited();
-    string nickname = client->getNickname();
-    if (_clients.find(nickname) != _clients.end()) {
-        throw UserAlreadyExists();
-    }
-    _clients[nickname] = client;
+    addClientToList(_clients, client);
 }
 
 void Channel::addOperator(Client* client) {
-    addClientToMap(_operatorsList, client);
+    addClientToList(_operatorsList, client);
 }
 
-void Channel::addVoiced(Client* client) { addClientToMap(_voicedList, client); }
-
-void Channel::eraseVoiced(Client* client) {
-    removeClientFromMap(_voicedList, client, "");
+void Channel::addVoiced(Client* client) {
+    addClientToList(_operatorsList, client);
 }
 
-void Channel::banClient(Client* client) { addClientToMap(_banList, client); }
+void Channel::removeVoiced(Client* client) {
+    removeClientFromList(_voicedList, client);
+}
+
+void Channel::banClient(Client* client) { addClientToList(_banList, client); }
 
 void Channel::inviteClient(Client* client) {
-    addClientToMap(_inviteList, client);
+    addClientToList(_inviteList, client);
 }
 
-void Channel::eraseOperator(Client* client) {
-    removeClientFromMap(_operatorsList, client, "the user was not an operator");
+void Channel::removeOperator(Client* client) {
+    removeClientFromList(_operatorsList, client);
 }
 
-void Channel::eraseClient(Client* client) {
-    removeClientFromMap(_clients, client, "the user does not exist");
+void Channel::removeClient(Client* client) {
+    removeClientFromList(_clients, client);
 }
 
 void Channel::unbanClient(Client* client) {
-    removeClientFromMap(_banList, client, "the user was not blacklisted");
+    removeClientFromList(_banList, client);
 }
 
 bool Channel::isInChannel(Client* client) const {
-    return verifClientOnMap(_clients, client);
+    return isOnList(_clients, client);
 }
 
 bool Channel::isInvited(Client* client) const {
-    return verifClientOnMap(_inviteList, client);
+    return isOnList(_inviteList, client);
 }
 
 bool Channel::isBanned(Client* client) const {
-    return verifClientOnMap(_banList, client);
+    return isOnList(_banList, client);
 }
 
 bool Channel::isOperator(Client* client) const {
-    return verifClientOnMap(_operatorsList, client) ||
-           client->isServerOperator();
+    return isOnList(_operatorsList, client) || client->isServerOperator();
 }
 
 bool Channel::isVoiced(Client* client) const {
-    return isOperator(client) || verifClientOnMap(_voicedList, client);
+    return isOperator(client) || isOnList(_voicedList, client);
 }
 
 bool Channel::isInChannel(string nickname) const {
-    return verifClientOnMap(_clients, nickname);
+    return isOnList(_clients, nickname);
 }
 
 bool Channel::isInvited(string nickname) const {
-    return verifClientOnMap(_inviteList, nickname);
+    return isOnList(_inviteList, nickname);
 }
 
 bool Channel::isBanned(string nickname) const {
-    return verifClientOnMap(_banList, nickname);
+    return isOnList(_banList, nickname);
 }
 
 bool Channel::isOperator(string nickname) const {
-    return verifClientOnMap(_operatorsList, nickname);
+    return isOnList(_operatorsList, nickname);
 }
 
 string Channel::getModes() const {

@@ -1,9 +1,8 @@
 #pragma once
 
 #include <ctime>
-#include <map>
-#include <stdexcept>
 #include <string>
+#include <vector>
 
 #include "Client.hpp"
 #include "Exception.hpp"
@@ -21,47 +20,18 @@ class Channel {
     size_t _maxClients;
     time_t _creationTime;
     time_t _topicSetTime;
-    std::map<std::string, Client*> _clients;
-    std::map<std::string, Client*> _inviteList;
-    std::map<std::string, Client*> _banList;
-    std::map<std::string, Client*> _operatorsList;
-    std::map<std::string, Client*> _voicedList;
+    std::vector<Client*> _clients;
+    std::vector<Client*> _inviteList;
+    std::vector<Client*> _banList;
+    std::vector<Client*> _operatorsList;
+    std::vector<Client*> _voicedList;
     void checkNameSyntax(std::string& name);
 
-    template <typename MapType>
-    void addClientToMap(MapType& map, Client* client) {
-        std::string nickname = client->getNickname();
-        if (map.find(nickname) != map.end()) {
-            return;
-        }
-        map[nickname] = client;
-    }
-
-    template <typename MapType>
-    void removeClientFromMap(MapType& map, Client* client,
-                             const std::string& errorMsg) {
-        std::string nickname = client->getNickname();
-        typename MapType::iterator it = map.find(nickname);
-        if (it != map.end()) {
-            map.erase(it);
-        } else {
-            throw std::runtime_error(errorMsg);
-        }
-    }
-
-    template <typename MapType>
-    bool verifClientOnMap(const MapType& map, const Client* client) const {
-        std::string nickname = client->getNickname();
-        typename MapType::const_iterator it = map.find(nickname);
-        return it != map.end();
-    }
-
-    template <typename MapType>
-    bool verifClientOnMap(const MapType& map,
-                          const std::string nickname) const {
-        typename MapType::const_iterator it = map.find(nickname);
-        return it != map.end();
-    }
+    void addClientToList(std::vector<Client*>& vec, Client* client);
+    void removeClientFromList(std::vector<Client*>& vec, Client* client);
+    bool isOnList(const std::vector<Client*>& vec, const Client* client) const;
+    bool isOnList(const std::vector<Client*>& vec,
+                  const std::string nickname) const;
 
   public:
     Channel(Client* client, std::string name);
@@ -80,11 +50,11 @@ class Channel {
     bool isProtectedTopic() const;
     void setProtectedTopic(bool lock);
 
-    std::map<std::string, Client*>& getClients();
-    std::map<std::string, Client*>& getInvitelist();
-    std::map<std::string, Client*>& getBanList();
-    std::map<std::string, Client*>& getOperatorsList();
-    std::map<std::string, Client*>& getVoicedList();
+    std::vector<Client*>& getClients();
+    std::vector<Client*>& getInvitelist();
+    std::vector<Client*>& getBanList();
+    std::vector<Client*>& getOperatorsList();
+    std::vector<Client*>& getVoicedList();
 
     bool isInviteOnly() const;
     void setInviteOnly(bool inviteMode);
@@ -101,13 +71,13 @@ class Channel {
     void addClient(Client* client);
     void addOperator(Client* client);
     void addVoiced(Client* client);
-    void eraseVoiced(Client* client);
+    void removeVoiced(Client* client);
     void banClient(Client* client);
     void inviteClient(Client* client);
 
-    void eraseOperator(Client* client);
+    void removeOperator(Client* client);
     void unbanClient(Client* client);
-    void eraseClient(Client* client);
+    void removeClient(Client* client);
 
     bool isInChannel(Client* client) const;
     bool isInvited(Client* client) const;

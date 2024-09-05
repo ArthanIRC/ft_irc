@@ -7,7 +7,6 @@
 #include "Replies.hpp"
 #include "Server.hpp"
 
-using std::map;
 using std::string;
 using std::vector;
 
@@ -76,11 +75,10 @@ void ModeCommand::invisibleMode(bool oper, size_t& p) {
 void ModeCommand::banMode(bool oper, size_t& p) {
     string param = retrieveParam(_params, p);
     if (param.empty()) {
-        map<string, Client*> banlist = _channel->getBanList();
-        for (map<string, Client*>::iterator it = banlist.begin();
+        vector<Client*> banlist = _channel->getBanList();
+        for (vector<Client*>::iterator it = banlist.begin();
              it != banlist.end(); it++)
-            _client->sendMessage(
-                Replies::RPL_BANLIST(_client, it->second, _channel));
+            _client->sendMessage(Replies::RPL_BANLIST(_client, *it, _channel));
         _client->sendMessage(Replies::RPL_ENDOFBANLIST(_client, _channel));
         return;
     }
@@ -178,7 +176,7 @@ void ModeCommand::operatorMode(bool oper, size_t& p) {
     if (oper)
         _channel->addOperator(target);
     else
-        _channel->eraseOperator(target);
+        _channel->removeOperator(target);
     addResult(oper, "o", param);
 }
 
@@ -201,7 +199,7 @@ void ModeCommand::voiceMode(bool oper, size_t& p) {
     if (oper)
         _channel->addVoiced(target);
     else
-        _channel->eraseVoiced(target);
+        _channel->removeVoiced(target);
     addResult(oper, "v", param);
 }
 
