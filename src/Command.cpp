@@ -16,8 +16,10 @@
 #include "PassCommand.hpp"
 #include "PingCommand.hpp"
 #include "PrivmsgCommand.hpp"
+#include "QuitCommand.hpp"
 #include "TopicCommand.hpp"
 #include "UserCommand.hpp"
+#include "WhoCommand.hpp"
 
 using std::string;
 using std::vector;
@@ -59,10 +61,14 @@ Command* Command::create(string& data, Client* client) {
         return new PingCommand(source, params, client);
     else if (command == "PRIVMSG")
         return new PrivmsgCommand(source, params, client);
+    else if (command == "QUIT")
+        return new QuitCommand(source, params, client);
     else if (command == "TOPIC")
         return new TopicCommand(source, params, client);
     else if (command == "USER")
         return new UserCommand(source, params, client);
+    else if (command == "WHO")
+        return new WhoCommand(source, params, client);
     else
         throw ClientException();
 }
