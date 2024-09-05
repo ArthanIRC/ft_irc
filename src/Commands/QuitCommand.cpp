@@ -5,9 +5,12 @@
 
 QuitCommand::QuitCommand(std::string source, std::vector<std::string> params,
                          Client* client) {
-    this->_reason = "";
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     if (params.size() >= 1) {
-        _reason = params[0];
+        this->_reason = params[0];
     }
     this->_source = source;
     this->_client = client;
@@ -16,13 +19,11 @@ QuitCommand::QuitCommand(std::string source, std::vector<std::string> params,
 QuitCommand::~QuitCommand() {}
 
 void QuitCommand::run() {
-    std::string message = "Quit: " + _reason;
+    std::string message =
+        ":" + _client->getSource() + " QUIT :Quit: " + _reason;
+    ;
     std::map<std::string, Channel*> joinedChans = _client->getChannels();
-
-    for (std::map<std::string, Channel*>::iterator it = joinedChans.begin();
-         it != joinedChans.end(); ++it) {
-        it->second->removeClient(_client);
-        Server::getInstance().sendMessage(it->second, message, _client);
-    }
-    _client->sendMessage((Replies::ERR_QUIT(_client)));
+    Server::getInstance().sendMessage(joinedChans, message, _client);
+    _client->sendMessage((Replies::ERR_QUIT(_reason)));
+    Server::getInstance().removeClient(_client);
 }
