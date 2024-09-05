@@ -7,7 +7,7 @@ using std::vector;
 
 Channel::Channel(Client* newClient, string name)
     : _name(name), _key(""), _protectedTopic(false), _inviteOnly(false),
-      _noExternal(true), _maxClients(0) {
+      _moderated(false), _noExternal(true), _maxClients(0) {
     checkNameSyntax(name);
     this->_clients.push_back(newClient);
     this->_operatorsList.push_back(newClient);
@@ -16,7 +16,7 @@ Channel::Channel(Client* newClient, string name)
 
 Channel::Channel(Client* newClient, string name, string key)
     : _name(name), _key(key), _protectedTopic(false), _inviteOnly(false),
-      _noExternal(true), _maxClients(0) {
+      _moderated(false), _noExternal(true), _maxClients(0) {
     checkNameSyntax(name);
     this->_clients.push_back(newClient);
     this->_operatorsList.push_back(newClient);

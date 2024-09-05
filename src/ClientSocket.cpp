@@ -10,6 +10,7 @@
 #include "Exception.hpp"
 #include "Server.hpp"
 
+using std::map;
 using std::string;
 
 ClientSocket::ClientSocket(int fd) : Socket() { this->_fd = fd; }
@@ -27,14 +28,15 @@ void ClientSocket::onPoll(uint32_t events) {
     ssize_t size;
     memset(buf, 0, MAX_LIMIT);
 
-    while ((size = recv(_fd, buf, MAX_LIMIT, 0)) != 0) {
-        if (size == -1)
-            break;
-        data.append(buf);
-        memset(buf, 0, MAX_LIMIT);
+    if (!_rem.empty()) {
+        data.append(_rem);
+        _rem.clear();
     }
 
-    if (data.empty()) {
+    size = recv(_fd, buf, MAX_LIMIT, 0);
+
+    data.append(buf);
+    if (data.empty() || size == -1) {
         removeSelf();
         return;
     }
@@ -53,6 +55,11 @@ void ClientSocket::onPoll(uint32_t events) {
 
         string line = data.substr(0, i);
         data = data.erase(0, i);
+
+        if (!line.empty() && i == string::npos) {
+            _rem = line;
+            return;
+        }
 
         if (!line.empty())
             executeCommand(line, client);
@@ -86,16 +93,22 @@ void ClientSocket::executeCommand(string data, Client* client) {
         sendMessage(Replies::ERR_REGFAILED());
         removeSelf();
     }
+    delete c;
 }
 
 void ClientSocket::sendMessage(string message) {
-    if (send(_fd, message.c_str(), message.size(), 0) == -1)
+    if (send(_fd, message.c_str(), message.size(), MSG_NOSIGNAL) == -1)
         throw SendException();
 }
 
 void ClientSocket::removeSelf() {
     try {
         std::cout << "Client removed\n";
+        Client* c = Server::getInstance().findClient(_fd);
+        map<string, Channel*> channels = c->getChannels();
+        string message = ":" + c->getSource() + " QUIT :Quit: Disconnected";
+        Server::getInstance().sendMessage(channels, Message::create(message),
+                                          c);
         Server::getInstance().removeClient(_fd);
     } catch (Server::ClientNotFoundException& e) {
         std::cerr << e.what() << "\n";

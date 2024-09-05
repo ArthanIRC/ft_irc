@@ -9,6 +9,8 @@ class Client;
 
 class ClientSocket : public Socket {
   private:
+    std::string _rem;
+
     void removeSelf();
     void executeCommand(std::string data, Client* client);
 

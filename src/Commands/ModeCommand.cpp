@@ -34,6 +34,7 @@ ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
         }
         this->_channel = channel;
     } else {
+        this->_isChan = false;
         Client* ctarget;
         try {
             ctarget = Server::getInstance().findClient(_target);
