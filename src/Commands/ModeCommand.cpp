@@ -11,6 +11,11 @@ using std::string;
 using std::vector;
 
 ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
+
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "MODE"));
         throw ClientException();
@@ -221,7 +226,7 @@ void ModeCommand::run() {
             return;
         }
 
-        if (!_channel->isOperator(_client)) {
+        if (!_channel->isOperator(_client) && _mode != "b") {
             _client->sendMessage(
                 Replies::ERR_CHANOPRIVSNEEDED(_client, _channel));
             return;

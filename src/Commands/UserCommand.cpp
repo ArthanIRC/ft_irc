@@ -2,10 +2,12 @@
 #include "CapCommand.hpp"
 #include "Client.hpp"
 #include "Exception.hpp"
-#include <vector>
 
-UserCommand::UserCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::string;
+using std::vector;
+
+UserCommand::UserCommand(string source, vector<string> params, Client* client) {
+
     if (params.size() < 4) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "USER"));
         throw ClientException();
@@ -34,7 +36,7 @@ void UserCommand::run() {
     _client->setState(USER_DONE);
 
     if (_client->hasCapEndedEarly()) {
-        std::vector<std::string> paraOut;
+        vector<string> paraOut;
         paraOut.push_back("END");
         CapCommand cap("", paraOut, _client);
         cap.run();

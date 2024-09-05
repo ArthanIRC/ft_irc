@@ -2,14 +2,22 @@
 #include "Client.hpp"
 #include "Replies.hpp"
 #include "Server.hpp"
-#include <map>
 
-OperCommand::OperCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::map;
+using std::string;
+using std::vector;
+
+OperCommand::OperCommand(string source, vector<string> params, Client* client) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
+
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "OPER"));
         throw ClientException();
     }
+
     this->_name = params[0];
     this->_password = params[1];
     this->_source = source;
@@ -21,8 +29,7 @@ OperCommand::~OperCommand() {}
 void OperCommand::run() {
     if (_name.empty() || _password.empty())
         return;
-    std::map<std::string, std::string> serverOperators =
-        Server::getInstance().getOperators();
+    map<string, string> serverOperators = Server::getInstance().getOperators();
     if (serverOperators.find(_name) == serverOperators.end()) {
         _client->sendMessage(Replies::ERR_NOOPERHOST());
         return;
@@ -34,7 +41,7 @@ void OperCommand::run() {
     }
     _client->setState(OPERATOR);
     _client->sendMessage(Replies::RPL_YOUREOPER(_client));
-    std::string reply = ":" + Server::getInstance().getSource() + " MODE " +
-                        _client->getNickname() + " +o";
+    string reply = ":" + Server::getInstance().getSource() + " MODE " +
+                   _client->getNickname() + " +o";
     _client->sendMessage(Message::create(reply));
 }

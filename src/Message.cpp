@@ -1,11 +1,12 @@
-#include "Message.hpp"
-#include "Server.hpp"
 #include <algorithm>
 #include <cctype>
 #include <cstddef>
 #include <cstdio>
 #include <sstream>
 #include <vector>
+
+#include "Message.hpp"
+#include "Server.hpp"
 
 using std::string;
 using std::vector;

@@ -16,6 +16,10 @@ TopicCommand::TopicCommand(string source, vector<string> params,
 TopicCommand::~TopicCommand() {}
 
 void TopicCommand::checkParams(Client* client, vector<string> params) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     if (params.size() == 0) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "TOPIC"));
         throw ClientException();

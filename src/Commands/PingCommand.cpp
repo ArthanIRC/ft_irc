@@ -1,9 +1,10 @@
 #include "PingCommand.hpp"
 #include "Server.hpp"
-#include <vector>
 
-PingCommand::PingCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::string;
+using std::vector;
+
+PingCommand::PingCommand(string source, vector<string> params, Client* client) {
     checkParams(client, params);
     this->_source = source;
     this->_params = params;
@@ -12,7 +13,7 @@ PingCommand::PingCommand(std::string source, std::vector<std::string> params,
 
 PingCommand::~PingCommand() {}
 
-void PingCommand::checkParams(Client* client, std::vector<std::string> params) {
+void PingCommand::checkParams(Client* client, vector<string> params) {
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PING"));
         throw ClientException();
@@ -20,7 +21,7 @@ void PingCommand::checkParams(Client* client, std::vector<std::string> params) {
 }
 
 void PingCommand::run() {
-    std::string reply =
+    string reply =
         "PONG " + Server::getInstance().getSource() + " " + _params[0];
     reply = Message::create(reply);
     _client->sendMessage(reply);

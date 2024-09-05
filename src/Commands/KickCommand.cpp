@@ -1,7 +1,9 @@
 #include "KickCommand.hpp"
 
-KickCommand::KickCommand(std::string source, std::vector<std::string> params,
-                         Client* client) {
+using std::string;
+using std::vector;
+
+KickCommand::KickCommand(string source, vector<string> params, Client* client) {
     checkParams(client, params);
     this->_source = source;
     this->_params = params;
@@ -10,7 +12,11 @@ KickCommand::KickCommand(std::string source, std::vector<std::string> params,
 
 KickCommand::~KickCommand() {}
 
-void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
+void KickCommand::checkParams(Client* client, vector<string> params) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
     if (params.size() < 2) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "KICK"));
         throw ClientException();
@@ -40,14 +46,14 @@ void KickCommand::checkParams(Client* client, std::vector<std::string> params) {
         throw ClientException();
     }
     this->_targetNickname = params[1];
-    if (params[params.size() - 2].find(',') == std::string::npos) {
+    if (params[params.size() - 2].find(',') == string::npos) {
         this->_comment = params[params.size() - 1];
     } else
         this->_comment = "";
 }
 
 void KickCommand::run() {
-    std::string reply;
+    string reply;
 
     reply = ":" + _client->getSource() + " KICK " + _channel->getName() + " " +
             _targetNickname + " " + _comment;
