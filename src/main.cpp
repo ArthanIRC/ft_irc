@@ -1,7 +1,9 @@
+#include <clocale>
 #include <csignal>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <locale>
 
 #include "Server.hpp"
 
@@ -29,6 +31,8 @@ int main(int ac, char** av) {
     if (register_sigaction(SIGINT, &handle_signint) == -1 ||
         register_sigaction(SIGQUIT, SIG_IGN) == -1)
         return EXIT_FAILURE;
+
+    std::setlocale(LC_ALL, "en_US.UTF-8");
 
     try {
         Server::getInstance().init(ac, av);

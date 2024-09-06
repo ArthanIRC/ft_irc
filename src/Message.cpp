@@ -2,7 +2,6 @@
 #include <cctype>
 #include <cstddef>
 #include <cstdio>
-#include <locale>
 #include <sstream>
 #include <vector>
 
@@ -87,8 +86,6 @@ int Message::parse(string& data, string& source, string& command,
 bool Message::validate(const string& source, const string& command,
                        const vector<string>& params) {
 
-    std::locale loc("en_US.UTF-8");
-
     if (!source.empty()) {
         for (size_t i = 0; i < source.length(); ++i) {
             if (!std::isalnum(source[i]) && source[i] != '-' &&
@@ -111,14 +108,6 @@ bool Message::validate(const string& source, const string& command,
 
     if (params.size() > max_params) {
         return (false);
-    }
-
-    for (size_t i = 0; i < params.size(); ++i) {
-        for (size_t j = 0; j < params[i].length(); ++j) {
-            if (!std::isprint(params[i][j], loc)) {
-                return (false);
-            }
-        }
     }
 
     return (true);
