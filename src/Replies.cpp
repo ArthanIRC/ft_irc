@@ -243,8 +243,9 @@ string Replies::RPL_WHOWASUSER() {
     return Message::create(reply);
 }
 
-string Replies::RPL_ENDOFWHO() {
+string Replies::RPL_ENDOFWHO(Client* client, string& mask) {
     string reply;
+    reply = "315 " + client->getNickname() + " " + mask + " :End of WHO list";
     return Message::create(reply);
 }
 
@@ -372,24 +373,46 @@ string Replies::RPL_VERSION() {
     return Message::create(reply);
 }
 
-string Replies::RPL_WHOREPLY() {
+string Replies::RPL_WHOREPLY(Client* client, Client* target, Channel* channel) {
     string reply;
+    string flags = " ";
+    string chanName = "*";
+
+    if (target->isAway())
+        flags += "G";
+    else
+        flags += "H";
+    if (target->isServerOperator())
+        flags += "*";
+    if (channel) {
+        flags += channel->getPrefix(target);
+        chanName = channel->getName();
+    }
+
+    reply = "352 " + client->getNickname() + " " + chanName + " " +
+            target->getUserName() + " localhost " +
+            Server::getInstance().getSource() + " " + target->getNickname() +
+            flags + " :0 " + target->getRealName();
     return Message::create(reply);
 }
 
 string Replies::RPL_NAMREPLY(Client* client, Channel* channel) {
     string reply;
-    reply = "353 " + client->getNickname() + " = " + channel->getName() + " :" +
-            channel->getPrefix(client) + client->getNickname();
+    reply = "353 " + client->getNickname() + " = " + channel->getName() + " :";
     vector<Client*> clients = channel->getClients();
+
+    if (clients.empty())
+        return "";
     vector<Client*>::const_iterator it = clients.begin();
     string prefix;
+    string spacer;
 
-    while (++it != clients.end()) {
+    for (; it != clients.end(); it++) {
         if ((*it)->isInvisible() && !channel->isInChannel(client))
             continue;
         prefix = channel->getPrefix(*it);
-        reply += " " + prefix + (*it)->getNickname();
+        reply += spacer + prefix + (*it)->getNickname();
+        spacer = " ";
     }
     return Message::create(reply);
 }

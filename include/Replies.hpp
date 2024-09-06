@@ -50,7 +50,7 @@ class Replies : public Message {
     static std::string RPL_WHOISSERVER();
     static std::string RPL_WHOISOPERATOR();
     static std::string RPL_WHOWASUSER();
-    static std::string RPL_ENDOFWHO();
+    static std::string RPL_ENDOFWHO(Client* client, std::string& mask);
     static std::string RPL_WHOISIDLE();
     static std::string RPL_ENDOFWHOIS();
     static std::string RPL_WHOISCHANNELS();
@@ -74,7 +74,8 @@ class Replies : public Message {
     static std::string RPL_EXCEPTLIST();
     static std::string RPL_ENDOFEXCEPTLIST();
     static std::string RPL_VERSION();
-    static std::string RPL_WHOREPLY();
+    static std::string RPL_WHOREPLY(Client* client, Client* target,
+                                    Channel* channel);
     static std::string RPL_NAMREPLY(Client* client, Channel* channel);
     static std::string RPL_LINKS();
     static std::string RPL_ENDOFLINKS();
