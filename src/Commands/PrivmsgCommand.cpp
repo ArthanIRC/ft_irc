@@ -71,7 +71,7 @@ void PrivmsgCommand::sendToClient(string& target) {
         _client->sendMessage(Replies::RPL_AWAY(_client, cli));
 
     string message =
-        ":" + _client->getSource() + " PRIVMSG " + target + " " + _message;
+        ":" + _client->getSource() + " PRIVMSG " + target + " :" + _message;
     cli->sendMessage(Message::create(message));
 }
 

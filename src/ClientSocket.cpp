@@ -13,7 +13,10 @@
 using std::map;
 using std::string;
 
-ClientSocket::ClientSocket(int fd) : Socket() { this->_fd = fd; }
+ClientSocket::ClientSocket(int fd, string ip) : Socket() {
+    this->_fd = fd;
+    this->_ip = ip;
+}
 
 ClientSocket::~ClientSocket() {}
 
@@ -114,6 +117,8 @@ void ClientSocket::removeSelf() {
         std::cerr << e.what() << "\n";
     }
 }
+
+string const& ClientSocket::getIp() const { return this->_ip; }
 
 const char* ClientSocket::SendException::what() const throw() {
     return "Error: Send failed.";

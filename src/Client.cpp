@@ -5,9 +5,9 @@
 using std::map;
 using std::string;
 
-Client::Client(int fd)
-    : _realname(""), _nickname(""), _username(""), _socket(fd), _state(UNKNOWN),
-      _capEndedEarly(false), _invisible(false), _away(false),
+Client::Client(int fd, string ip)
+    : _realname(""), _nickname(""), _username(""), _socket(fd, ip),
+      _state(UNKNOWN), _capEndedEarly(false), _invisible(false), _away(false),
       _awayNotify(false) {}
 
 Client::~Client() {
@@ -26,8 +26,10 @@ string const& Client::getUserName() const { return this->_username; }
 
 string const& Client::getRealName() const { return this->_realname; }
 
+string const& Client::getIp() const { return this->_socket.getIp(); }
+
 string const Client::getSource() const {
-    string source = _nickname + "!" + _username + "@localhost";
+    string source = _nickname + "!" + _username + "@" + _socket.getIp();
     return source;
 }
 

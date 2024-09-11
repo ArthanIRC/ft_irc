@@ -32,12 +32,13 @@ class Client {
     std::string _awayMsg;
 
   public:
-    Client(int fd);
+    Client(int fd, std::string ip);
     ~Client();
 
     std::string const& getNickname() const;
     std::string const& getUserName() const;
     std::string const& getRealName() const;
+    std::string const& getIp() const;
     std::string const getSource() const;
     std::string getModes();
     std::string const& getAwayMsg() const;
