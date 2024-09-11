@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <cerrno>
 #include <cstddef>
 #include <cstring>
@@ -53,7 +54,10 @@ void ServerSocket::listen() {
 
 void ServerSocket::onPoll(uint32_t events) {
     (void)events;
-    int clientFd = accept(_fd, NULL, NULL);
+    struct sockaddr_in client_addr;
+    socklen_t addr_size = sizeof client_addr;
+
+    int clientFd = accept(_fd, (struct sockaddr*)&client_addr, &addr_size);
     if (clientFd < 0) {
         if ((errno == EAGAIN) || (errno == EWOULDBLOCK))
             return;
@@ -63,7 +67,9 @@ void ServerSocket::onPoll(uint32_t events) {
     if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
         throw ServerSocket::ClientNonBlockException();
 
-    Client* c = new Client(clientFd);
+    std::string ip = inet_ntoa(client_addr.sin_addr);
+
+    Client* c = new Client(clientFd, ip);
     Server::getInstance().addClient(c);
     std::cout << "Client added\n";
 }
