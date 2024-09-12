@@ -2,6 +2,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Replies.hpp"
+#include "Server.hpp"
 
 using std::map;
 using std::string;
@@ -15,7 +16,7 @@ NamesCommand::NamesCommand(string source, vector<string> params,
     }
 
     if (params.size() > 0) {
-        this->_params[0] = params[0];
+        this->_params[0] = toLowerCase(params[0]);
     } else {
         this->_params.push_back("");
     }

@@ -7,6 +7,7 @@
 #include "JoinCommand.hpp"
 #include "PartCommand.hpp"
 #include "Replies.hpp"
+#include "Server.hpp"
 
 using std::map;
 using std::string;
@@ -45,6 +46,7 @@ void JoinCommand::parseParams() {
     size_t i = 0;
 
     while (std::getline(iss2, chanName, ',')) {
+        chanName = toLowerCase(chanName);
         try {
             _channels.push_back(Server::getInstance().findChannel(chanName));
         } catch (const Server::ChannelNotFoundException&) {

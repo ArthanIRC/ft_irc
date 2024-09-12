@@ -1,5 +1,6 @@
 #include "PartCommand.hpp"
 #include "Replies.hpp"
+#include "Server.hpp"
 
 using std::string;
 using std::vector;
@@ -19,6 +20,7 @@ void PartCommand::checkParams(Client* client, vector<string> params) {
         client->sendMessage(Replies::ERR_NOTREGISTERED());
         throw ClientException();
     }
+
     if (params.size() < 1) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PART"));
         throw ClientException();
@@ -31,6 +33,7 @@ void PartCommand::parseParams(Client* client, vector<string> params) {
     this->_reason = "";
 
     while (std::getline(iss, chanName, ',')) {
+        chanName = toLowerCase(chanName);
         try {
             _channels.push_back(Server::getInstance().findChannel(chanName));
         } catch (const Server::ChannelNotFoundException&) {
@@ -38,6 +41,7 @@ void PartCommand::parseParams(Client* client, vector<string> params) {
             continue;
         }
     }
+
     if (params.size() > 1) {
         _reason = params[1];
     }

@@ -11,6 +11,7 @@ MotdCommand::MotdCommand(string source, vector<string> params, Client* client) {
         client->sendMessage(Replies::ERR_NOTREGISTERED());
         throw ClientException();
     }
+
     this->_params = params;
     this->_source = source;
     this->_client = client;

@@ -16,6 +16,8 @@
 #include "Epoll.hpp"
 #include "ServerSocket.hpp"
 
+std::string toLowerCase(std::string s);
+
 class Server {
   private:
     bool _running;

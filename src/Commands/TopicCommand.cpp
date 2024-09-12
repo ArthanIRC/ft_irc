@@ -20,16 +20,19 @@ void TopicCommand::checkParams(Client* client, vector<string> params) {
         client->sendMessage(Replies::ERR_NOTREGISTERED());
         throw ClientException();
     }
+
     if (params.size() == 0) {
         client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "TOPIC"));
         throw ClientException();
     }
 
     Channel* chan;
+    string chanName = toLowerCase(params[0]);
+
     try {
-        chan = Server::getInstance().findChannel(params[0]);
+        chan = Server::getInstance().findChannel(chanName);
     } catch (const Server::ChannelNotFoundException&) {
-        client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, params[0]));
+        client->sendMessage(Replies::ERR_NOSUCHCHANNEL(client, chanName));
         throw ClientException();
     }
 
