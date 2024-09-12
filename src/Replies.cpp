@@ -849,7 +849,7 @@ string Replies::ERR_INVALIDBOTKEY(Client* client) {
 
 string Replies::RPL_YOUREPRIVBOT(Client* client) {
     string reply;
-    reply = "910 " + client->getNickname() + " :You are now an privilegied bot";
+    reply = "910 " + client->getNickname() + " :You are now a privileged bot";
     return Message::create(reply);
 }
 
