@@ -16,7 +16,7 @@ Message::~Message() {}
 bool Message::verify(string& data) {
     string source, command;
     vector<string> params;
-    int res = Message::parse(data, source, command, params);
+    int res = Message::parse(data, source, command, params, false);
 
     switch (res) {
     case (0):
@@ -42,7 +42,10 @@ bool Message::verify(string& data) {
 }
 
 int Message::parse(string& data, string& source, string& command,
-                   vector<string>& params) {
+                   vector<string>& params, bool addTrailing) {
+    if (addTrailing == true) {
+        data += "\r\n";
+    }
     if (data.length() < 2 || data.substr(data.length() - 2) != "\r\n") {
         return (err_trailing);
     }

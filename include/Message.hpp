@@ -11,7 +11,8 @@ class Message {
 
   protected:
     static int parse(std::string& data, std::string& source,
-                     std::string& command, std::vector<std::string>& params);
+                     std::string& command, std::vector<std::string>& params,
+                     bool addTrailing);
     static std::vector<std::string> split(std::string& str, char delim);
 
     static const unsigned int max_params = 15;
