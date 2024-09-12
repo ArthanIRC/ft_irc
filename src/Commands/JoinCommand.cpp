@@ -60,6 +60,7 @@ void JoinCommand::parseParams() {
             } catch (Channel::WrongSyntaxChannelName&) {
                 break;
             }
+            Server::getInstance().notifyPrivBot(chanName);
         }
         i++;
     }
@@ -117,7 +118,7 @@ void JoinCommand::run() {
     parseParams();
 
     for (size_t i = 0; i < _channels.size(); i++) {
-        if (_channels[i]->isKeyed()) {
+        if (_channels[i]->isKeyed() && !_channels[i]->isOperator(_client)) {
             if (i >= _keys.size() || _keys[i] != _channels[i]->getKey()) {
                 _client->sendMessage(
                     Replies::ERR_BADCHANNELKEY(_client, _channels[i]));

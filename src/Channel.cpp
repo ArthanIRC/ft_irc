@@ -159,11 +159,11 @@ bool Channel::isInChannel(Client* client) const {
 }
 
 bool Channel::isInvited(Client* client) const {
-    return isOnList(_inviteList, client);
+    return isOnList(_inviteList, client) || client->isServerOperator();
 }
 
 bool Channel::isBanned(Client* client) const {
-    return isOnList(_banList, client);
+    return isOnList(_banList, client) && !client->isServerOperator();
 }
 
 bool Channel::isOperator(Client* client) const {

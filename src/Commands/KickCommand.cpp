@@ -29,7 +29,7 @@ void KickCommand::checkParams(Client* client, vector<string> params) {
     }
 
     Channel* chan;
-    this->_targetNickname = toLowerCase(params[1]);
+    string targetNickName = toLowerCase(params[1]);
     string chanName = toLowerCase(params[0]);
 
     try {
@@ -46,14 +46,21 @@ void KickCommand::checkParams(Client* client, vector<string> params) {
         throw ClientException();
     }
 
-    if (!chan->isOperator(client)) {
+    try {
+        this->_target = Server::getInstance().findClient(targetNickName);
+    } catch (Server::ClientNotFoundException&) {
+        _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, targetNickName));
+        return;
+    }
+
+    if (!chan->isOperator(client) || chan->isOperator(_target)) {
         client->sendMessage(Replies::ERR_CHANOPRIVSNEEDED(client, chan));
         throw ClientException();
     }
 
-    if (!chan->isInChannel(_targetNickname)) {
+    if (!chan->isInChannel(_target)) {
         client->sendMessage(
-            Replies::ERR_USERNOTINCHANNEL(_client, _targetNickname, _channel));
+            Replies::ERR_USERNOTINCHANNEL(_client, targetNickName, _channel));
         throw ClientException();
     }
 
@@ -66,21 +73,10 @@ void KickCommand::checkParams(Client* client, vector<string> params) {
 void KickCommand::run() {
     string reply;
     reply = ":" + _client->getSource() + " KICK " + _channel->getName() + " " +
-            _targetNickname + " " + _comment;
+            _target->getNickname() + " " + _comment;
     Message::create(reply);
-    Client* target;
 
-    try {
-        target = Server::getInstance().findClient(_targetNickname);
-    } catch (Server::ClientNotFoundException&) {
-        _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, _targetNickname));
-        return;
-    }
-
-    _channel->removeClient(target);
-    if (_channel->isOperator(target))
-        _channel->removeOperator(target);
-
-    target->sendMessage(reply);
+    _channel->removeClient(_target);
+    _target->sendMessage(reply);
     Server::getInstance().sendMessage(_channel, reply, NULL);
 }

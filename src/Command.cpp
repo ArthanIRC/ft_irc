@@ -1,6 +1,7 @@
 #include <string>
 
 #include "AwayCommand.hpp"
+#include "BotCommand.hpp"
 #include "CapCommand.hpp"
 #include "Command.hpp"
 #include "InviteCommand.hpp"
@@ -32,6 +33,8 @@ Command* Command::create(string& data, Client* client) {
 
     if (command == "AWAY")
         return new AwayCommand(source, params, client);
+    else if (command == "BOT")
+        return new BotCommand(source, params, client);
     else if (command == "CAP")
         return new CapCommand(source, params, client);
     else if (command == "INVITE")
