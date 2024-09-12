@@ -28,8 +28,7 @@ Command* Command::create(string& data, Client* client) {
     Message::verify(data);
     string source, command;
     vector<string> params;
-    data += "\r\n"; // ULTRA TMP MAIS POUR FAIRE MARCHER 2eme PARSING
-    Message::parse(data, source, command, params);
+    Message::parse(data, source, command, params, true);
 
     if (command == "AWAY")
         return new AwayCommand(source, params, client);
