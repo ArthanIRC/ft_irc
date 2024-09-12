@@ -1,5 +1,6 @@
 #include "PrivmsgCommand.hpp"
 #include "Channel.hpp"
+#include "Server.hpp"
 
 using std::string;
 using std::vector;
@@ -18,8 +19,8 @@ PrivmsgCommand::PrivmsgCommand(string source, vector<string> params,
         client->sendMessage(Replies::ERR_NOTEXTTOSEND(client));
         throw ClientException();
     }
-
-    this->_targets = split(params[0], ',');
+    string lowered = toLowerCase(params[0]);
+    this->_targets = split(lowered, ',');
     this->_message = params[1];
     this->_source = source;
     this->_params = params;

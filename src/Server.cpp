@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cctype>
 #include <cstdlib>
 #include <iostream>
 #include <set>
@@ -259,6 +260,11 @@ void Server::sendMessageIfAway(map<string, Channel*> channels, string message,
         if ((*it)->isAwayNotify())
             (*it)->sendMessage(message);
     }
+}
+
+string toLowerCase(string s) {
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    return s;
 }
 
 const char* Server::InvalidNumberOfParametersException::what() const throw() {

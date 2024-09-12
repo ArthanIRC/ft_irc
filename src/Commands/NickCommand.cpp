@@ -3,6 +3,7 @@
 
 #include "Client.hpp"
 #include "NickCommand.hpp"
+#include "Server.hpp"
 
 using std::string;
 using std::vector;
@@ -24,7 +25,7 @@ NickCommand::NickCommand(string source, vector<string> params, Client* client) {
         throw RegFailedException();
     }
 
-    string nick = params[0];
+    string nick = toLowerCase(params[0]);
 
     if (find_if(nick.begin(), nick.end(), isInvalidNick) != nick.end()) {
         client->sendMessage(Replies::ERR_ERRONEUSNICKNAME(client, nick));

@@ -21,7 +21,7 @@ ModeCommand::ModeCommand(string source, vector<string> params, Client* client) {
         throw ClientException();
     }
 
-    this->_target = params[0];
+    this->_target = toLowerCase(params[0]);
 
     if (_target[0] == '#') {
         this->_isChan = true;
@@ -79,7 +79,7 @@ void ModeCommand::invisibleMode(bool oper, size_t& p) {
 }
 
 void ModeCommand::banMode(bool oper, size_t& p) {
-    string param = retrieveParam(_params, p);
+    string param = toLowerCase(retrieveParam(_params, p));
     if (param.empty()) {
         vector<Client*> banlist = _channel->getBanList();
         for (vector<Client*>::iterator it = banlist.begin();
@@ -164,7 +164,7 @@ void ModeCommand::protectedTopicMode(bool oper, size_t& p) {
 }
 
 void ModeCommand::operatorMode(bool oper, size_t& p) {
-    string param = retrieveParam(_params, p);
+    string param = toLowerCase(retrieveParam(_params, p));
     if (param.empty())
         return;
     p++;
@@ -187,7 +187,7 @@ void ModeCommand::operatorMode(bool oper, size_t& p) {
 }
 
 void ModeCommand::voiceMode(bool oper, size_t& p) {
-    string param = retrieveParam(_params, p);
+    string param = toLowerCase(retrieveParam(_params, p));
     if (param.empty())
         return;
     p++;
