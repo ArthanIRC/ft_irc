@@ -29,6 +29,7 @@ objs
 
 # Executables
 ircserv
+ircbot
 *.exe
 *.out
 *.app
