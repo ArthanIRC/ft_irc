@@ -53,6 +53,8 @@ bool Client::isAwayNotify() { return this->_awayNotify; }
 
 bool Client::isInvisible() { return this->_invisible; }
 
+bool Client::isBot() { return this->_bot; }
+
 void Client::setCapEndedEarly() { this->_capEndedEarly = true; }
 
 void Client::setAway(bool state, string message) {
@@ -63,6 +65,8 @@ void Client::setAway(bool state, string message) {
 void Client::setAwayNotify(bool state) { this->_awayNotify = state; }
 
 void Client::setInvisible(bool state) { this->_invisible = state; }
+
+void Client::setBot(bool state) { this->_bot = state; }
 
 void Client::setNickname(string& nick) { this->_nickname = nick; }
 
@@ -81,6 +85,8 @@ string Client::getModes() {
         modes += "o";
     if (isInvisible())
         modes += "i";
+    if (isBot())
+        modes += "B";
     return modes;
 }
 

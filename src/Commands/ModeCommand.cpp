@@ -103,6 +103,12 @@ void ModeCommand::banMode(bool oper, size_t& p) {
     addResult(oper, "b", param);
 }
 
+void ModeCommand::botMode(bool oper, size_t& p) {
+    _client->setBot(oper);
+    (void)p;
+    addResult(oper, "B", "");
+}
+
 void ModeCommand::limitMode(bool oper, size_t& p) {
     if (!oper) {
         _channel->setMaxClients(0);
@@ -266,6 +272,9 @@ void ModeCommand::executeMode() {
 
     if (unknownFlag)
         _client->sendMessage(Replies::ERR_UMODEUNKNOWNFLAG(_client));
+
+    if (_modeResult.empty())
+        return;
 
     string message = ":" + _client->getNickname() + " MODE " + _params[0];
     message += " " + _modeResult + _paramResult;

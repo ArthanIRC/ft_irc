@@ -382,6 +382,8 @@ string Replies::RPL_WHOREPLY(Client* client, Client* target, Channel* channel) {
         flags += "G";
     else
         flags += "H";
+    if (target->isBot())
+        flags += "B";
     if (target->isServerOperator())
         flags += "*";
     if (channel) {
@@ -833,8 +835,27 @@ string Replies::ERR_REGFAILED() {
     return Message::create(reply);
 }
 
-std::string Replies::ERR_QUIT() {
+string Replies::ERR_QUIT() {
     std::string reply;
     reply = "ERROR :No hard feelings, goodbye.";
+    return Message::create(reply);
+}
+
+string Replies::ERR_INVALIDBOTKEY(Client* client) {
+    string reply;
+    reply = "909 " + client->getNickname() + " :Bot key is invalid";
+    return Message::create(reply);
+}
+
+string Replies::RPL_YOUREPRIVBOT(Client* client) {
+    string reply;
+    reply = "910 " + client->getNickname() + " :You are now a privileged bot";
+    return Message::create(reply);
+}
+
+string Replies::RPL_NEWCHAN(Client* client, string chanName) {
+    string reply;
+    reply =
+        "911 " + client->getNickname() + " " + chanName + " :has been created";
     return Message::create(reply);
 }

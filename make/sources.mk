@@ -10,6 +10,7 @@ SOURCES += ./src/Server.cpp
 SOURCES += ./src/ServerSocket.cpp
 SOURCES += ./src/Socket.cpp
 SOURCES += ./src/Commands/AwayCommand.cpp
+SOURCES += ./src/Commands/BotCommand.cpp
 SOURCES += ./src/Commands/CapCommand.cpp
 SOURCES += ./src/Commands/InviteCommand.cpp
 SOURCES += ./src/Commands/JoinCommand.cpp

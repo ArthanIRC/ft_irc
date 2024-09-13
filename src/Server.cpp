@@ -6,6 +6,7 @@
 
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Replies.hpp"
 #include "Server.hpp"
 #include "ServerSocket.hpp"
 
@@ -25,11 +26,11 @@ static const string channelModes = "biklmntov";
 static const string version = "1.0.0";
 static const string creationDate = "27/07/2024";
 static const string rplSupport1 =
-    "AWAYLEN=255 CASEMAPPING=ascii CHANLIMIT=#: CHANMODES=b,k,l,imnt "
+    "AWAYLEN=255 BOT=B CASEMAPPING=ascii CHANLIMIT=#: CHANMODES=b,k,l,imnt "
     "CHANNELLEN=30 CHANTYPES=# "
-    "ELIST= HOSTLEN=64 KICKLEN=255 MAXLIST=b:20 NICKLEN=30 PREFIX=(ov)@+ "
-    "STATUSMSG=";
-static const string rplSupport2 = "TOPICLEN=307 USERLEN=18";
+    "ELIST= HOSTLEN=64 KICKLEN=255 MAXLIST=b:20 NICKLEN=30 PREFIX=(ov)@+ ";
+static const string rplSupport2 = "STATUSMSG= TOPICLEN=307 USERLEN=18";
+static const string botKey = "#WM5dal&wGPoVR";
 
 Server::Server() {}
 
@@ -206,6 +207,8 @@ string Server::getRplSupport1() const { return rplSupport1; }
 
 string Server::getRplSupport2() const { return rplSupport2; }
 
+string Server::getBotKey() const { return botKey; }
+
 size_t Server::getMaxClients() const { return _maxClients; }
 
 bool Server::isRunning() const { return this->_running; }
@@ -259,6 +262,14 @@ void Server::sendMessageIfAway(map<string, Channel*> channels, string message,
          it++) {
         if ((*it)->isAwayNotify())
             (*it)->sendMessage(message);
+    }
+}
+
+void Server::notifyPrivBot(string chanName) {
+    for (vector<Client*>::iterator it = _clients.begin(); it != _clients.end();
+         it++) {
+        if ((*it)->isServerOperator() && (*it)->isBot())
+            (*it)->sendMessage(Replies::RPL_NEWCHAN(*it, chanName));
     }
 }
 

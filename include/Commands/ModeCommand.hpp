@@ -18,6 +18,7 @@ class ModeCommand : public Command {
     static modeMap initMap() {
         modeMap m;
         m['b'] = &ModeCommand::banMode;
+        m['B'] = &ModeCommand::botMode;
         m['l'] = &ModeCommand::limitMode;
         m['i'] = &ModeCommand::iModeDispatcher;
         m['k'] = &ModeCommand::keyMode;
@@ -34,6 +35,7 @@ class ModeCommand : public Command {
     void executeMode();
     void invisibleMode(bool oper, size_t& p);
     void banMode(bool oper, size_t& p);
+    void botMode(bool oper, size_t& p);
     void limitMode(bool oper, size_t& p);
     void inviteMode(bool oper, size_t& p);
     void keyMode(bool oper, size_t& p);

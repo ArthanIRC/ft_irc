@@ -66,6 +66,7 @@ class Server {
     std::string getChannelModes() const;
     std::string getRplSupport1() const;
     std::string getRplSupport2() const;
+    std::string getBotKey() const;
     size_t getMaxClients() const;
     std::set<Client*> getClientsSet(std::map<std::string, Channel*> channels,
                                     Client* sender);
@@ -76,6 +77,7 @@ class Server {
                            Client* sender);
     void sendMessageIfAway(std::map<std::string, Channel*> channels,
                            std::string message, Client* sender);
+    void notifyPrivBot(std::string chanName);
 
     static Server& getInstance();
 

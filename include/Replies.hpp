@@ -156,4 +156,7 @@ class Replies : public Message {
     static std::string RPL_SASLMECHS();
     static std::string ERR_REGFAILED();
     static std::string ERR_QUIT();
+    static std::string ERR_INVALIDBOTKEY(Client* client);
+    static std::string RPL_YOUREPRIVBOT(Client* client);
+    static std::string RPL_NEWCHAN(Client* client, std::string chanName);
 };
