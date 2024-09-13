@@ -29,3 +29,6 @@ SOURCES += ./src/Commands/QuitCommand.cpp
 SOURCES += ./src/Commands/TopicCommand.cpp
 SOURCES += ./src/Commands/UserCommand.cpp
 SOURCES += ./src/Commands/WhoCommand.cpp
+SOURCES_2 += ./bot/src/Bot.cpp
+SOURCES_2 += ./bot/src/BotSocket.cpp
+SOURCES_2 += ./bot/src/main.cpp
