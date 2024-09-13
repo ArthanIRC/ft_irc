@@ -101,7 +101,7 @@ void ClientSocket::executeCommand(string data, Client* client) {
 
 void ClientSocket::sendMessage(string message) {
     if (send(_fd, message.c_str(), message.size(), MSG_NOSIGNAL) == -1)
-        throw SendException();
+        throw Socket::SendException();
 }
 
 void ClientSocket::removeSelf() {
@@ -119,7 +119,3 @@ void ClientSocket::removeSelf() {
 }
 
 string const& ClientSocket::getIp() const { return this->_ip; }
-
-const char* ClientSocket::SendException::what() const throw() {
-    return "Error: Send failed.";
-}

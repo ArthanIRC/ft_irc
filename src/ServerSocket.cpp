@@ -26,12 +26,12 @@ void ServerSocket::init(const char* port) {
     hints.ai_flags = AI_PASSIVE;
 
     if ((rv = getaddrinfo(NULL, port, &hints, &ai)) != 0)
-        throw ServerSocket::AddrInfoException();
+        throw Socket::AddrInfoException();
 
     this->_fd = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
     if (_fd < 0) {
         freeaddrinfo(ai);
-        throw ServerSocket::SocketCreationException();
+        throw Socket::SocketCreationException();
     }
 
     this->_ai = ai;
@@ -43,13 +43,13 @@ void ServerSocket::listen() {
     setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
     if (bind(_fd, _ai->ai_addr, _ai->ai_addrlen) < 0)
-        throw ServerSocket::BindFailedException();
+        throw Socket::BindFailedException();
 
     if (::listen(_fd, 10) == -1)
-        throw ServerSocket::ListenFailedException();
+        throw Socket::ListenFailedException();
 
     if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
-        throw ServerSocket::ServerNonBlockException();
+        throw Socket::ServerNonBlockException();
 }
 
 void ServerSocket::onPoll(uint32_t events) {
@@ -59,9 +59,7 @@ void ServerSocket::onPoll(uint32_t events) {
 
     int clientFd = accept(_fd, (struct sockaddr*)&client_addr, &addr_size);
     if (clientFd < 0) {
-        if ((errno == EAGAIN) || (errno == EWOULDBLOCK))
-            return;
-        throw ServerSocket::AcceptFailedException();
+        throw Socket::AcceptFailedException();
     }
 
     if (fcntl(clientFd, F_SETFL, O_NONBLOCK) < 0)
@@ -77,31 +75,3 @@ void ServerSocket::onPoll(uint32_t events) {
 bool ServerSocket::isRegistered() { return this->_registered; }
 
 void ServerSocket::setRegistered() { _registered = true; }
-
-const char* ServerSocket::AddrInfoException::what() const throw() {
-    return "Error: Obtention of the local ip failed";
-}
-
-const char* ServerSocket::SocketCreationException::what() const throw() {
-    return "Error: Creation of the local socket failed";
-}
-
-const char* ServerSocket::BindFailedException::what() const throw() {
-    return "Error: Failed to bind the socket";
-}
-
-const char* ServerSocket::ListenFailedException::what() const throw() {
-    return "Error: Failed to listen to the socket";
-}
-
-const char* ServerSocket::ServerNonBlockException::what() const throw() {
-    return "Error: Failed to set the server socket to nonblocking";
-};
-
-const char* ServerSocket::AcceptFailedException::what() const throw() {
-    return "Warning: Failed to accept a client socket";
-}
-
-const char* ServerSocket::ClientNonBlockException::what() const throw() {
-    return "Warning: Failed to set the client socket to nonblocking";
-}
