@@ -34,12 +34,11 @@ class Server {
     Server(Server const&);
     void operator=(Server const&);
 
-    static std::string parsePort(const char* strp);
-    static std::string parsePassword(std::string pass);
-
   public:
     ~Server();
 
+    static std::string parsePort(const char* strp);
+    static std::string parsePassword(std::string pass);
     void init(int ac, char** data);
     void run();
     void stop();

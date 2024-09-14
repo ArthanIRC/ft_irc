@@ -15,6 +15,7 @@
 #* ************************************************************************** *#
 
 TARGET := ircserv
+TARGET_2 := ircbot
 
 #* ************************************************************************** *#
 #* *                             COMPILATION                                * *#
@@ -28,15 +29,16 @@ STD := -std=c++98
 #* *                              INCLUDES                                  * *#
 #* ************************************************************************** *#
 
-INCLUDES := include include/Commands
+INCLUDES := include include/Commands bot/include
 INCLUDES_FLAGS += $(addprefix -I, $(INCLUDES))
 
 #* ************************************************************************** *#
 #* *                               SOURCES                                  * *#
 #* ************************************************************************** *#
 
+SRCDIR := ./src/
+SRCDIR_2 := ./bot/src/
 -include make/sources.mk
-SRCDIR := src
 
 #* ************************************************************************** *#
 #* *                              OBJECTS                                   * *#
@@ -44,12 +46,14 @@ SRCDIR := src
 
 OBJDIR := obj
 OBJECTS := ${SOURCES:%.cpp=${OBJDIR}/%.o}
+OBJECTS_2 := ${SOURCES_2:%.cpp=${OBJDIR}/%.o}
 
 #* ************************************************************************** *#
 #* *                            DEPENDENCIES                                * *#
 #* ************************************************************************** *#
 
 DEPENDENCIES := $(OBJECTS:.o=.d)
+DEPENDENCIES_2 := $(OBJECTS_2:.o=.d)
 
 #* ************************************************************************** *#
 #* *                          TEXT CONSTANTS                                * *#
@@ -101,13 +105,13 @@ endef
 #* *                          MAKEFILE RULES                                * *#
 #* ************************************************************************** *#
 
-all: $(TARGET)
+all: $(TARGET) $(TARGET_2)
 
 # -------------------- #
 # Create object files. #
 # -------------------- #
 
-$(OBJECTS): $(OBJDIR)/%.o: %.cpp
+$(OBJECTS) $(OBJECTS_2): $(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(@D)
 	@$(call compile_message)
 	@$(CC) $(CPPFLAGS) $(STD) -MMD -MF $(@:.o=.d) $(INCLUDES_FLAGS) -c $< -o $@
@@ -124,6 +128,14 @@ $(TARGET): $(OBJECTS)
 	@echo ""
 	@$(call success_message)
 
+-include $(DEPENDENCIES_2)
+ircbot: $(OBJECTS) $(OBJECTS_2)
+	@echo ""
+	@$(call linking_message)
+	@$(CC) $(CPPFLAGS) $(STD) $(INCLUDES_FLAGS) -o $@ $(filter-out obj/./src/main.o,$(OBJECTS)) $(OBJECTS_2)
+	@echo ""
+	@$(call success_message)
+
 # --------------------- #
 # Delete compiled data. #
 # --------------------- #
@@ -134,6 +146,7 @@ clean:
 
 fclean: clean
 	@rm -rf $(TARGET)
+	@rm -rf $(TARGET_2)
 	@printf "$(YELLOW)Deleting $(CYAN)$(NAME) executable $(YELLOW)...$(RESET_COLOR)\n"
 
 # ------------------------------- #
@@ -142,7 +155,9 @@ fclean: clean
 
 gmk:
 	if [ -d make ];then echo ok;else mkdir make;fi
-	@find ./src/ -name '*.cpp' -printf "%d%p\n" | sort -n | sed 's/^[[:digit:]]/SOURCES += /' > make/sources.mk
+	@find $(SRCDIR) -name '*.cpp' -printf "%d%p\n" | sort -n | sed 's/^[[:digit:]]/SOURCES += /' > make/sources.mk
+	@find $(SRCDIR_2) -name '*.cpp' -printf "%d%p\n" | sort -n | sed 's/^[[:digit:]]/SOURCES_2 += /' >> make/sources.mk
+
 
 # --------------------- #
 #      Recompile.       #

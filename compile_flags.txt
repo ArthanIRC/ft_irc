@@ -4,3 +4,4 @@
 -std=c++98
 -Iinclude
 -Iinclude/Commands
+-Ibot/include
