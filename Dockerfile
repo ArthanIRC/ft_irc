@@ -5,7 +5,7 @@ COPY /src ./src/
 COPY /include ./include/
 COPY /make ./make/
 COPY Makefile .
-RUN make
+RUN make ircserv
 
 FROM alpine:3.20 AS runner
 RUN apk update && apk add --no-cache libstdc++
