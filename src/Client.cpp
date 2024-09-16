@@ -8,7 +8,7 @@ using std::string;
 Client::Client(int fd, string ip)
     : _realname(""), _nickname(""), _username(""), _socket(fd, ip),
       _state(UNKNOWN), _capEndedEarly(false), _invisible(false), _away(false),
-      _awayNotify(false) {}
+      _awayNotify(false), _bot(false) {}
 
 Client::~Client() {
     map<string, Channel*> channels = getChannels();
