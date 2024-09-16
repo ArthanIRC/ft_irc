@@ -33,39 +33,6 @@ void JoinCommand::checkParams(Client* client, vector<string> params) {
     }
 }
 
-void JoinCommand::parseParams() {
-    if (_params.size() > 1) {
-        std::istringstream iss(_params[1]);
-        string buff;
-        while (std::getline(iss, buff, ','))
-            _keys.push_back(buff);
-    }
-
-    std::istringstream iss2(_params[0]);
-    string chanName;
-    size_t i = 0;
-
-    while (std::getline(iss2, chanName, ',')) {
-        chanName = toLowerCase(chanName);
-        try {
-            _channels.push_back(Server::getInstance().findChannel(chanName));
-        } catch (const Server::ChannelNotFoundException&) {
-            try {
-                if (!_keys.empty() && i < _keys.size())
-                    _channels.push_back(
-                        new Channel(_client, chanName, _keys[i]));
-                else
-                    _channels.push_back(new Channel(_client, chanName));
-                Server::getInstance().addChannel(_channels[i]);
-            } catch (Channel::WrongSyntaxChannelName&) {
-                break;
-            }
-            Server::getInstance().notifyPrivBot(chanName);
-        }
-        i++;
-    }
-}
-
 void JoinCommand::joinAndReplies(Channel* channel) {
     try {
         channel->addClient(_client);
@@ -108,6 +75,39 @@ void JoinCommand::leaveChannels() {
     }
     PartCommand p("", chanParams, _client);
     p.run();
+}
+
+void JoinCommand::parseParams() {
+    if (_params.size() > 1) {
+        std::istringstream iss(_params[1]);
+        string buff;
+        while (std::getline(iss, buff, ','))
+            _keys.push_back(buff);
+    }
+
+    std::istringstream iss2(_params[0]);
+    string chanName;
+    size_t i = 0;
+
+    while (std::getline(iss2, chanName, ',')) {
+        chanName = toLowerCase(chanName);
+        try {
+            _channels.push_back(Server::getInstance().findChannel(chanName));
+        } catch (const Server::ChannelNotFoundException&) {
+            try {
+                if (!_keys.empty() && i < _keys.size())
+                    _channels.push_back(
+                        new Channel(_client, chanName, _keys[i]));
+                else
+                    _channels.push_back(new Channel(_client, chanName));
+                Server::getInstance().addChannel(_channels[i]);
+            } catch (Channel::WrongSyntaxChannelName&) {
+                break;
+            }
+            Server::getInstance().notifyPrivBot(chanName);
+        }
+        i++;
+    }
 }
 
 void JoinCommand::run() {

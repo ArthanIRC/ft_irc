@@ -2,6 +2,7 @@
 #include "Client.hpp"
 #include "LusersCommand.hpp"
 #include "MotdCommand.hpp"
+#include "Replies.hpp"
 
 using std::string;
 using std::vector;

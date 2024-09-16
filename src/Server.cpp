@@ -22,7 +22,7 @@ static const string networkName = "ArThAn";
 static const string serverName = "JUSTICE";
 static const string source = "arthan@justice.42.fr";
 static const string userModes = "ior";
-static const string channelModes = "biklmntov";
+static const string channelModes = "biklmnotv";
 static const string version = "1.0.0";
 static const string creationDate = "27/07/2024";
 static const string rplSupport1 =
@@ -56,6 +56,26 @@ Server::~Server() {
         }
 }
 
+string Server::parsePassword(std::string pass) {
+    if (pass.empty()) {
+        throw Server::EmptyPasswordException();
+    }
+    for (size_t i = 0; i < pass.size(); ++i) {
+        if (!isalnum(pass[i])) {
+            throw Server::NonAlnumPasswordException();
+        }
+    }
+    return pass;
+}
+
+string Server::parsePort(const char* strp) {
+    int port = strtol(strp, NULL, 10);
+
+    if (port < 1 || port > 65535)
+        throw Server::InvalidPortException();
+    return strp;
+}
+
 void Server::init(int ac, char** data) {
     string port;
     string password;
@@ -81,31 +101,6 @@ void Server::init(int ac, char** data) {
     this->_running = true;
 }
 
-Server& Server::getInstance() {
-    static Server instance;
-    return instance;
-}
-
-string Server::parsePort(const char* strp) {
-    int port = strtol(strp, NULL, 10);
-
-    if (port < 1 || port > 65535)
-        throw Server::InvalidPortException();
-    return strp;
-}
-
-string Server::parsePassword(std::string pass) {
-    if (pass.empty()) {
-        throw Server::EmptyPasswordException();
-    }
-    for (size_t i = 0; i < pass.size(); ++i) {
-        if (!isalnum(pass[i])) {
-            throw Server::NonAlnumPasswordException();
-        }
-    }
-    return pass;
-}
-
 void Server::run() {
     _socket.listen();
     _epoll.subscribe(_socket.getFd(), _socket);
@@ -121,6 +116,8 @@ void Server::stop() {
     _running = false;
     std::cout << "\nShutting down...\n";
 }
+
+bool Server::isRunning() const { return this->_running; }
 
 void Server::addClient(Client* c) {
     _clients.push_back(c);
@@ -175,43 +172,13 @@ void Server::removeClient(Client* client) {
 
 void Server::removeClient(int fd) { removeClient(findClient(fd)); }
 
-std::string Server::getSource() { return source; }
-
-vector<Client*> Server::getClients() { return this->_clients; }
-
 map<std::string, Channel*> Server::getChannels() { return this->_channels; }
 
 map<std::string, std::string> Server::getOperators() {
     return this->_operators;
 }
 
-Epoll& Server::getEpoll() { return this->_epoll; }
-
-string Server::getPassword() const { return this->_password; }
-
-string Server::getMotd() const { return motd; }
-
-string Server::getNetworkName() const { return networkName; }
-
-string Server::getServerName() const { return serverName; }
-
-string Server::getVersion() const { return version; }
-
-string Server::getCreationDate() const { return creationDate; }
-
-string Server::getUserModes() const { return userModes; }
-
-string Server::getChannelModes() const { return channelModes; }
-
-string Server::getRplSupport1() const { return rplSupport1; }
-
-string Server::getRplSupport2() const { return rplSupport2; }
-
-string Server::getBotKey() const { return botKey; }
-
-size_t Server::getMaxClients() const { return _maxClients; }
-
-bool Server::isRunning() const { return this->_running; }
+vector<Client*> Server::getClients() { return this->_clients; }
 
 set<Client*> Server::getClientsSet(map<string, Channel*> channels,
                                    Client* sender) {
@@ -228,6 +195,34 @@ set<Client*> Server::getClientsSet(map<string, Channel*> channels,
 
     return clients;
 }
+
+string Server::getBotKey() const { return botKey; }
+
+string Server::getChannelModes() const { return channelModes; }
+
+string Server::getCreationDate() const { return creationDate; }
+
+string Server::getMotd() const { return motd; }
+
+string Server::getNetworkName() const { return networkName; }
+
+string Server::getPassword() const { return this->_password; }
+
+string Server::getRplSupport1() const { return rplSupport1; }
+
+string Server::getRplSupport2() const { return rplSupport2; }
+
+string Server::getServerName() const { return serverName; }
+
+std::string Server::getSource() { return source; }
+
+string Server::getUserModes() const { return userModes; }
+
+string Server::getVersion() const { return version; }
+
+Epoll& Server::getEpoll() { return this->_epoll; }
+
+size_t Server::getMaxClients() const { return _maxClients; }
 
 void Server::sendMessage(Channel* channel, string message, Client* sender) {
     vector<Client*> clients = channel->getClients();
@@ -271,6 +266,11 @@ void Server::notifyPrivBot(string chanName) {
         if ((*it)->isServerOperator() && (*it)->isBot())
             (*it)->sendMessage(Replies::RPL_NEWCHAN(*it, chanName));
     }
+}
+
+Server& Server::getInstance() {
+    static Server instance;
+    return instance;
 }
 
 string toLowerCase(string s) {

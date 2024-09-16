@@ -2,6 +2,7 @@
 #include "Client.hpp"
 #include "Exception.hpp"
 #include "JoinCommand.hpp"
+#include "Replies.hpp"
 #include <vector>
 
 using std::map;

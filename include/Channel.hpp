@@ -25,8 +25,8 @@ class Channel {
     std::vector<Client*> _banList;
     std::vector<Client*> _operatorsList;
     std::vector<Client*> _voicedList;
-    void checkNameSyntax(std::string& name);
 
+    void checkNameSyntax(std::string& name);
     void addClientToList(std::vector<Client*>& vec, Client* client);
     void removeClientFromList(std::vector<Client*>& vec, Client* client);
     bool isOnList(const std::vector<Client*>& vec, const Client* client) const;

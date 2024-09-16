@@ -15,16 +15,11 @@ PartCommand::PartCommand(string source, vector<string> params, Client* client) {
 
 PartCommand::~PartCommand() {}
 
-void PartCommand::checkParams(Client* client, vector<string> params) {
-    if (!client->isRegistered()) {
-        client->sendMessage(Replies::ERR_NOTREGISTERED());
-        throw ClientException();
-    }
-
-    if (params.size() < 1) {
-        client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PART"));
-        throw ClientException();
-    }
+string PartCommand::createReply(Channel* channel) {
+    string reply;
+    reply = ":" + _client->getNickname() + " PART " + channel->getName() + " " +
+            _reason;
+    return Message::create(reply);
 }
 
 void PartCommand::parseParams(Client* client, vector<string> params) {
@@ -47,11 +42,16 @@ void PartCommand::parseParams(Client* client, vector<string> params) {
     }
 }
 
-string PartCommand::createReply(Channel* channel) {
-    string reply;
-    reply = ":" + _client->getNickname() + " PART " + channel->getName() + " " +
-            _reason;
-    return Message::create(reply);
+void PartCommand::checkParams(Client* client, vector<string> params) {
+    if (!client->isRegistered()) {
+        client->sendMessage(Replies::ERR_NOTREGISTERED());
+        throw ClientException();
+    }
+
+    if (params.size() < 1) {
+        client->sendMessage(Replies::ERR_NEEDMOREPARAMS(client, "PART"));
+        throw ClientException();
+    }
 }
 
 void PartCommand::run() {

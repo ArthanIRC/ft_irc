@@ -1,4 +1,5 @@
 #include "AwayCommand.hpp"
+#include "Replies.hpp"
 
 using std::map;
 using std::string;

@@ -8,6 +8,7 @@ class KickCommand : public Command {
     Channel* _channel;
     std::string _comment;
     Client* _target;
+
     void checkParams(Client* client, std::vector<std::string> params);
 
   public:
