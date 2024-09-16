@@ -30,6 +30,7 @@ int main(int ac, char** av) {
         return EXIT_FAILURE;
 
     std::setlocale(LC_ALL, "en_US.UTF-8");
+    srand(time(0));
 
     try {
         Bot::getInstance().init(ac, av);
