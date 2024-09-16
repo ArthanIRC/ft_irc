@@ -13,7 +13,6 @@ class Message {
     static int parse(std::string& data, std::string& source,
                      std::string& command, std::vector<std::string>& params,
                      bool addTrailing);
-    static std::vector<std::string> split(std::string& str, char delim);
 
     static const unsigned int max_params = 15;
     static const unsigned int err_trailing = 1001;
@@ -31,6 +30,7 @@ class Message {
 
     static bool verify(std::string& data);
     static std::string create(std::string& data);
+    static std::vector<std::string> split(std::string& str, char delim);
 
     virtual void run() = 0;
 
