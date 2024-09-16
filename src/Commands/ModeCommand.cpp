@@ -65,17 +65,14 @@ string ModeCommand::retrieveParam(vector<string>& param, size_t i) {
     }
 }
 
-void ModeCommand::iModeDispatcher(bool oper, size_t& p) {
-    if (_isChan)
-        inviteMode(oper, p);
+void ModeCommand::addResult(bool oper, string mode, string param) {
+    if (oper)
+        _modeResult += "+" + mode;
     else
-        invisibleMode(oper, p);
-}
+        _modeResult += "-" + mode;
 
-void ModeCommand::invisibleMode(bool oper, size_t& p) {
-    _client->setInvisible(oper);
-    (void)p;
-    addResult(oper, "i", "");
+    if (!param.empty())
+        _paramResult += " " + param;
 }
 
 void ModeCommand::banMode(bool oper, size_t& p) {
@@ -107,146 +104,6 @@ void ModeCommand::botMode(bool oper, size_t& p) {
     _client->setBot(oper);
     (void)p;
     addResult(oper, "B", "");
-}
-
-void ModeCommand::limitMode(bool oper, size_t& p) {
-    if (!oper) {
-        _channel->setMaxClients(0);
-        addResult(oper, "l", "");
-        return;
-    }
-
-    string param = retrieveParam(_params, p);
-    if (param.empty())
-        return;
-    p++;
-    std::stringstream ss(param);
-    size_t limit;
-    ss >> limit;
-
-    _channel->setMaxClients(limit);
-    addResult(oper, "l", param);
-}
-
-void ModeCommand::inviteMode(bool oper, size_t& p) {
-    _channel->setInviteOnly(oper);
-    (void)p;
-    addResult(oper, "i", "");
-}
-
-void ModeCommand::keyMode(bool oper, size_t& p) {
-    if (!oper) {
-        _channel->clearKey();
-        return;
-    }
-
-    string param = retrieveParam(_params, p);
-    if (param.empty()) {
-        _client->sendMessage(Replies::ERR_INVALIDKEY(_client, _channel));
-        return;
-    }
-
-    p++;
-    _channel->setKey(param);
-    addResult(oper, "k", param);
-}
-
-void ModeCommand::moderatedMode(bool oper, size_t& p) {
-    _channel->setModerated(oper);
-    (void)p;
-    addResult(oper, "m", "");
-}
-
-void ModeCommand::noExternalMode(bool oper, size_t& p) {
-    _channel->setNoExternal(oper);
-    (void)p;
-    addResult(oper, "n", "");
-}
-
-void ModeCommand::protectedTopicMode(bool oper, size_t& p) {
-    _channel->setProtectedTopic(oper);
-    (void)p;
-    addResult(oper, "t", "");
-}
-
-void ModeCommand::operatorMode(bool oper, size_t& p) {
-    string param = toLowerCase(retrieveParam(_params, p));
-    if (param.empty())
-        return;
-    p++;
-
-    Client* target;
-    try {
-        target = Server::getInstance().findClient(param);
-    } catch (Server::ClientNotFoundException&) {
-        return;
-    }
-
-    if (!_channel->isInChannel(target))
-        return;
-
-    if (oper)
-        _channel->addOperator(target);
-    else
-        _channel->removeOperator(target);
-    addResult(oper, "o", param);
-}
-
-void ModeCommand::voiceMode(bool oper, size_t& p) {
-    string param = toLowerCase(retrieveParam(_params, p));
-    if (param.empty())
-        return;
-    p++;
-
-    Client* target;
-    try {
-        target = Server::getInstance().findClient(param);
-    } catch (Server::ClientNotFoundException&) {
-        return;
-    }
-
-    if (!_channel->isInChannel(target))
-        return;
-
-    if (oper)
-        _channel->addVoiced(target);
-    else
-        _channel->removeVoiced(target);
-    addResult(oper, "v", param);
-}
-
-void ModeCommand::addResult(bool oper, string mode, string param) {
-    if (oper)
-        _modeResult += "+" + mode;
-    else
-        _modeResult += "-" + mode;
-
-    if (!param.empty())
-        _paramResult += " " + param;
-}
-
-void ModeCommand::run() {
-    if (_isChan) {
-        if (_mode.empty()) {
-            _client->sendMessage(Replies::RPL_CHANNELMODEIS(_client, _channel));
-            _client->sendMessage(Replies::RPL_CREATIONTIME(_client, _channel));
-            return;
-        }
-
-        if (!_channel->isOperator(_client) && _mode != "b") {
-            _client->sendMessage(
-                Replies::ERR_CHANOPRIVSNEEDED(_client, _channel));
-            return;
-        }
-
-    } else {
-        if (_mode.empty()) {
-            _client->sendMessage(Replies::RPL_UMODEIS(_client));
-            return;
-        }
-    }
-
-    executeMode();
 }
 
 void ModeCommand::executeMode() {
@@ -283,4 +140,147 @@ void ModeCommand::executeMode() {
                                           NULL);
     else
         _client->sendMessage(Message::create(message));
+}
+
+void ModeCommand::invisibleMode(bool oper, size_t& p) {
+    _client->setInvisible(oper);
+    (void)p;
+    addResult(oper, "i", "");
+}
+
+void ModeCommand::inviteMode(bool oper, size_t& p) {
+    _channel->setInviteOnly(oper);
+    (void)p;
+    addResult(oper, "i", "");
+}
+
+void ModeCommand::keyMode(bool oper, size_t& p) {
+    if (!oper) {
+        _channel->clearKey();
+        return;
+    }
+
+    string param = retrieveParam(_params, p);
+    if (param.empty()) {
+        _client->sendMessage(Replies::ERR_INVALIDKEY(_client, _channel));
+        return;
+    }
+
+    p++;
+    _channel->setKey(param);
+    addResult(oper, "k", param);
+}
+
+void ModeCommand::limitMode(bool oper, size_t& p) {
+    if (!oper) {
+        _channel->setMaxClients(0);
+        addResult(oper, "l", "");
+        return;
+    }
+
+    string param = retrieveParam(_params, p);
+    if (param.empty())
+        return;
+    p++;
+    std::stringstream ss(param);
+    size_t limit;
+    ss >> limit;
+
+    _channel->setMaxClients(limit);
+    addResult(oper, "l", param);
+}
+
+void ModeCommand::moderatedMode(bool oper, size_t& p) {
+    _channel->setModerated(oper);
+    (void)p;
+    addResult(oper, "m", "");
+}
+
+void ModeCommand::noExternalMode(bool oper, size_t& p) {
+    _channel->setNoExternal(oper);
+    (void)p;
+    addResult(oper, "n", "");
+}
+
+void ModeCommand::operatorMode(bool oper, size_t& p) {
+    string param = toLowerCase(retrieveParam(_params, p));
+    if (param.empty())
+        return;
+    p++;
+
+    Client* target;
+    try {
+        target = Server::getInstance().findClient(param);
+    } catch (Server::ClientNotFoundException&) {
+        return;
+    }
+
+    if (!_channel->isInChannel(target))
+        return;
+
+    if (oper)
+        _channel->addOperator(target);
+    else
+        _channel->removeOperator(target);
+    addResult(oper, "o", param);
+}
+
+void ModeCommand::protectedTopicMode(bool oper, size_t& p) {
+    _channel->setProtectedTopic(oper);
+    (void)p;
+    addResult(oper, "t", "");
+}
+
+void ModeCommand::voiceMode(bool oper, size_t& p) {
+    string param = toLowerCase(retrieveParam(_params, p));
+    if (param.empty())
+        return;
+    p++;
+
+    Client* target;
+    try {
+        target = Server::getInstance().findClient(param);
+    } catch (Server::ClientNotFoundException&) {
+        return;
+    }
+
+    if (!_channel->isInChannel(target))
+        return;
+
+    if (oper)
+        _channel->addVoiced(target);
+    else
+        _channel->removeVoiced(target);
+    addResult(oper, "v", param);
+}
+
+void ModeCommand::iModeDispatcher(bool oper, size_t& p) {
+    if (_isChan)
+        inviteMode(oper, p);
+    else
+        invisibleMode(oper, p);
+}
+
+void ModeCommand::run() {
+    if (_isChan) {
+        if (_mode.empty()) {
+            _client->sendMessage(Replies::RPL_CHANNELMODEIS(_client, _channel));
+            _client->sendMessage(Replies::RPL_CREATIONTIME(_client, _channel));
+            return;
+        }
+
+        if (!_channel->isOperator(_client) && _mode != "b") {
+            _client->sendMessage(
+                Replies::ERR_CHANOPRIVSNEEDED(_client, _channel));
+            return;
+        }
+
+    } else {
+        if (_mode.empty()) {
+            _client->sendMessage(Replies::RPL_UMODEIS(_client));
+            return;
+        }
+    }
+
+    executeMode();
 }

@@ -3,6 +3,7 @@
 
 #include "Client.hpp"
 #include "NickCommand.hpp"
+#include "Replies.hpp"
 #include "Server.hpp"
 
 using std::string;

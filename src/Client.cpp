@@ -33,49 +33,6 @@ string const Client::getSource() const {
     return source;
 }
 
-string const& Client::getAwayMsg() const { return this->_awayMsg; }
-
-State Client::getState() const { return this->_state; }
-
-ClientSocket& Client::getSocket() { return this->_socket; }
-
-void Client::setState(State newState) { this->_state = newState; }
-
-bool Client::hasCapEndedEarly() { return this->_capEndedEarly; }
-
-bool Client::isRegistered() { return this->_state >= REGISTERED; }
-
-bool Client::isServerOperator() { return this->_state == OPERATOR; }
-
-bool Client::isAway() { return this->_away; }
-
-bool Client::isAwayNotify() { return this->_awayNotify; }
-
-bool Client::isInvisible() { return this->_invisible; }
-
-bool Client::isBot() { return this->_bot; }
-
-void Client::setCapEndedEarly() { this->_capEndedEarly = true; }
-
-void Client::setAway(bool state, string message) {
-    this->_away = state;
-    this->_awayMsg = message;
-}
-
-void Client::setAwayNotify(bool state) { this->_awayNotify = state; }
-
-void Client::setInvisible(bool state) { this->_invisible = state; }
-
-void Client::setBot(bool state) { this->_bot = state; }
-
-void Client::setNickname(string& nick) { this->_nickname = nick; }
-
-void Client::setUsername(string& username) { this->_username = username; }
-
-void Client::setRealname(string& realname) { this->_realname = realname; }
-
-void Client::sendMessage(string message) { _socket.sendMessage(message); }
-
 string Client::getModes() {
     string modes = "+";
 
@@ -90,6 +47,10 @@ string Client::getModes() {
     return modes;
 }
 
+string const& Client::getAwayMsg() const { return this->_awayMsg; }
+
+ClientSocket& Client::getSocket() { return this->_socket; }
+
 map<string, Channel*> Client::getChannels() {
     map<string, Channel*> servMap = Server::getInstance().getChannels();
     map<string, Channel*> result;
@@ -101,3 +62,42 @@ map<string, Channel*> Client::getChannels() {
 
     return result;
 }
+
+State Client::getState() const { return this->_state; }
+
+void Client::setState(State newState) { this->_state = newState; }
+
+void Client::setInvisible(bool state) { this->_invisible = state; }
+
+void Client::setAway(bool state, string message) {
+    this->_away = state;
+    this->_awayMsg = message;
+}
+
+void Client::setAwayNotify(bool state) { this->_awayNotify = state; }
+
+void Client::setBot(bool state) { this->_bot = state; }
+
+void Client::setCapEndedEarly() { this->_capEndedEarly = true; }
+
+void Client::setNickname(string& nick) { this->_nickname = nick; }
+
+void Client::setUsername(string& username) { this->_username = username; }
+
+void Client::setRealname(string& realname) { this->_realname = realname; }
+
+bool Client::isRegistered() { return this->_state >= REGISTERED; }
+
+bool Client::isServerOperator() { return this->_state == OPERATOR; }
+
+bool Client::isAway() { return this->_away; }
+
+bool Client::isAwayNotify() { return this->_awayNotify; }
+
+bool Client::isInvisible() { return this->_invisible; }
+
+bool Client::isBot() { return this->_bot; }
+
+bool Client::hasCapEndedEarly() { return this->_capEndedEarly; }
+
+void Client::sendMessage(string message) { _socket.sendMessage(message); }

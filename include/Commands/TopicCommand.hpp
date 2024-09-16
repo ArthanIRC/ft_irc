@@ -4,8 +4,9 @@
 
 class TopicCommand : public Command {
   private:
-    void checkParams(Client* client, std::vector<std::string> params);
     Channel* _channel;
+
+    void checkParams(Client* client, std::vector<std::string> params);
 
   public:
     TopicCommand(std::string source, std::vector<std::string> params,

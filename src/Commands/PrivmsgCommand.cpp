@@ -1,5 +1,6 @@
 #include "PrivmsgCommand.hpp"
 #include "Channel.hpp"
+#include "Replies.hpp"
 #include "Server.hpp"
 
 using std::string;

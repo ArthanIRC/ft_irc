@@ -32,17 +32,17 @@ class ModeCommand : public Command {
 
     std::string retrieveParam(std::vector<std::string>& param, size_t i);
     void addResult(bool oper, std::string mode, std::string param);
-    void executeMode();
-    void invisibleMode(bool oper, size_t& p);
     void banMode(bool oper, size_t& p);
     void botMode(bool oper, size_t& p);
-    void limitMode(bool oper, size_t& p);
+    void executeMode();
+    void invisibleMode(bool oper, size_t& p);
     void inviteMode(bool oper, size_t& p);
     void keyMode(bool oper, size_t& p);
+    void limitMode(bool oper, size_t& p);
     void moderatedMode(bool oper, size_t& p);
     void noExternalMode(bool oper, size_t& p);
-    void protectedTopicMode(bool oper, size_t& p);
     void operatorMode(bool oper, size_t& p);
+    void protectedTopicMode(bool oper, size_t& p);
     void voiceMode(bool oper, size_t& p);
     void iModeDispatcher(bool oper, size_t& p);
 

@@ -1,5 +1,6 @@
 #include "QuitCommand.hpp"
 #include "Client.hpp"
+#include "Replies.hpp"
 #include "Server.hpp"
 
 using std::string;

@@ -1,4 +1,5 @@
 #include "LusersCommand.hpp"
+#include "Replies.hpp"
 
 using std::string;
 using std::vector;

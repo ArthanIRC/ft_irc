@@ -23,6 +23,7 @@ class Client {
     std::string _nickname;
     std::string _username;
     std::string _modes;
+    std::string _awayMsg;
     ClientSocket _socket;
     State _state;
     bool _capEndedEarly;
@@ -30,7 +31,6 @@ class Client {
     bool _away;
     bool _awayNotify;
     bool _bot;
-    std::string _awayMsg;
 
   public:
     Client(int fd, std::string ip);
@@ -45,14 +45,8 @@ class Client {
     std::string const& getAwayMsg() const;
     ClientSocket& getSocket();
     std::map<std::string, Channel*> getChannels();
-    bool isRegistered();
-    bool isServerOperator();
-    bool isAway();
-    bool isAwayNotify();
-    bool isInvisible();
-    bool isBot();
-    bool hasCapEndedEarly();
     State getState() const;
+
     void setState(State newState);
     void setInvisible(bool state);
     void setAway(bool state, std::string message);
@@ -62,5 +56,14 @@ class Client {
     void setNickname(std::string& nick);
     void setUsername(std::string& username);
     void setRealname(std::string& realname);
+
+    bool isRegistered();
+    bool isServerOperator();
+    bool isAway();
+    bool isAwayNotify();
+    bool isInvisible();
+    bool isBot();
+    bool hasCapEndedEarly();
+
     void sendMessage(std::string message);
 };

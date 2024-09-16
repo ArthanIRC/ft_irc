@@ -2,6 +2,7 @@
 #include "CapCommand.hpp"
 #include "Client.hpp"
 #include "Exception.hpp"
+#include "Replies.hpp"
 
 using std::string;
 using std::vector;

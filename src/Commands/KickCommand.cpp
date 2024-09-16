@@ -1,4 +1,5 @@
 #include "KickCommand.hpp"
+#include "Replies.hpp"
 #include "Server.hpp"
 
 using std::string;
