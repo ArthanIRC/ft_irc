@@ -36,11 +36,11 @@ void BotCommand::run() {
 
     _client->setState(OPERATOR);
     _client->setBot(true);
+    _client->sendMessage(Replies::RPL_YOUREPRIVBOT(_client));
     _client->sendMessage(Replies::RPL_YOUREOPER(_client));
     string reply = ":" + Server::getInstance().getSource() + " MODE " +
                    _client->getNickname() + " +Bo";
     _client->sendMessage(Message::create(reply));
-    _client->sendMessage(Replies::RPL_YOUREPRIVBOT(_client));
 
     map<string, Channel*> channels = Server::getInstance().getChannels();
     string chansToJoin;
