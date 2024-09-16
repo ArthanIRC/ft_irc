@@ -15,17 +15,16 @@ NamesCommand::NamesCommand(string source, vector<string> params,
         throw ClientException();
     }
 
-    if (params.size() > 0) {
-        this->_params[0] = toLowerCase(params[0]);
-    } else {
+    if (params.size() > 0)
+        this->_params.push_back(toLowerCase(params[0]));
+    else
         this->_params.push_back("");
-    }
 
     this->_source = source;
     this->_client = client;
 }
 
-NamesCommand::~NamesCommand(){};
+NamesCommand::~NamesCommand() {};
 
 void NamesCommand::run() {
     if (_params[0].empty()) {
