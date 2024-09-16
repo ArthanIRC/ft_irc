@@ -49,11 +49,13 @@ string BotSocket::receive() {
         _rem.clear();
     }
 
-    size = recv(_fd, buf, MAX_LIMIT, 0);
-    data.append(buf);
-    if (data.empty() || size == -1) {
-        _eof = true;
-        return "";
+    if (data.empty() || data.find("\n") == string::npos) {
+        size = recv(_fd, buf, MAX_LIMIT, 0);
+        data.append(buf);
+        if (data.empty() || size == -1) {
+            _eof = true;
+            return "";
+        }
     }
 
     size_t i = data.find("\n");
