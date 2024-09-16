@@ -17,10 +17,10 @@ class BotSocket : public Socket {
 
     void init(const char* ip, const char* port);
     void connect();
-    std::string receive();
     void sendMessage(std::string message);
     void onPoll(uint32_t events);
     void setRegistered();
     bool isRegistered();
     bool isEof();
+    std::string receive();
 };
