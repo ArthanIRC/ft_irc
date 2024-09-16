@@ -106,42 +106,6 @@ void ModeCommand::botMode(bool oper, size_t& p) {
     addResult(oper, "B", "");
 }
 
-void ModeCommand::executeMode() {
-    if (_mode[0] != '-' && _mode[0] != '+' && _mode.size() > 1 &&
-        _mode[1] != 'b') {
-        _client->sendMessage(Replies::ERR_UMODEUNKNOWNFLAG(_client));
-        return;
-    }
-
-    bool oper = true;
-    bool unknownFlag = false;
-    size_t p = 2;
-    for (string::iterator it = _mode.begin(); it != _mode.end(); it++) {
-        if (*it == '+' || *it == '-') {
-            oper = *it == '+';
-            continue;
-        }
-        if (_modeExec.find(*it) == _modeExec.end())
-            unknownFlag = true;
-        else
-            (this->*_modeExec[*it])(oper, p);
-    }
-
-    if (unknownFlag)
-        _client->sendMessage(Replies::ERR_UMODEUNKNOWNFLAG(_client));
-
-    if (_modeResult.empty())
-        return;
-
-    string message = ":" + _client->getNickname() + " MODE " + _params[0];
-    message += " " + _modeResult + _paramResult;
-    if (_isChan)
-        Server::getInstance().sendMessage(_channel, Message::create(message),
-                                          NULL);
-    else
-        _client->sendMessage(Message::create(message));
-}
-
 void ModeCommand::invisibleMode(bool oper, size_t& p) {
     _client->setInvisible(oper);
     (void)p;
@@ -259,6 +223,42 @@ void ModeCommand::iModeDispatcher(bool oper, size_t& p) {
         inviteMode(oper, p);
     else
         invisibleMode(oper, p);
+}
+
+void ModeCommand::executeMode() {
+    if (_mode[0] != '-' && _mode[0] != '+' && _mode.size() > 1 &&
+        _mode[1] != 'b') {
+        _client->sendMessage(Replies::ERR_UMODEUNKNOWNFLAG(_client));
+        return;
+    }
+
+    bool oper = true;
+    bool unknownFlag = false;
+    size_t p = 2;
+    for (string::iterator it = _mode.begin(); it != _mode.end(); it++) {
+        if (*it == '+' || *it == '-') {
+            oper = *it == '+';
+            continue;
+        }
+        if (_modeExec.find(*it) == _modeExec.end())
+            unknownFlag = true;
+        else
+            (this->*_modeExec[*it])(oper, p);
+    }
+
+    if (unknownFlag)
+        _client->sendMessage(Replies::ERR_UMODEUNKNOWNFLAG(_client));
+
+    if (_modeResult.empty())
+        return;
+
+    string message = ":" + _client->getNickname() + " MODE " + _params[0];
+    message += " " + _modeResult + _paramResult;
+    if (_isChan)
+        Server::getInstance().sendMessage(_channel, Message::create(message),
+                                          NULL);
+    else
+        _client->sendMessage(Message::create(message));
 }
 
 void ModeCommand::run() {

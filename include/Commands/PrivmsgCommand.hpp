@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Command.hpp"
 
 class PrivmsgCommand : public Command {
