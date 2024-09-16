@@ -55,7 +55,7 @@ void PrivmsgCommand::sendToChannel(string& target) {
     }
 
     string message =
-        ":" + _client->getSource() + " PRIVMSG " + target + " " + _message;
+        ":" + _client->getSource() + " PRIVMSG " + target + " :" + _message;
     Server::getInstance().sendMessage(chan, Message::create(message), _client);
 }
 

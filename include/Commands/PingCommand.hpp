@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Command.hpp"
-#include <vector>
 
 class PingCommand : public Command {
   private:

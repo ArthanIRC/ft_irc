@@ -19,14 +19,16 @@ class Bot {
     Bot(Bot const&);
     void operator=(Bot const&);
 
+    std::string joinPara(std::vector<std::string>& splitData, size_t i);
+    std::vector<std::string> parse(std::string& data);
+
+    void checkSender();
+    void readFile();
+    int roll(int min, int max);
     void login();
+    void execute(std::vector<std::string> message);
     void imDad(std::string source, std::string target, std::string content);
     void joke(std::string source, std::string target);
-    std::string joinPara(std::vector<std::string>& splitData);
-    void execute(std::vector<std::string> message);
-    void checkSender();
-    int roll(int min, int max);
-    std::vector<std::string> parse(std::string& data);
 
   public:
     ~Bot();

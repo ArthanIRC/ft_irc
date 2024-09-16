@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Command.hpp"
-#include <map>
-#include <string>
 
 class NamesCommand : public Command {
   private:

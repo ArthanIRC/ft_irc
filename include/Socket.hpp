@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Exception.hpp"
 #include <stdint.h>
+
+#include "Exception.hpp"
 
 class Socket {
   protected:

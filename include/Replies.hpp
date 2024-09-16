@@ -1,10 +1,11 @@
 #pragma once
 
+#include <sstream>
+
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Server.hpp"
-#include <sstream>
 
 class Replies : public Message {
   private:
