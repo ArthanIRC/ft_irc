@@ -24,7 +24,7 @@ NamesCommand::NamesCommand(string source, vector<string> params,
     this->_client = client;
 }
 
-NamesCommand::~NamesCommand() {};
+NamesCommand::~NamesCommand(){};
 
 void NamesCommand::run() {
     if (_params[0].empty()) {
