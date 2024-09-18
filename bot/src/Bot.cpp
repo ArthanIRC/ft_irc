@@ -123,7 +123,8 @@ void Bot::run() {
 void Bot::login() {
     _socket.sendMessage("CAP LS 302\r\n");
     string data = _socket.receive();
-    string rpl = "PASS " + _password + "\r\nNICK daddy\r\nUSER Dad * * :Dad\r\nCAP END\r\n";
+    string rpl = "PASS " + _password +
+                 "\r\nNICK daddy\r\nUSER Dad * * :Dad\r\nCAP END\r\n";
     _socket.sendMessage(rpl);
     data = _socket.receive();
 
