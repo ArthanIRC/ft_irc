@@ -145,7 +145,6 @@ void Channel::removeOperator(Client* client) {
 void Channel::removeClient(Client* client) {
     removeClientFromList(_inviteList, client);
     removeClientFromList(_operatorsList, client);
-    removeClientFromList(_banList, client);
     removeClientFromList(_voicedList, client);
     removeClientFromList(_clients, client);
 }
