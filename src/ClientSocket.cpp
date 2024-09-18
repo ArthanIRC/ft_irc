@@ -96,6 +96,7 @@ void ClientSocket::executeCommand(string data, Client* client) {
     } catch (RegFailedException&) {
         sendMessage(Replies::ERR_REGFAILED());
         removeSelf();
+        throw RegFailedException();
     }
     delete c;
 }

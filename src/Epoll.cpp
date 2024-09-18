@@ -50,6 +50,8 @@ void Epoll::poll() {
             ((Socket*)events[i].data.ptr)->onPoll(events[i].events);
         } catch (ClientException& e) {
             std::cerr << e.what() << "\n";
+        } catch (RegFailedException& e) {
+            break;
         }
     }
 }

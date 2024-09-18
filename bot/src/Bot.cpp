@@ -123,13 +123,14 @@ void Bot::run() {
 void Bot::login() {
     _socket.sendMessage("CAP LS 302\r\n");
     string data = _socket.receive();
-    _socket.sendMessage(
-        "PASS bonjour\r\nNICK daddy\r\nUSER Dad * * :Dad\r\nCAP END\r\n");
+    string rpl = "PASS " + _password +
+                 "\r\nNICK daddy\r\nUSER Dad * * :Dad\r\nCAP END\r\n";
+    _socket.sendMessage(rpl);
     data = _socket.receive();
 
     vector<string> message = Message::split(data, ' ');
     if (message.at(1) != "001")
-        throw RegFailedException();
+        throw RegFailedException(data);
     this->_nickname = message.at(2);
     while (data.find("221") == string::npos) {
         data = _socket.receive();
