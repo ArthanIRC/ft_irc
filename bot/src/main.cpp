@@ -35,6 +35,9 @@ int main(int ac, char** av) {
     try {
         Bot::getInstance().init(ac, av);
         Bot::getInstance().run();
+    } catch (RegFailedException& e) {
+        std::cerr << e.what();
+        return EXIT_FAILURE;
     } catch (std::exception& e) {
         std::cerr << e.what() << "\n";
         return EXIT_FAILURE;
