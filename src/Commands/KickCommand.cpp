@@ -1,4 +1,5 @@
 #include "KickCommand.hpp"
+#include "Exception.hpp"
 #include "Replies.hpp"
 #include "Server.hpp"
 
@@ -43,15 +44,15 @@ void KickCommand::checkParams(Client* client, vector<string> params) {
     this->_channel = chan;
 
     if (!chan->isInChannel(client)) {
-        client->sendMessage(Replies::ERR_NOTONCHANNEL(client, chan));
+        client->sendMessage(Replies::ERR_NOTONCHANNEL(client, _channel));
         throw ClientException();
     }
 
     try {
         this->_target = Server::getInstance().findClient(targetNickName);
     } catch (Server::ClientNotFoundException&) {
-        _client->sendMessage(Replies::ERR_NOSUCHNICK(_client, targetNickName));
-        return;
+        client->sendMessage(Replies::ERR_NOSUCHNICK(client, targetNickName));
+        throw ClientException();
     }
 
     if (!chan->isOperator(client) || chan->isOperator(_target)) {
@@ -61,7 +62,7 @@ void KickCommand::checkParams(Client* client, vector<string> params) {
 
     if (!chan->isInChannel(_target)) {
         client->sendMessage(
-            Replies::ERR_USERNOTINCHANNEL(_client, targetNickName, _channel));
+            Replies::ERR_USERNOTINCHANNEL(client, targetNickName, _channel));
         throw ClientException();
     }
 

@@ -1,7 +1,10 @@
+#include <cctype>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 
 #include "Channel.hpp"
+#include "KickCommand.hpp"
 #include "Message.hpp"
 #include "ModeCommand.hpp"
 #include "Replies.hpp"
@@ -88,13 +91,28 @@ void ModeCommand::banMode(bool oper, size_t& p) {
 
     p++;
     Client* target;
+    size_t i = 0;
+    for (; i < param.size(); ++i) {
+        if (std::isalpha(param[i]))
+            break;
+    }
+
+    string starget = param.substr(i, param.find("@") - i);
+
     try {
-        target = Server::getInstance().findClient(param);
+        target = Server::getInstance().findClient(starget);
     } catch (Server::ClientNotFoundException&) {
         return;
     }
+
     if (oper) {
         _channel->banClient(target);
+        vector<string> outpara;
+        outpara.push_back(_channel->getName());
+        outpara.push_back(starget);
+        outpara.push_back(":Banned from channel.");
+        KickCommand k("", outpara, _client);
+        k.run();
     } else
         _channel->unbanClient(target);
     addResult(oper, "b", param);
